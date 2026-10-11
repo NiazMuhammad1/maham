@@ -1,0 +1,9 @@
+# Use this workspace to collaborate
+workspace:
+  id: dbf1515e-ed91-4d44-9801-3c109af54aa4
+
+localResources:
+  collections:
+    - ../docs/postman/Maham-Customer-API.postman_collection.json
+  environments:
+    - ../docs/postman/Maham-Local.postman_environment.json

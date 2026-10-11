@@ -1,0 +1,13 @@
+<?php
+
+namespace App\Services\Sms;
+
+use Illuminate\Support\Facades\Log;
+
+class LogSmsSender implements SmsSender
+{
+    public function send(string $recipient, string $message): void
+    {
+        Log::info('SMS to '.$recipient.': '.$message);
+    }
+}

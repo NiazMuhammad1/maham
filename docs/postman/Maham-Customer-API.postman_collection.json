@@ -1,0 +1,1410 @@
+{
+    "info": {
+        "name": "Maham Customer API v1",
+        "description": "# Maham Customer API (v1)\n\n**Base URL**: `{{base_url}}` (local: `http://maham.test/api/v1`)\n\n## Headers on every request\n- `Accept: application/json`\n- `Accept-Language: ar` or `en` (messages, validation errors and content come back in this language)\n- `Authorization: Bearer {token}` on protected endpoints\n\n## Response format\nSuccess: `{ \"success\": true, \"message\": \"...\", \"data\": {...} }`\n\nError: `{ \"success\": false, \"message\": \"first error to show the user\", \"errors\": { \"field\": [\"...\"] } }`\n\nStatus codes: 200 OK, 401 not logged in / token expired, 403 forbidden, 404 not found, 422 validation error, 429 too many requests / OTP resend too soon, 503 SMS provider down.\n\n## Registration flow & next_step\nEvery auth response contains `next_step`. Open the screen for that value:\n- `verify_phone` -> Phone number screen (Google/Apple users: use **Phone (social users)** endpoints)\n- `personal_details` -> Tell us about yourself\n- `credentials` -> Secure your account (email + password)\n- `verify_email` -> Verify Email OTP sheet\n- `address` -> Where should we find you?\n- `profile_image` -> Add a profile photo\n- `completed` -> Home\n- `guest` -> Home in guest mode\n\nIf the user closes the app mid sign-up, call `GET /auth/me` on launch and open the `next_step` screen.\n\n## Phone numbers\nSend any Saudi format: `0512345678`, `512345678` or `+966512345678`. The API returns `phone` as `512345678` and `phone_country_code` as `+966`.\n\n## OTP\n4 digits, valid 5 minutes, resend after 60 seconds (values also returned by `/app/config`). **On the local/staging server the OTP is always `1234`.**",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://maham.test/api/v1"
+        },
+        {
+            "key": "lang",
+            "value": "en"
+        },
+        {
+            "key": "token",
+            "value": ""
+        },
+        {
+            "key": "reset_token",
+            "value": ""
+        }
+    ],
+    "item": [
+        {
+            "name": "1. Splash, Language & Onboarding",
+            "item": [
+                {
+                    "name": "App config (splash)",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "{{lang}}",
+                                "description": "ar or en"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/app/config?platform=android&version=1.0.0",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "app",
+                                "config"
+                            ],
+                            "query": [
+                                {
+                                    "key": "platform",
+                                    "value": "android",
+                                    "description": "android | ios"
+                                },
+                                {
+                                    "key": "version",
+                                    "value": "1.0.0",
+                                    "description": "Installed app version"
+                                }
+                            ]
+                        },
+                        "description": "Call on the Splash screen.\n\n- `data.update`: `force` = block the app and open `versions.{platform}.store_url`; `optional` = show \"update available\"; `none` = continue.\n- `data.maintenance_mode`: show maintenance screen when true.\n- `data.languages`: options for the Choose language screen (`direction` rtl/ltr).\n- `data.otp`: OTP length and timers.\n\nThe chosen language is kept on the device and sent as `Accept-Language` on every request.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    }
+                },
+                {
+                    "name": "Onboarding slides",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "{{lang}}",
+                                "description": "ar or en"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/onboarding-slides?audience=customer",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "onboarding-slides"
+                            ],
+                            "query": [
+                                {
+                                    "key": "audience",
+                                    "value": "customer"
+                                }
+                            ]
+                        },
+                        "description": "Onboarding 1-4 screens. Returns title, description and image_url in the requested language, already sorted.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    }
+                },
+                {
+                    "name": "Page: Terms of Service",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "{{lang}}",
+                                "description": "ar or en"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/pages/terms-of-service",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "pages",
+                                "terms-of-service"
+                            ]
+                        },
+                        "description": "Linked from \"By creating an account, you agree to Maham's Terms of Service\". `content` is HTML.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    }
+                },
+                {
+                    "name": "Page: Privacy Policy",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "{{lang}}",
+                                "description": "ar or en"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/pages/privacy-policy",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "pages",
+                                "privacy-policy"
+                            ]
+                        },
+                        "description": "Linked from the sign-up screen. `content` is HTML.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "2. Registration (New User)",
+            "item": [
+                {
+                    "name": "Step 1a - Send phone OTP",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "{{lang}}",
+                                "description": "ar or en"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/auth/register/send-otp",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "register",
+                                "send-otp"
+                            ]
+                        },
+                        "description": "\"What's your phone number?\" -> Next. Shows \"Sending OTP\" then \"We just sent you an OTP\".\n\nAlso used for \"Resend OTP\" (allowed after `resend_in` seconds, otherwise 429).\n\nError 422 on `phone` if the number already has an account (show message, go to Login).",
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"phone\": \"0512345678\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Step 1b - Verify phone OTP",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "{{lang}}",
+                                "description": "ar or en"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/auth/register/verify-otp",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "register",
+                                "verify-otp"
+                            ]
+                        },
+                        "description": "OTP sheet -> Verify. On success shows \"Phone Verified\".\n\nReturns `token` (saved automatically in Postman) + `next_step`. Use this token for all next steps.\n\n`device_name`, `fcm_token`, `platform` are optional (for push notifications).",
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"phone\": \"0512345678\",\n    \"otp\": \"1234\",\n    \"device_name\": \"Pixel 8\",\n    \"fcm_token\": \"FCM_TOKEN_FROM_FIREBASE\",\n    \"platform\": \"android\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "const res = pm.response.json();",
+                                    "if (res.success && res.data && res.data.token) {",
+                                    "    pm.collectionVariables.set(\"token\", res.data.token);",
+                                    "    pm.environment.set(\"token\", res.data.token);",
+                                    "}"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Check username availability",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "{{lang}}",
+                                "description": "ar or en"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/auth/username-availability?username=ahmed_ali",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "username-availability"
+                            ],
+                            "query": [
+                                {
+                                    "key": "username",
+                                    "value": "ahmed_ali"
+                                }
+                            ]
+                        },
+                        "description": "Optional live check while typing the username. `data.available` true/false.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    }
+                },
+                {
+                    "name": "Step 2 - Personal details",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "{{lang}}",
+                                "description": "ar or en"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/auth/register/personal-details",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "register",
+                                "personal-details"
+                            ]
+                        },
+                        "description": "\"Tell us about yourself\".\n\n- `username`: 3-30 chars, letters/numbers/_/. (saved lowercase)\n- `national_id`: 10 digits, starts with 1 (Saudi ID) or 2 (Iqama), checksum validated.",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Ahmed Ali\",\n    \"username\": \"ahmed_ali\",\n    \"national_id\": \"1000000008\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Step 3 - Email & password",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "{{lang}}",
+                                "description": "ar or en"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/auth/register/credentials",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "register",
+                                "credentials"
+                            ]
+                        },
+                        "description": "\"Secure your account\". Password: min 8 chars, at least one letter and one number.\n\nAutomatically emails a verification code -> open \"Verify Email\" sheet.",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"ahmed@example.com\",\n    \"password\": \"Secret123\",\n    \"password_confirmation\": \"Secret123\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Step 4a - Resend email OTP",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "{{lang}}",
+                                "description": "ar or en"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/auth/email/send-otp",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "email",
+                                "send-otp"
+                            ]
+                        },
+                        "description": "\"Didn't receive OTP? Resend\" on the Verify Email sheet.",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Step 4b - Verify email OTP",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "{{lang}}",
+                                "description": "ar or en"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/auth/email/verify-otp",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "email",
+                                "verify-otp"
+                            ]
+                        },
+                        "description": "Verify Email sheet -> Verify. Shows \"Email Verified\".",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"otp\": \"1234\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Cities list",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "{{lang}}",
+                                "description": "ar or en"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/cities",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "cities"
+                            ]
+                        },
+                        "description": "\"Select City\" dropdown.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    }
+                },
+                {
+                    "name": "Districts of a city",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "{{lang}}",
+                                "description": "ar or en"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/cities/1/districts",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "cities",
+                                "1",
+                                "districts"
+                            ]
+                        },
+                        "description": "\"Select District\" dropdown, after a city is chosen.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    }
+                },
+                {
+                    "name": "Step 5 - Home address",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "{{lang}}",
+                                "description": "ar or en"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/auth/register/address",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "register",
+                                "address"
+                            ]
+                        },
+                        "description": "\"Where should we find you?\". `postal_code` (5 digits), `latitude`, `longitude` are optional.",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"city_id\": 1,\n    \"district_id\": 1,\n    \"street_address\": \"King Fahd Road, Building 12\",\n    \"postal_code\": \"12345\",\n    \"latitude\": 24.7136,\n    \"longitude\": 46.6753\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Step 6 - Complete with photo (Submit details)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "{{lang}}",
+                                "description": "ar or en"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/auth/register/complete",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "register",
+                                "complete"
+                            ]
+                        },
+                        "description": "\"Add a profile photo\" -> Submit details. multipart/form-data with `avatar` (jpg/png/webp, max 5 MB).\n\nShows \"Your account has been created successfully\".",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "avatar",
+                                    "type": "file",
+                                    "src": [],
+                                    "description": "Image file"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Step 6 - Complete without photo (Skip)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "{{lang}}",
+                                "description": "ar or en"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/auth/register/complete",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "register",
+                                "complete"
+                            ]
+                        },
+                        "description": "\"Skip\" button on the profile photo screen.",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "3. Login (Existing User)",
+            "item": [
+                {
+                    "name": "Login",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "{{lang}}",
+                                "description": "ar or en"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/auth/login",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "login"
+                            ]
+                        },
+                        "description": "\"Welcome Back\" -> Login.\n\n\"Remember me\" is handled on the device (keep the token in secure storage). Check `next_step`: if not `completed`, continue the sign-up.",
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"ahmed@example.com\",\n    \"password\": \"Secret123\",\n    \"device_name\": \"Pixel 8\",\n    \"fcm_token\": \"FCM_TOKEN_FROM_FIREBASE\",\n    \"platform\": \"android\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "const res = pm.response.json();",
+                                    "if (res.success && res.data && res.data.token) {",
+                                    "    pm.collectionVariables.set(\"token\", res.data.token);",
+                                    "    pm.environment.set(\"token\", res.data.token);",
+                                    "}"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Continue with Google",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "{{lang}}",
+                                "description": "ar or en"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/auth/social",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "social"
+                            ]
+                        },
+                        "description": "Send the `idToken` from the google_sign_in package.\n\nNew accounts get `next_step = verify_phone` -> use the **Phone (social users)** endpoints, then continue the normal steps.",
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"provider\": \"google\",\n    \"id_token\": \"ID_TOKEN_FROM_GOOGLE_SIGN_IN\",\n    \"device_name\": \"Pixel 8\",\n    \"fcm_token\": \"FCM_TOKEN_FROM_FIREBASE\",\n    \"platform\": \"android\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "const res = pm.response.json();",
+                                    "if (res.success && res.data && res.data.token) {",
+                                    "    pm.collectionVariables.set(\"token\", res.data.token);",
+                                    "    pm.environment.set(\"token\", res.data.token);",
+                                    "}"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Continue with Apple",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "{{lang}}",
+                                "description": "ar or en"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/auth/social",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "social"
+                            ]
+                        },
+                        "description": "Send `identityToken` from sign_in_with_apple. Apple gives the name only on the first login, so send `name` when you have it.",
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"provider\": \"apple\",\n    \"id_token\": \"IDENTITY_TOKEN_FROM_APPLE\",\n    \"name\": \"Ahmed Ali\",\n    \"device_name\": \"Pixel 8\",\n    \"fcm_token\": \"FCM_TOKEN_FROM_FIREBASE\",\n    \"platform\": \"android\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "const res = pm.response.json();",
+                                    "if (res.success && res.data && res.data.token) {",
+                                    "    pm.collectionVariables.set(\"token\", res.data.token);",
+                                    "    pm.environment.set(\"token\", res.data.token);",
+                                    "}"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Continue as a guest",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "{{lang}}",
+                                "description": "ar or en"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/auth/guest",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "guest"
+                            ]
+                        },
+                        "description": "Returns a guest token (`next_step = guest`). Guests can browse; ask them to register before booking.",
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"device_name\": \"Pixel 8\",\n    \"fcm_token\": \"FCM_TOKEN_FROM_FIREBASE\",\n    \"platform\": \"android\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "const res = pm.response.json();",
+                                    "if (res.success && res.data && res.data.token) {",
+                                    "    pm.collectionVariables.set(\"token\", res.data.token);",
+                                    "    pm.environment.set(\"token\", res.data.token);",
+                                    "}"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Me (current user / validate token)",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "{{lang}}",
+                                "description": "ar or en"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/auth/me",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "me"
+                            ]
+                        },
+                        "description": "Call on app start when a token is saved. 401 = token invalid -> go to Login. Use `next_step` to resume sign-up.",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Register FCM device token",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "{{lang}}",
+                                "description": "ar or en"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/device-tokens",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "device-tokens"
+                            ]
+                        },
+                        "description": "Call when Firebase refreshes the push token.",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"fcm_token\": \"FCM_TOKEN_FROM_FIREBASE\",\n    \"platform\": \"android\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Logout",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "{{lang}}",
+                                "description": "ar or en"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/auth/logout",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "logout"
+                            ]
+                        },
+                        "description": "Revokes this device token. `fcm_token` optional (stops push to this device).",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"fcm_token\": \"FCM_TOKEN_FROM_FIREBASE\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "4. Phone (social users)",
+            "item": [
+                {
+                    "name": "Send phone OTP",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "{{lang}}",
+                                "description": "ar or en"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/auth/phone/send-otp",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "phone",
+                                "send-otp"
+                            ]
+                        },
+                        "description": "For Google/Apple accounts with `next_step = verify_phone`. Uses the same phone + OTP screens.",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"phone\": \"0512345678\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Verify phone OTP",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "{{lang}}",
+                                "description": "ar or en"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/auth/phone/verify-otp",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "phone",
+                                "verify-otp"
+                            ]
+                        },
+                        "description": "Saves the verified phone and returns `next_step`.",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"phone\": \"0512345678\",\n    \"otp\": \"1234\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "5. Forgot / Update Password",
+            "item": [
+                {
+                    "name": "Forgot password - send OTP",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "{{lang}}",
+                                "description": "ar or en"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/auth/forgot-password/send-otp",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "forgot-password",
+                                "send-otp"
+                            ]
+                        },
+                        "description": "\"Forgot Password\" -> Send OTP. 422 on `phone` if no account uses this number.",
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"phone\": \"0512345678\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Forgot password - verify OTP",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "{{lang}}",
+                                "description": "ar or en"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/auth/forgot-password/verify-otp",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "forgot-password",
+                                "verify-otp"
+                            ]
+                        },
+                        "description": "Returns `reset_token` (valid 15 minutes, saved automatically in Postman).",
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"phone\": \"0512345678\",\n    \"otp\": \"1234\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "const res = pm.response.json();",
+                                    "if (res.success) { pm.environment.set(\"reset_token\", res.data.reset_token); pm.collectionVariables.set(\"reset_token\", res.data.reset_token); }"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Forgot password - set new password",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "{{lang}}",
+                                "description": "ar or en"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/auth/forgot-password/reset",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "forgot-password",
+                                "reset"
+                            ]
+                        },
+                        "description": "\"Update Password\" screen in the forgot flow (only New + Confirm password; no current password). Shows \"Password Changed\" -> Login.\n\nAll devices are logged out.",
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"reset_token\": \"{{reset_token}}\",\n    \"password\": \"NewSecret123\",\n    \"password_confirmation\": \"NewSecret123\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Change password (logged in)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "{{lang}}",
+                                "description": "ar or en"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/auth/change-password",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "change-password"
+                            ]
+                        },
+                        "description": "\"Update Password\" from the profile (Current + New + Confirm). Other devices are logged out; this one stays logged in.",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"current_password\": \"Secret123\",\n    \"password\": \"NewSecret123\",\n    \"password_confirmation\": \"NewSecret123\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

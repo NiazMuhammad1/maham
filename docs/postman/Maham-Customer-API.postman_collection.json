@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "Maham Customer API v1",
-        "description": "# Maham Customer API (v1)\n\n**Base URL**: `{{base_url}}` (local: `http://maham.test/api/v1`)\n\n## Headers on every request\n- `Accept: application/json`\n- `Accept-Language: ar` or `en` (messages, validation errors and content come back in this language)\n- `Authorization: Bearer {token}` on protected endpoints\n\n## Response format\nSuccess: `{ \"success\": true, \"message\": \"...\", \"data\": {...} }`\n\nError: `{ \"success\": false, \"message\": \"first error to show the user\", \"errors\": { \"field\": [\"...\"] } }`\n\nStatus codes: 200 OK, 401 not logged in / token expired, 403 forbidden, 404 not found, 422 validation error, 429 too many requests / OTP resend too soon, 503 SMS provider down.\n\n## Registration flow & next_step\nEvery auth response contains `next_step`. Open the screen for that value:\n- `verify_phone` -> Phone number screen (Google/Apple users: use **Phone (social users)** endpoints)\n- `personal_details` -> Tell us about yourself\n- `credentials` -> Secure your account (email + password)\n- `verify_email` -> Verify Email OTP sheet\n- `address` -> Where should we find you?\n- `profile_image` -> Add a profile photo\n- `completed` -> Home\n- `guest` -> Home in guest mode\n\nIf the user closes the app mid sign-up, call `GET /auth/me` on launch and open the `next_step` screen.\n\n## Phone numbers\nSend any Saudi format: `0512345678`, `512345678` or `+966512345678`. The API returns `phone` as `512345678` and `phone_country_code` as `+966`.\n\n## OTP\n4 digits, valid 5 minutes, resend after 60 seconds (values also returned by `/app/config`). **On the local/staging server the OTP is always `1234`.**",
+        "description": "# Maham Customer API (v1)\n\n**Base URL**: `{{base_url}}` (local: `http://maham.test/api/v1`)\n\n## Headers on every request\n- `Accept: application/json`\n- `Accept-Language: ar` or `en` (messages, validation errors and content come back in this language)\n- `Authorization: Bearer {token}` on protected endpoints\n\n## Response format\nSuccess: `{ \"success\": true, \"message\": \"...\", \"data\": {...} }`\n\nError: `{ \"success\": false, \"message\": \"first error to show the user\", \"errors\": { \"field\": [\"...\"] } }`\n\nStatus codes: 200 OK, 401 not logged in / token expired, 403 forbidden, 404 not found, 422 validation error, 429 too many requests / OTP resend too soon, 503 SMS provider down.\n\n## Registration flow & next_step\nEvery auth response contains `next_step`. Open the screen for that value:\n- `verify_phone` -> Phone number screen (Google/Apple users: use **Phone (social users)** endpoints)\n- `personal_details` -> Tell us about yourself\n- `credentials` -> Secure your account (email + password)\n- `verify_email` -> Verify Email OTP sheet\n- `address` -> Where should we find you?\n- `profile_image` -> Add a profile photo\n- `completed` -> Home\n- `guest` -> Home in guest mode\n\nIf the user closes the app mid sign-up, call `GET /auth/me` on launch and open the `next_step` screen.\n\n## Phone numbers\nSend any Saudi format: `0512345678`, `512345678` or `+966512345678`. The API returns `phone` as `512345678` and `phone_country_code` as `+966`.\n\n## OTP\n**Demo account (local)**: demo@maham.sa / Demo1234 / phone 0500000001.\n\n4 digits, valid 5 minutes, resend after 60 seconds (values also returned by `/app/config`). **On the local/staging server the OTP is always `1234`.**",
         "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
     },
     "variable": [
@@ -752,7 +752,7 @@
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"email\": \"ahmed@example.com\",\n    \"password\": \"Secret123\",\n    \"device_name\": \"Pixel 8\",\n    \"fcm_token\": \"FCM_TOKEN_FROM_FIREBASE\",\n    \"platform\": \"android\"\n}",
+                            "raw": "{\n    \"email\": \"demo@maham.sa\",\n    \"password\": \"Demo1234\",\n    \"device_name\": \"Pixel 8\",\n    \"fcm_token\": \"FCM_TOKEN_FROM_FIREBASE\",\n    \"platform\": \"android\"\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -1242,7 +1242,7 @@
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"phone\": \"0512345678\"\n}",
+                            "raw": "{\n    \"phone\": \"0500000001\"\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -1287,7 +1287,7 @@
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"phone\": \"0512345678\",\n    \"otp\": \"1234\"\n}",
+                            "raw": "{\n    \"phone\": \"0500000001\",\n    \"otp\": \"1234\"\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -1395,7 +1395,7 @@
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"current_password\": \"Secret123\",\n    \"password\": \"NewSecret123\",\n    \"password_confirmation\": \"NewSecret123\"\n}",
+                            "raw": "{\n    \"current_password\": \"Demo1234\",\n    \"password\": \"NewSecret123\",\n    \"password_confirmation\": \"NewSecret123\"\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"

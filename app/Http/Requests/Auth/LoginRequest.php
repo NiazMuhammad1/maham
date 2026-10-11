@@ -2,13 +2,10 @@
 
 namespace App\Http\Requests\Auth;
 
-use App\Http\Requests\Concerns\HasDeviceFields;
 use Illuminate\Foundation\Http\FormRequest;
 
 class LoginRequest extends FormRequest
 {
-    use HasDeviceFields;
-
     protected function prepareForValidation(): void
     {
         $this->merge(['email' => mb_strtolower(trim((string) $this->input('email')))]);
@@ -22,7 +19,9 @@ class LoginRequest extends FormRequest
         return [
             'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
-            ...$this->deviceRules(),
+            'device_name' => ['nullable', 'string', 'max:100'],
+            'fcm_token' => ['nullable', 'string', 'max:500'],
+            'platform' => ['nullable', 'required_with:fcm_token', 'in:android,ios,web'],
         ];
     }
 }

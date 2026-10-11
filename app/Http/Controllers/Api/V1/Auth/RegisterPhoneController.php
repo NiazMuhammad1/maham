@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\V1\Auth;
 
-use App\Http\Controllers\Api\V1\Auth\Concerns\IssuesAuthTokens;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\SendPhoneOtpRequest;
 use App\Http\Requests\Auth\VerifyPhoneOtpRequest;
@@ -17,8 +16,6 @@ use Illuminate\Validation\ValidationException;
  */
 class RegisterPhoneController extends Controller
 {
-    use IssuesAuthTokens;
-
     public function __construct(private OtpService $otp) {}
 
     public function sendOtp(SendPhoneOtpRequest $request): JsonResponse

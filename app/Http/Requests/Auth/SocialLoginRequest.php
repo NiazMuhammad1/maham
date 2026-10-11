@@ -2,13 +2,10 @@
 
 namespace App\Http\Requests\Auth;
 
-use App\Http\Requests\Concerns\HasDeviceFields;
 use Illuminate\Foundation\Http\FormRequest;
 
 class SocialLoginRequest extends FormRequest
 {
-    use HasDeviceFields;
-
     /**
      * @return array<string, mixed>
      */
@@ -18,7 +15,9 @@ class SocialLoginRequest extends FormRequest
             'provider' => ['required', 'in:google,apple'],
             'id_token' => ['required', 'string'],
             'name' => ['nullable', 'string', 'max:100'],
-            ...$this->deviceRules(),
+            'device_name' => ['nullable', 'string', 'max:100'],
+            'fcm_token' => ['nullable', 'string', 'max:500'],
+            'platform' => ['nullable', 'required_with:fcm_token', 'in:android,ios,web'],
         ];
     }
 }

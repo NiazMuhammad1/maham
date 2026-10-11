@@ -2,12 +2,18 @@
 
 namespace App\Http\Requests\Auth;
 
-use App\Http\Requests\Concerns\NormalizesPhone;
+use App\Services\SaudiPhone;
 use Illuminate\Foundation\Http\FormRequest;
 
 class SendPhoneOtpRequest extends FormRequest
 {
-    use NormalizesPhone;
+    /**
+     * Accept 05XXXXXXXX, 5XXXXXXXX or +9665XXXXXXXX and turn it into 5XXXXXXXX.
+     */
+    protected function prepareForValidation(): void
+    {
+        $this->merge(['phone' => SaudiPhone::normalize((string) $this->input('phone'))]);
+    }
 
     /**
      * @return array<string, mixed>
@@ -15,7 +21,7 @@ class SendPhoneOtpRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'phone' => $this->phoneRules(),
+            'phone' => ['required', 'string', 'regex:/^5\d{8}$/'],
         ];
     }
 }

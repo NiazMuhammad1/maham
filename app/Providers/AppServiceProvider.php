@@ -2,10 +2,6 @@
 
 namespace App\Providers;
 
-use App\Services\Sms\LogSmsSender;
-use App\Services\Sms\SmsSender;
-use App\Services\Sms\TaqnyatSmsSender;
-use App\Services\Sms\UnifonicSmsSender;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -18,17 +14,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(SmsSender::class, fn () => match (config('services.sms.driver')) {
-            'taqnyat' => new TaqnyatSmsSender(
-                (string) config('services.sms.taqnyat.token'),
-                (string) config('services.sms.taqnyat.sender'),
-            ),
-            'unifonic' => new UnifonicSmsSender(
-                (string) config('services.sms.unifonic.app_sid'),
-                (string) config('services.sms.unifonic.sender'),
-            ),
-            default => new LogSmsSender,
-        });
+        //
     }
 
     /**

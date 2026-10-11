@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\V1\Auth;
 
-use App\Http\Controllers\Api\V1\Auth\Concerns\IssuesAuthTokens;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
@@ -16,8 +15,6 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
  */
 class LoginController extends Controller
 {
-    use IssuesAuthTokens;
-
     public function __invoke(LoginRequest $request): JsonResponse
     {
         $user = User::where('email', $request->validated('email'))->first();

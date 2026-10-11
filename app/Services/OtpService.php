@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Mail\OtpMail;
 use App\Models\OtpCode;
 use App\Models\User;
-use App\Services\Sms\SmsSender;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
@@ -20,7 +19,7 @@ class OtpService
 
     public const string PURPOSE_FORGOT_PASSWORD = 'forgot_password';
 
-    public function __construct(private SmsSender $sms) {}
+    public function __construct(private SmsService $sms) {}
 
     /**
      * Generate a code and deliver it by SMS (national phone 5XXXXXXXX) or email.

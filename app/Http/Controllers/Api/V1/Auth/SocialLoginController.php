@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\V1\Auth;
 
-use App\Http\Controllers\Api\V1\Auth\Concerns\IssuesAuthTokens;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\SocialLoginRequest;
 use App\Models\SocialAccount;
@@ -17,8 +16,6 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
  */
 class SocialLoginController extends Controller
 {
-    use IssuesAuthTokens;
-
     public function __invoke(SocialLoginRequest $request, SocialTokenVerifier $verifier): JsonResponse
     {
         $provider = $request->validated('provider');

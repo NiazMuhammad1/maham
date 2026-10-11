@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Throwable;
 
@@ -50,6 +51,13 @@ class SocialTokenVerifier
         if (! $response->successful()
             || ! in_array($claims['aud'] ?? null, config('services.google.client_ids'), true)
             || ! in_array($claims['iss'] ?? null, ['accounts.google.com', 'https://accounts.google.com'], true)) {
+            Log::warning('Google ID token rejected', [
+                'status' => $response->status(),
+                'error' => $claims['error_description'] ?? $claims['error'] ?? null,
+                'aud' => $claims['aud'] ?? null,
+                'allowed_aud' => config('services.google.client_ids'),
+            ]);
+
             return null;
         }
 

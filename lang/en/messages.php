@@ -42,6 +42,8 @@ return [
 
     // Misc
     'device_token_saved' => 'Device registered for notifications.',
+    'notifications_marked_read' => 'All notifications marked as read.',
+    'language_updated' => 'Language updated.',
 
     // Errors
     'unauthenticated' => 'Please log in to continue.',

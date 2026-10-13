@@ -42,6 +42,8 @@ return [
 
     // Misc
     'device_token_saved' => 'تم تسجيل الجهاز لاستقبال الإشعارات.',
+    'notifications_marked_read' => 'تم تحديد جميع الإشعارات كمقروءة.',
+    'language_updated' => 'تم تحديث اللغة.',
 
     // Errors
     'unauthenticated' => 'يرجى تسجيل الدخول للمتابعة.',

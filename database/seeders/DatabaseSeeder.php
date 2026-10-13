@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             PageSeeder::class,
             LocationSeeder::class,
             OnboardingSlideSeeder::class,
+            ServiceSeeder::class,
             DemoUserSeeder::class,
         ]);
     }

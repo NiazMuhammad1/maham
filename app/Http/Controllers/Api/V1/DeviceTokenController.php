@@ -13,7 +13,9 @@ class DeviceTokenController extends Controller
 {
     public function store(DeviceTokenRequest $request): JsonResponse
     {
-        $request->user()->deviceTokens()->updateOrCreate($request->validated());
+        $request->user()->deviceTokens()->updateOrCreate(
+            ['token' => $request->input('fcm_token'), 'platform' => $request->input('platform')],
+        );
 
         return $this->success(null, __('messages.device_token_saved'));
     }

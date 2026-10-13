@@ -28,6 +28,17 @@ class LoginTest extends TestCase
         $this->assertDatabaseHas('device_tokens', ['user_id' => $user->id, 'token' => 'fcm-123']);
     }
 
+    public function test_logged_in_user_can_register_device_token(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->postJson('/api/v1/device-tokens', ['fcm_token' => 'fcm-456', 'platform' => 'ios'])
+            ->assertOk();
+
+        $this->assertDatabaseHas('device_tokens', ['user_id' => $user->id, 'token' => 'fcm-456', 'platform' => 'ios']);
+    }
+
     public function test_wrong_password_is_rejected(): void
     {
         User::factory()->create(['email' => 'ahmed@example.com', 'password' => 'Secret123']);

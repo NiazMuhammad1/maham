@@ -14,8 +14,12 @@ use App\Http\Controllers\Api\V1\Auth\SocialLoginController;
 use App\Http\Controllers\Api\V1\Auth\UsernameAvailabilityController;
 use App\Http\Controllers\Api\V1\CityController;
 use App\Http\Controllers\Api\V1\DeviceTokenController;
+use App\Http\Controllers\Api\V1\HomeController;
+use App\Http\Controllers\Api\V1\LanguageController;
+use App\Http\Controllers\Api\V1\NotificationController;
 use App\Http\Controllers\Api\V1\OnboardingSlideController;
 use App\Http\Controllers\Api\V1\PageController;
+use App\Http\Controllers\Api\V1\ServiceController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->name('api.v1.')->group(function () {
@@ -63,5 +67,20 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
         });
     });
 
-    Route::post('device-tokens', [DeviceTokenController::class, 'store'])->middleware('auth:sanctum')->name('device-tokens.store');
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('device-tokens', [DeviceTokenController::class, 'store'])->name('device-tokens.store');
+
+        // Home, All Services, Service Details
+        Route::get('home', HomeController::class)->name('home');
+        Route::get('services', [ServiceController::class, 'index'])->name('services.index');
+        Route::get('services/{service}', [ServiceController::class, 'show'])->name('services.show');
+
+        // Notifications
+        Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
+        Route::post('notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
+        Route::post('notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+
+        // Side menu
+        Route::put('profile/language', [LanguageController::class, 'update'])->name('profile.language');
+    });
 });

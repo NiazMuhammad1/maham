@@ -45,6 +45,21 @@ return [
     'notifications_marked_read' => 'All notifications marked as read.',
     'language_updated' => 'Language updated.',
 
+    // Request service
+    'request_submitted' => 'Your request submitted successfully.',
+    'request_date_past' => 'Please pick today or a later date.',
+    'flexibility' => [
+        'fixed' => 'Fixed',
+        'flexible' => 'Flexible',
+        'very_flexible' => 'Very flexible',
+    ],
+    'request_status' => [
+        'open' => 'Open',
+        'accepted' => 'Accepted',
+        'cancelled' => 'Cancelled',
+        'expired' => 'Expired',
+    ],
+
     // Errors
     'unauthenticated' => 'Please log in to continue.',
     'forbidden' => 'You are not allowed to perform this action.',

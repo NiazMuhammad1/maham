@@ -23,7 +23,6 @@ class OnboardingSlideFactory extends Factory
             'title_ar' => 'عنوان '.fake()->numberBetween(1, 999),
             'description_en' => fake()->sentence(),
             'description_ar' => 'وصف '.fake()->numberBetween(1, 999),
-            'image' => 'onboarding/'.fake()->uuid().'.png',
             'is_active' => true,
             'sort_order' => 0,
         ];

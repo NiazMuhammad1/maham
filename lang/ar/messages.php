@@ -45,6 +45,21 @@ return [
     'notifications_marked_read' => 'تم تحديد جميع الإشعارات كمقروءة.',
     'language_updated' => 'تم تحديث اللغة.',
 
+    // Request service
+    'request_submitted' => 'تم تقديم الطلب بنجاح.',
+    'request_date_past' => 'يرجى اختيار تاريخ اليوم أو تاريخ لاحق.',
+    'flexibility' => [
+        'fixed' => 'ثابت',
+        'flexible' => 'مرن',
+        'very_flexible' => 'مرن جداً',
+    ],
+    'request_status' => [
+        'open' => 'مفتوح',
+        'accepted' => 'مقبول',
+        'cancelled' => 'ملغي',
+        'expired' => 'منتهي',
+    ],
+
     // Errors
     'unauthenticated' => 'يرجى تسجيل الدخول للمتابعة.',
     'forbidden' => 'غير مسموح لك بتنفيذ هذا الإجراء.',

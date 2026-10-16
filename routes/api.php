@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\V1\NotificationController;
 use App\Http\Controllers\Api\V1\OnboardingSlideController;
 use App\Http\Controllers\Api\V1\PageController;
 use App\Http\Controllers\Api\V1\ServiceController;
+use App\Http\Controllers\Api\V1\ServiceRequestController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->name('api.v1.')->group(function () {
@@ -74,6 +75,12 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
         Route::get('home', HomeController::class)->name('home');
         Route::get('services', [ServiceController::class, 'index'])->name('services.index');
         Route::get('services/{service}', [ServiceController::class, 'show'])->name('services.show');
+
+        // Request Service (customer) and My Requests
+        Route::get('service-requests/options', [ServiceRequestController::class, 'options'])->name('service-requests.options');
+        Route::get('service-requests', [ServiceRequestController::class, 'index'])->name('service-requests.index');
+        Route::post('service-requests', [ServiceRequestController::class, 'store'])->name('service-requests.store');
+        Route::get('service-requests/{serviceRequest}', [ServiceRequestController::class, 'show'])->name('service-requests.show');
 
         // Notifications
         Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');

@@ -5,7 +5,6 @@ namespace App\Http\Resources;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Storage;
 
 /**
  * @mixin Service
@@ -24,9 +23,9 @@ class ServiceResource extends JsonResource
             'slug' => $this->slug,
             'name' => $this->localized('name'),
             'description' => $this->localized('description'),
-            'icon_url' => $this->icon ? Storage::disk('public')->url($this->icon) : null,
+            'icon_url' => $this->getFirstMediaUrl('icon') ?: null,
             'icon_bg_color' => $this->icon_bg_color,
-            'image_url' => $this->image ? Storage::disk('public')->url($this->image) : null,
+            'image_url' => $this->getFirstMediaUrl('image') ?: null,
             'sub_services' => SubServiceResource::collection($this->whenLoaded('subServices')),
         ];
     }

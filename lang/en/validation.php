@@ -206,6 +206,12 @@ return [
         'district_id' => 'district',
         'id_token' => 'sign-in token',
         'fcm_token' => 'notification token',
+        'service_id' => 'service',
+        'address_id' => 'address',
+        'preferred_date' => 'date',
+        'preferred_time' => 'time',
+        'description' => 'work description',
+        'images.*' => 'image',
     ],
 
 ];

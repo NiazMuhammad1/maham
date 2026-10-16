@@ -15,6 +15,7 @@ class OnboardingSlideController extends Controller
         $request->validate(['audience' => ['nullable', 'in:customer,provider']]);
 
         $slides = OnboardingSlide::active()
+            ->with('media')
             ->where('audience', $request->input('audience', 'customer'))
             ->orderBy('sort_order')
             ->get();

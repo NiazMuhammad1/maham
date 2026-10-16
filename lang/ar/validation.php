@@ -1,12 +1,16 @@
 <?php
 
 return [
+    'after_or_equal' => 'يجب أن يكون :attribute تاريخاً بعد أو يساوي :date.',
+    'array' => 'يجب أن يكون :attribute قائمة.',
     'between' => [
         'numeric' => 'يجب أن تكون قيمة :attribute بين :min و :max.',
         'string' => 'يجب أن يكون طول :attribute بين :min و :max حرفاً.',
     ],
     'confirmed' => 'تأكيد :attribute غير متطابق.',
     'current_password' => 'كلمة المرور الحالية غير صحيحة.',
+    'date' => 'يجب أن يكون :attribute تاريخاً صحيحاً.',
+    'date_format' => 'يجب أن يكون :attribute بالصيغة :format.',
     'different' => 'يجب أن يكون :attribute مختلفاً عن :other.',
     'digits' => 'يجب أن يتكون :attribute من :digits أرقام.',
     'email' => 'يجب أن يكون :attribute بريداً إلكترونياً صحيحاً.',
@@ -15,6 +19,7 @@ return [
     'in' => ':attribute المحدد غير صحيح.',
     'integer' => 'يجب أن يكون :attribute رقماً صحيحاً.',
     'max' => [
+        'array' => 'يجب ألا يحتوي :attribute على أكثر من :max عناصر.',
         'file' => 'يجب ألا يتجاوز حجم :attribute :max كيلوبايت.',
         'numeric' => 'يجب ألا تتجاوز قيمة :attribute :max.',
         'string' => 'يجب ألا يتجاوز :attribute :max حرفاً.',
@@ -63,5 +68,15 @@ return [
         'platform' => 'المنصة',
         'version' => 'الإصدار',
         'audience' => 'الفئة',
+        'service_id' => 'الخدمة',
+        'address_id' => 'العنوان',
+        'preferred_date' => 'التاريخ',
+        'preferred_time' => 'الوقت',
+        'flexibility' => 'المرونة',
+        'description' => 'وصف العمل',
+        'budget' => 'الميزانية',
+        'images' => 'الصور',
+        'images.*' => 'الصورة',
+        'tab' => 'التبويب',
     ],
 ];

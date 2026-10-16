@@ -8,18 +8,25 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-#[Fillable(['audience', 'title_en', 'title_ar', 'description_en', 'description_ar', 'image', 'is_active', 'sort_order'])]
-class OnboardingSlide extends Model
+#[Fillable(['audience', 'title_en', 'title_ar', 'description_en', 'description_ar', 'is_active', 'sort_order'])]
+class OnboardingSlide extends Model implements HasMedia
 {
     /** @use HasFactory<OnboardingSlideFactory> */
-    use HasFactory, HasLocalizedAttributes;
+    use HasFactory, HasLocalizedAttributes, InteractsWithMedia;
 
     protected function casts(): array
     {
         return [
             'is_active' => 'boolean',
         ];
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('image')->singleFile();
     }
 
     /**

@@ -3,12 +3,17 @@
 namespace Database\Seeders;
 
 use App\Models\Service;
+use Database\Seeders\Concerns\AttachesSeedImages;
 use Illuminate\Database\Seeder;
 
 class ServiceSeeder extends Seeder
 {
+    use AttachesSeedImages;
+
     /**
-     * Services from the Home / All Services design. Icons live on the public disk under services/.
+     * Services from the Home / All Services design.
+     *
+     * Icons are read from database/seeders/images/services/{slug}.png (skipped when the file is missing).
      */
     public function run(): void
     {
@@ -26,14 +31,15 @@ class ServiceSeeder extends Seeder
         ];
 
         foreach ($services as $index => [$slug, $nameEn, $nameAr, $color, $isPopular]) {
-            Service::updateOrCreate(['slug' => $slug], [
+            $service = Service::updateOrCreate(['slug' => $slug], [
                 'name_en' => $nameEn,
                 'name_ar' => $nameAr,
-                'icon' => "services/{$slug}.png",
                 'icon_bg_color' => $color,
                 'is_popular' => $isPopular,
                 'sort_order' => $index + 1,
             ]);
+
+            $this->attachImage($service, "services/{$slug}.png", 'icon');
         }
 
         $this->seedAcRepairDetails();
@@ -46,8 +52,9 @@ class ServiceSeeder extends Seeder
     {
         $service = Service::firstWhere('slug', 'ac-repair');
 
+        $this->attachImage($service, 'services/ac-repair-cover.jpg', 'image');
+
         $service->update([
-            'image' => 'services/ac-repair-cover.jpg',
             'description_en' => 'Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.',
             'description_ar' => 'حافظ على برودة وراحة منزلك. قم بوصف مشكلة المكيف (مثل عدم التبريد أو التسريب أو الضوضاء)، وحمّل الصور لتشخيص أسرع، واختر الوقت المناسب لك. سيتم إرسال طلبك إلى متخصصي تكييف معتمدين في منطقتك.',
         ]);

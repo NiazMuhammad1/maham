@@ -20,7 +20,7 @@ class HomeController extends Controller
 
         $address = $user->defaultAddress()->with('city', 'district')->first();
 
-        $popularServices = Service::active()->where('is_popular', true)->orderBy('sort_order')->get();
+        $popularServices = Service::active()->with('media')->where('is_popular', true)->orderBy('sort_order')->get();
 
         return $this->success([
             'address' => $address ? new AddressResource($address) : null,

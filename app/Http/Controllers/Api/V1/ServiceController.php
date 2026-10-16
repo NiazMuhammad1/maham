@@ -14,7 +14,7 @@ class ServiceController extends Controller
 {
     public function index(): JsonResponse
     {
-        $services = Service::active()->orderBy('sort_order')->get();
+        $services = Service::active()->with('media')->orderBy('sort_order')->get();
 
         return $this->success(ServiceResource::collection($services));
     }

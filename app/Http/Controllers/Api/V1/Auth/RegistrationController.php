@@ -11,7 +11,6 @@ use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Services\OtpService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
 /**
@@ -87,9 +86,9 @@ class RegistrationController extends Controller
             ]);
         }
 
+        // "avatar" is a single-file media collection, so a new photo replaces the old one.
         if ($request->hasFile('avatar')) {
-            $user->avatar && Storage::disk('public')->delete($user->avatar);
-            $user->avatar = $request->file('avatar')->store('avatars', 'public');
+            $user->addMediaFromRequest('avatar')->toMediaCollection('avatar');
         }
 
         $user->registration_completed_at = now();

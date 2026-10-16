@@ -12,8 +12,9 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
 #[Fillable([
     'name',
@@ -23,15 +24,14 @@ use Laravel\Sanctum\HasApiTokens;
     'phone_country_code',
     'phone',
     'national_id',
-    'avatar',
     'language',
     'is_guest',
 ])]
 #[Hidden(['password', 'remember_token'])]
-class User extends Authenticatable
+class User extends Authenticatable implements HasMedia
 {
     /** @use HasFactory<UserFactory> */
-    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
+    use HasApiTokens, HasFactory, InteractsWithMedia, Notifiable, SoftDeletes;
 
     public const string STEP_VERIFY_PHONE = 'verify_phone';
 
@@ -106,9 +106,25 @@ class User extends Authenticatable
         return $this->phone ? $this->phone_country_code.$this->phone : null;
     }
 
+    /**
+     * Profile photo (one file, a new upload replaces the old one).
+     */
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('avatar')->singleFile();
+    }
+
+    /**
+     * @return HasMany<ServiceRequest, $this>
+     */
+    public function serviceRequests(): HasMany
+    {
+        return $this->hasMany(ServiceRequest::class, 'customer_id');
+    }
+
     public function avatarUrl(): ?string
     {
-        return $this->avatar ? Storage::disk('public')->url($this->avatar) : null;
+        return $this->getFirstMediaUrl('avatar') ?: null;
     }
 
     /**

@@ -67,7 +67,7 @@ class RegistrationTest extends TestCase
 
         $user = User::firstWhere('phone', '512345678');
         $this->assertNotNull($user->registration_completed_at);
-        Storage::disk('public')->assertExists($user->avatar);
+        Storage::disk('public')->assertExists($user->getFirstMedia('avatar')->getPathRelativeToRoot());
     }
 
     public function test_wrong_otp_is_rejected(): void

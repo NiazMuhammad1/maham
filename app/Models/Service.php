@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
 #[Fillable([
     'slug',
@@ -17,17 +19,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'name_ar',
     'description_en',
     'description_ar',
-    'icon',
     'icon_bg_color',
-    'image',
     'is_popular',
     'is_active',
     'sort_order',
 ])]
-class Service extends Model
+class Service extends Model implements HasMedia
 {
     /** @use HasFactory<ServiceFactory> */
-    use HasFactory, HasLocalizedAttributes, SoftDeletes;
+    use HasFactory, HasLocalizedAttributes, InteractsWithMedia, SoftDeletes;
 
     protected function casts(): array
     {
@@ -35,6 +35,15 @@ class Service extends Model
             'is_popular' => 'boolean',
             'is_active' => 'boolean',
         ];
+    }
+
+    /**
+     * "icon" = small picture on the Home / All Services grid, "image" = hero picture on Service Details.
+     */
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('icon')->singleFile();
+        $this->addMediaCollection('image')->singleFile();
     }
 
     /**

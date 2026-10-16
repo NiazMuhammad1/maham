@@ -3,12 +3,17 @@
 namespace Database\Seeders;
 
 use App\Models\OnboardingSlide;
+use Database\Seeders\Concerns\AttachesSeedImages;
 use Illuminate\Database\Seeder;
 
 class OnboardingSlideSeeder extends Seeder
 {
+    use AttachesSeedImages;
+
     /**
-     * Customer onboarding slides from the design. Images live on the public disk under onboarding/.
+     * Customer onboarding slides from the design.
+     *
+     * Images are read from database/seeders/images/onboarding/ (skipped when the file is missing).
      */
     public function run(): void
     {
@@ -23,16 +28,17 @@ class OnboardingSlideSeeder extends Seeder
         ];
 
         foreach ($slides as $index => [$titleEn, $titleAr, $image]) {
-            OnboardingSlide::updateOrCreate(
+            $slide = OnboardingSlide::updateOrCreate(
                 ['audience' => 'customer', 'sort_order' => $index + 1],
                 [
                     'title_en' => $titleEn,
                     'title_ar' => $titleAr,
                     'description_en' => $descriptionEn,
                     'description_ar' => $descriptionAr,
-                    'image' => $image,
                 ],
             );
+
+            $this->attachImage($slide, $image, 'image');
         }
     }
 }

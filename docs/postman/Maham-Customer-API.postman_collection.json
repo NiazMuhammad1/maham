@@ -1,11 +1,11 @@
 {
   "info": {
-    "_postman_id": "452be9be-1525-4ec4-b774-93f95e2d2336",
+    "_postman_id": "2ab2d607-fe3d-4008-9301-c98213d42081",
     "name": "Maham Customer API v1",
     "description": "# Maham Customer API (v1)\n\n**Base URL**: `{{base_url}}` (local: `http://maham.test/api/v1`)\n\n## Headers on every request\n- `Accept: application/json`\n- `Accept-Language: ar` or `en` (messages, validation errors and content come back in this language)\n- `Authorization: Bearer {token}` on protected endpoints\n\n## Response format\nSuccess: `{ \"success\": true, \"message\": \"...\", \"data\": {...} }`\n\nError: `{ \"success\": false, \"message\": \"first error to show the user\", \"errors\": { \"field\": [\"...\"] } }`\n\nStatus codes: 200 OK, 401 not logged in / token expired, 403 forbidden, 404 not found, 422 validation error, 429 too many requests / OTP resend too soon, 503 SMS provider down.\n\n## Registration flow & next_step\nEvery auth response contains `next_step`. Open the screen for that value:\n- `verify_phone` -> Phone number screen (Google/Apple users: use **Phone (social users)** endpoints)\n- `personal_details` -> Tell us about yourself\n- `credentials` -> Secure your account (email + password)\n- `verify_email` -> Verify Email OTP sheet\n- `address` -> Where should we find you?\n- `profile_image` -> Add a profile photo\n- `completed` -> Home\n- `guest` -> Home in guest mode\n\nIf the user closes the app mid sign-up, call `GET /auth/me` on launch and open the `next_step` screen.\n\n## Phone numbers\nSend any Saudi format: `0512345678`, `512345678` or `+966512345678`. The API returns `phone` as `512345678` and `phone_country_code` as `+966`.\n\n## OTP\n**Demo account (local)**: demo@maham.sa / Demo1234 / phone 0500000001.\n\n4 digits, valid 5 minutes, resend after 60 seconds (values also returned by `/app/config`). **On the local/staging server the OTP is always `1234`.**",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "6225479",
-    "_collection_link": "https://go.postman.co/collection/6225479-452be9be-1525-4ec4-b774-93f95e2d2336?source=collection_link"
+    "_collection_link": "https://go.postman.co/collection/6225479-2ab2d607-fe3d-4008-9301-c98213d42081?source=collection_link"
   },
   "item": [
     {
@@ -3722,7 +3722,6 @@
     },
     {
       "name": "8. Request Service",
-      "description": "# Request Service (customer)\n\nScreens: **Service Details** -> \"Request service\" -> **1. Add Address** -> **2. Select Date and Time** -> **3. What do you need done?** -> **4. Add photos (optional)** -> **Confirm Request** -> \"Submit Request\" -> **Request Submitted** popup -> **My Requests**.\n\n## How the app should do it\n1. Call `GET /service-requests/options` once to fill the **Flexibility** dropdown (labels come in the user's language).\n2. Steps 1-4 are only forms on the phone. Keep the values locally; validate on the phone and press **Next**.\n   - Step 1 prefill: use `user.default_address` from `GET /auth/me` (city, district, street, postal code) and send its id as `address_id`.\n   - Cities: `GET /cities`, districts: `GET /cities/{id}/districts`.\n3. **Confirm Request** screen is built from the local values. The pencil icons just go back to that step.\n4. **Submit Request** -> `POST /service-requests` (multipart/form-data) with everything. On 201 show the popup with `message`. On 422 show `message` and go back to the step that has the error field.\n5. **My Requests** button -> `GET /service-requests`.\n\n## Images\nAll images in the API (service icons, service cover, onboarding, avatar, request photos) are stored with Spatie Media Library and returned as full URLs, e.g. `http://maham.test/storage/15/ac-photo-1.jpg`.\n\n## Arabic\nSend `Accept-Language: ar` to get messages, validation errors, service names, `status_label`, `flexibility_label`, `preferred_date_label` and `preferred_time_label` in Arabic. The saved values (`flexibility`, `status`, `preferred_date` ...) never change with the language.",
       "item": [
         {
           "name": "Request options (dropdowns)",
@@ -3870,12 +3869,7 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "// Remember the new request id for \"Request details\"",
-                  "const res = pm.response.json();",
-                  "if (res.success && res.data && res.data.id) {",
-                  "    pm.collectionVariables.set(\"service_request_id\", res.data.id);",
-                  "    pm.environment.set(\"service_request_id\", res.data.id);",
-                  "}"
+                  "// Remember the new request id for \"Request details\"\nconst res = pm.response.json();\nif (res.success && res.data && res.data.id) {\n    pm.collectionVariables.set(\"service_request_id\", res.data.id);\n    pm.environment.set(\"service_request_id\", res.data.id);\n}"
                 ]
               }
             }
@@ -3914,7 +3908,7 @@
                 },
                 {
                   "key": "address_id",
-                  "value": "1",
+                  "value": "2",
                   "type": "text",
                   "description": "OPTIONAL. Step 1 \"Add Address\": id of the saved address the form was prefilled with (user.default_address.id). Remove it if the user typed a new address."
                 },
@@ -3987,15 +3981,19 @@
                 {
                   "key": "images[]",
                   "type": "file",
-                  "description": "OPTIONAL. Step 4 \"Add photos\": tick this row and select an image, repeat images[] once per photo, max 6 photos, jpg/png/webp, max 5 MB each.",
-                  "src": [],
+                  "description": "OPTIONAL. Step 4 \"Add photos\": repeat images[] once per photo, max 6 photos, jpg/png/webp, max 5 MB each.",
+                  "src": [
+                    ""
+                  ],
                   "disabled": true
                 },
                 {
                   "key": "images[]",
                   "type": "file",
-                  "description": "Second photo (optional). Tick this row and select an image.",
-                  "src": [],
+                  "description": "Second photo (optional).",
+                  "src": [
+                    ""
+                  ],
                   "disabled": true
                 }
               ]
@@ -4906,7 +4904,8 @@
             }
           ]
         }
-      ]
+      ],
+      "description": "# Request Service (customer)\n\nScreens: **Service Details** -> \"Request service\" -> **1. Add Address** -> **2. Select Date and Time** -> **3. What do you need done?** -> **4. Add photos (optional)** -> **Confirm Request** -> \"Submit Request\" -> **Request Submitted** popup -> **My Requests**.\n\n## How the app should do it\n1. Call `GET /service-requests/options` once to fill the **Flexibility** dropdown (labels come in the user's language).\n2. Steps 1-4 are only forms on the phone. Keep the values locally; validate on the phone and press **Next**.\n   - Step 1 prefill: use `user.default_address` from `GET /auth/me` (city, district, street, postal code) and send its id as `address_id`.\n   - Cities: `GET /cities`, districts: `GET /cities/{id}/districts`.\n3. **Confirm Request** screen is built from the local values. The pencil icons just go back to that step.\n4. **Submit Request** -> `POST /service-requests` (multipart/form-data) with everything. On 201 show the popup with `message`. On 422 show `message` and go back to the step that has the error field.\n5. **My Requests** button -> `GET /service-requests`.\n\n## Images\nAll images in the API (service icons, service cover, onboarding, avatar, request photos) are stored with Spatie Media Library and returned as full URLs, e.g. `http://maham.test/storage/15/ac-photo-1.jpg`.\n\n## Arabic\nSend `Accept-Language: ar` to get messages, validation errors, service names, `status_label`, `flexibility_label`, `preferred_date_label` and `preferred_time_label` in Arabic. The saved values (`flexibility`, `status`, `preferred_date` ...) never change with the language."
     }
   ],
   "variable": [

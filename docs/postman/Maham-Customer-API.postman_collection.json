@@ -1,11 +1,11 @@
 {
   "info": {
-    "_postman_id": "2ab2d607-fe3d-4008-9301-c98213d42081",
+    "_postman_id": "9338bd56-7cfa-4338-b644-f2d3c3b8198b",
     "name": "Maham Customer API v1",
     "description": "# Maham Customer API (v1)\n\n**Base URL**: `{{base_url}}` (local: `http://maham.test/api/v1`)\n\n## Headers on every request\n- `Accept: application/json`\n- `Accept-Language: ar` or `en` (messages, validation errors and content come back in this language)\n- `Authorization: Bearer {token}` on protected endpoints\n\n## Response format\nSuccess: `{ \"success\": true, \"message\": \"...\", \"data\": {...} }`\n\nError: `{ \"success\": false, \"message\": \"first error to show the user\", \"errors\": { \"field\": [\"...\"] } }`\n\nStatus codes: 200 OK, 401 not logged in / token expired, 403 forbidden, 404 not found, 422 validation error, 429 too many requests / OTP resend too soon, 503 SMS provider down.\n\n## Registration flow & next_step\nEvery auth response contains `next_step`. Open the screen for that value:\n- `verify_phone` -> Phone number screen (Google/Apple users: use **Phone (social users)** endpoints)\n- `personal_details` -> Tell us about yourself\n- `credentials` -> Secure your account (email + password)\n- `verify_email` -> Verify Email OTP sheet\n- `address` -> Where should we find you?\n- `profile_image` -> Add a profile photo\n- `completed` -> Home\n- `guest` -> Home in guest mode\n\nIf the user closes the app mid sign-up, call `GET /auth/me` on launch and open the `next_step` screen.\n\n## Phone numbers\nSend any Saudi format: `0512345678`, `512345678` or `+966512345678`. The API returns `phone` as `512345678` and `phone_country_code` as `+966`.\n\n## OTP\n**Demo account (local)**: demo@maham.sa / Demo1234 / phone 0500000001.\n\n4 digits, valid 5 minutes, resend after 60 seconds (values also returned by `/app/config`). **On the local/staging server the OTP is always `1234`.**",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "6225479",
-    "_collection_link": "https://go.postman.co/collection/6225479-2ab2d607-fe3d-4008-9301-c98213d42081?source=collection_link"
+    "_collection_link": "https://go.postman.co/collection/6225479-9338bd56-7cfa-4338-b644-f2d3c3b8198b?source=collection_link"
   },
   "item": [
     {
@@ -3982,18 +3982,14 @@
                   "key": "images[]",
                   "type": "file",
                   "description": "OPTIONAL. Step 4 \"Add photos\": repeat images[] once per photo, max 6 photos, jpg/png/webp, max 5 MB each.",
-                  "src": [
-                    ""
-                  ],
+                  "value": "",
                   "disabled": true
                 },
                 {
                   "key": "images[]",
                   "type": "file",
                   "description": "Second photo (optional).",
-                  "src": [
-                    ""
-                  ],
+                  "value": "",
                   "disabled": true
                 }
               ]

@@ -4906,6 +4906,1375 @@
         }
       ],
       "description": "# Request Service (customer)\n\nScreens: **Service Details** -> \"Request service\" -> **1. Add Address** -> **2. Select Date and Time** -> **3. What do you need done?** -> **4. Add photos (optional)** -> **Confirm Request** -> \"Submit Request\" -> **Request Submitted** popup -> **My Requests**.\n\n## How the app should do it\n1. Call `GET /service-requests/options` once to fill the **Flexibility** dropdown (labels come in the user's language).\n2. Steps 1-4 are only forms on the phone. Keep the values locally; validate on the phone and press **Next**.\n   - Step 1 prefill: use `user.default_address` from `GET /auth/me` (city, district, street, postal code) and send its id as `address_id`.\n   - Cities: `GET /cities`, districts: `GET /cities/{id}/districts`.\n3. **Confirm Request** screen is built from the local values. The pencil icons just go back to that step.\n4. **Submit Request** -> `POST /service-requests` (multipart/form-data) with everything. On 201 show the popup with `message`. On 422 show `message` and go back to the step that has the error field.\n5. **My Requests** button -> `GET /service-requests`.\n\n## Images\nAll images in the API (service icons, service cover, onboarding, avatar, request photos) are stored with Spatie Media Library and returned as full URLs, e.g. `http://maham.test/storage/15/ac-photo-1.jpg`.\n\n## Arabic\nSend `Accept-Language: ar` to get messages, validation errors, service names, `status_label`, `flexibility_label`, `preferred_date_label` and `preferred_time_label` in Arabic. The saved values (`flexibility`, `status`, `preferred_date` ...) never change with the language."
+    },
+    {
+      "name": "9. My Requests, Offers & Booking",
+      "item": [
+        {
+          "name": "Cancel request",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{lang}}",
+                "description": "ar or en"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"reason\": \"I fixed it myself\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/service-requests/{{service_request_id}}/cancel",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "service-requests",
+                "{{service_request_id}}",
+                "cancel"
+              ]
+            },
+            "description": "\"Cancel Request\" button (My Requests card or Request Details) -> \"Are you sure?\" popup -> **Cancel Request**.\n\n- `reason` is optional (max 255 characters).\n- Only `open` requests can be cancelled; otherwise 422 with `errors.service_request`.\n- Pending offers on the request are rejected. The request moves to the **Closed** tab with `status = cancelled`.\n- 404 if the request belongs to another user.\n\nResponse `data` = the request (same fields as **Request details**)."
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "en",
+                    "description": "ar or en"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"reason\": \"I fixed it myself\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/service-requests/{{service_request_id}}/cancel",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "service-requests",
+                    "{{service_request_id}}",
+                    "cancel"
+                  ]
+                },
+                "description": "\"Cancel Request\" button (My Requests card or Request Details) -> \"Are you sure?\" popup -> **Cancel Request**.\n\n- `reason` is optional (max 255 characters).\n- Only `open` requests can be cancelled; otherwise 422 with `errors.service_request`.\n- Pending offers on the request are rejected. The request moves to the **Closed** tab with `status = cancelled`.\n- 404 if the request belongs to another user.\n\nResponse `data` = the request (same fields as **Request details**)."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Your request has been cancelled.\",\n    \"data\": {\n        \"id\": 16,\n        \"reference\": \"REQ-919069\",\n        \"status\": \"cancelled\",\n        \"status_label\": \"Cancelled\",\n        \"service\": {\n            \"id\": 1,\n            \"slug\": \"ac-repair\",\n            \"name\": \"AC Repair\",\n            \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n            \"icon_url\": null,\n            \"icon_bg_color\": \"#B8EBD0\",\n            \"image_url\": null\n        },\n        \"description\": \"Central AC unit not cooling - compressor makes loud noise when running.\",\n        \"budget\": 250,\n        \"currency\": \"SAR\",\n        \"preferred_date\": \"2026-10-23\",\n        \"preferred_date_label\": \"Friday 23 Oct, 2026\",\n        \"preferred_time\": \"09:00\",\n        \"preferred_time_label\": \"09:00 AM\",\n        \"flexibility\": \"flexible\",\n        \"flexibility_label\": \"Flexible\",\n        \"address\": {\n            \"address_id\": null,\n            \"city\": {\n                \"id\": 1,\n                \"name\": \"Riyadh\"\n            },\n            \"district\": {\n                \"id\": 1,\n                \"city_id\": 1,\n                \"name\": \"Al Olaya\"\n            },\n            \"street_address\": \"675 King Jamil Rd., 213 Alamal Dist.\",\n            \"postal_code\": \"23142\",\n            \"latitude\": null,\n            \"longitude\": null\n        },\n        \"images\": [],\n        \"offers_count\": 0,\n        \"created_at\": \"2026-10-19T04:00:01+00:00\"\n    }\n}"
+            },
+            {
+              "name": "Already closed (English)",
+              "originalRequest": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "en",
+                    "description": "ar or en"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/service-requests/{{service_request_id}}/cancel",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "service-requests",
+                    "{{service_request_id}}",
+                    "cancel"
+                  ]
+                },
+                "description": "\"Cancel Request\" button (My Requests card or Request Details) -> \"Are you sure?\" popup -> **Cancel Request**.\n\n- `reason` is optional (max 255 characters).\n- Only `open` requests can be cancelled; otherwise 422 with `errors.service_request`.\n- Pending offers on the request are rejected. The request moves to the **Closed** tab with `status = cancelled`.\n- 404 if the request belongs to another user.\n\nResponse `data` = the request (same fields as **Request details**)."
+              },
+              "status": "Unprocessable Content",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": false,\n    \"message\": \"Only open requests can be cancelled.\",\n    \"errors\": {\n        \"service_request\": [\n            \"Only open requests can be cancelled.\"\n        ]\n    }\n}"
+            },
+            {
+              "name": "Already closed (Arabic)",
+              "originalRequest": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "ar",
+                    "description": "ar or en"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/service-requests/{{service_request_id}}/cancel",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "service-requests",
+                    "{{service_request_id}}",
+                    "cancel"
+                  ]
+                },
+                "description": "\"Cancel Request\" button (My Requests card or Request Details) -> \"Are you sure?\" popup -> **Cancel Request**.\n\n- `reason` is optional (max 255 characters).\n- Only `open` requests can be cancelled; otherwise 422 with `errors.service_request`.\n- Pending offers on the request are rejected. The request moves to the **Closed** tab with `status = cancelled`.\n- 404 if the request belongs to another user.\n\nResponse `data` = the request (same fields as **Request details**)."
+              },
+              "status": "Unprocessable Content",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": false,\n    \"message\": \"يمكن إلغاء الطلبات المفتوحة فقط.\",\n    \"errors\": {\n        \"service_request\": [\n            \"يمكن إلغاء الطلبات المفتوحة فقط.\"\n        ]\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Offers received",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.success && res.data.offers.length) {",
+                  "    pm.collectionVariables.set(\"offer_id\", res.data.offers[0].id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{lang}}",
+                "description": "ar or en"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/service-requests/{{service_request_id}}/offers?page=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "service-requests",
+                "{{service_request_id}}",
+                "offers"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number"
+                }
+              ]
+            },
+            "description": "**Offers Received** screen (\"View Offers\" on a My Requests card).\n\n- `service_request`: the request at the top (service name, `reference`, `offers_count` -> \"3 Offers\").\n- `offers`: offer cards, newest first, 20 per page (`?page=2`). Withdrawn offers are not listed.\n  - `provider`: photo, name, `@username`, `tagline`, `rating_avg` + `reviews_count` -> \"4.9 (312 reviews)\".\n  - `description`, `price`, `date_label` + `time_label` (the provider's proposed time when `schedule_type = proposed`, otherwise the customer's time).\n  - \"View Offer\" -> **Offer details**. \"Chat\" -> coming with the Chat module.\n\nThe first offer id is saved to `{{offer_id}}`."
+          },
+          "response": [
+            {
+              "name": "Success (English)",
+              "originalRequest": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "en",
+                    "description": "ar or en"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/service-requests/{{service_request_id}}/offers?page=1",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "service-requests",
+                    "{{service_request_id}}",
+                    "offers"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1",
+                      "description": "Page number"
+                    }
+                  ]
+                },
+                "description": "**Offers Received** screen (\"View Offers\" on a My Requests card).\n\n- `service_request`: the request at the top (service name, `reference`, `offers_count` -> \"3 Offers\").\n- `offers`: offer cards, newest first, 20 per page (`?page=2`). Withdrawn offers are not listed.\n  - `provider`: photo, name, `@username`, `tagline`, `rating_avg` + `reviews_count` -> \"4.9 (312 reviews)\".\n  - `description`, `price`, `date_label` + `time_label` (the provider's proposed time when `schedule_type = proposed`, otherwise the customer's time).\n  - \"View Offer\" -> **Offer details**. \"Chat\" -> coming with the Chat module.\n\nThe first offer id is saved to `{{offer_id}}`."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": null,\n    \"data\": {\n        \"service_request\": {\n            \"id\": 13,\n            \"reference\": \"REQ-883584\",\n            \"status\": \"open\",\n            \"status_label\": \"Open\",\n            \"service\": {\n                \"id\": 1,\n                \"slug\": \"ac-repair\",\n                \"name\": \"AC Repair\",\n                \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                \"icon_url\": null,\n                \"icon_bg_color\": \"#B8EBD0\",\n                \"image_url\": null\n            },\n            \"description\": \"Central AC unit not cooling - compressor makes loud noise when running.\",\n            \"budget\": 250,\n            \"currency\": \"SAR\",\n            \"preferred_date\": \"2026-10-25\",\n            \"preferred_date_label\": \"Sunday 25 Oct, 2026\",\n            \"preferred_time\": \"09:00\",\n            \"preferred_time_label\": \"09:00 AM\",\n            \"flexibility\": \"flexible\",\n            \"flexibility_label\": \"Flexible\",\n            \"address\": {\n                \"address_id\": null,\n                \"city\": {\n                    \"id\": 1,\n                    \"name\": \"Riyadh\"\n                },\n                \"district\": {\n                    \"id\": 1,\n                    \"city_id\": 1,\n                    \"name\": \"Al Olaya\"\n                },\n                \"street_address\": \"675 King Jamil Rd., 213 Alamal Dist.\",\n                \"postal_code\": \"23142\",\n                \"latitude\": null,\n                \"longitude\": null\n            },\n            \"images\": [],\n            \"offers_count\": 2,\n            \"created_at\": \"2026-10-19T03:59:43+00:00\"\n        },\n        \"offers\": [\n            {\n                \"id\": 9,\n                \"service_request_id\": 13,\n                \"status\": \"pending\",\n                \"status_label\": \"Pending\",\n                \"provider\": {\n                    \"id\": 4,\n                    \"name\": \"Mohammed Al-Rashidi\",\n                    \"username\": \"abdul.1523\",\n                    \"avatar_url\": null,\n                    \"tagline\": \"Professional AC and Electronic Services\",\n                    \"rating_avg\": 4.5,\n                    \"reviews_count\": 8\n                },\n                \"description\": \"I will check the compressor, refill the gas if needed and clean the filters. Spare parts are not included.\",\n                \"price\": 250,\n                \"currency\": \"SAR\",\n                \"schedule_type\": \"customer_time\",\n                \"date\": \"2026-10-25\",\n                \"date_label\": \"Sunday 25 Oct, 2026\",\n                \"time\": \"09:00\",\n                \"time_label\": \"09:00 AM\",\n                \"flexibility\": \"flexible\",\n                \"flexibility_label\": \"Flexible\",\n                \"created_at\": \"2026-10-19T03:59:43+00:00\"\n            },\n            {\n                \"id\": 10,\n                \"service_request_id\": 13,\n                \"status\": \"pending\",\n                \"status_label\": \"Pending\",\n                \"provider\": {\n                    \"id\": 5,\n                    \"name\": \"Khalid Al-Otaibi\",\n                    \"username\": \"khalid.cool\",\n                    \"avatar_url\": null,\n                    \"tagline\": \"Professional AC and Electronic Services\",\n                    \"rating_avg\": 0,\n                    \"reviews_count\": 0\n                },\n                \"description\": \"Full inspection and repair of the central unit. I am free one day later in the afternoon.\",\n                \"price\": 220,\n                \"currency\": \"SAR\",\n                \"schedule_type\": \"proposed\",\n                \"date\": \"2026-10-26\",\n                \"date_label\": \"Monday 26 Oct, 2026\",\n                \"time\": \"16:00\",\n                \"time_label\": \"04:00 PM\",\n                \"flexibility\": \"flexible\",\n                \"flexibility_label\": \"Flexible\",\n                \"created_at\": \"2026-10-19T03:59:43+00:00\"\n            }\n        ],\n        \"current_page\": 1,\n        \"last_page\": 1,\n        \"total\": 2\n    }\n}"
+            },
+            {
+              "name": "Success (Arabic)",
+              "originalRequest": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "ar",
+                    "description": "ar or en"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/service-requests/{{service_request_id}}/offers?page=1",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "service-requests",
+                    "{{service_request_id}}",
+                    "offers"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1",
+                      "description": "Page number"
+                    }
+                  ]
+                },
+                "description": "**Offers Received** screen (\"View Offers\" on a My Requests card).\n\n- `service_request`: the request at the top (service name, `reference`, `offers_count` -> \"3 Offers\").\n- `offers`: offer cards, newest first, 20 per page (`?page=2`). Withdrawn offers are not listed.\n  - `provider`: photo, name, `@username`, `tagline`, `rating_avg` + `reviews_count` -> \"4.9 (312 reviews)\".\n  - `description`, `price`, `date_label` + `time_label` (the provider's proposed time when `schedule_type = proposed`, otherwise the customer's time).\n  - \"View Offer\" -> **Offer details**. \"Chat\" -> coming with the Chat module.\n\nThe first offer id is saved to `{{offer_id}}`."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": null,\n    \"data\": {\n        \"service_request\": {\n            \"id\": 13,\n            \"reference\": \"REQ-883584\",\n            \"status\": \"open\",\n            \"status_label\": \"مفتوح\",\n            \"service\": {\n                \"id\": 1,\n                \"slug\": \"ac-repair\",\n                \"name\": \"تصليح التكييف\",\n                \"description\": \"حافظ على برودة وراحة منزلك. قم بوصف مشكلة المكيف (مثل عدم التبريد أو التسريب أو الضوضاء)، وحمّل الصور لتشخيص أسرع، واختر الوقت المناسب لك. سيتم إرسال طلبك إلى متخصصي تكييف معتمدين في منطقتك.\",\n                \"icon_url\": null,\n                \"icon_bg_color\": \"#B8EBD0\",\n                \"image_url\": null\n            },\n            \"description\": \"Central AC unit not cooling - compressor makes loud noise when running.\",\n            \"budget\": 250,\n            \"currency\": \"SAR\",\n            \"preferred_date\": \"2026-10-25\",\n            \"preferred_date_label\": \"الأحد 25 أكتوبر, 2026\",\n            \"preferred_time\": \"09:00\",\n            \"preferred_time_label\": \"09:00 ص\",\n            \"flexibility\": \"flexible\",\n            \"flexibility_label\": \"مرن\",\n            \"address\": {\n                \"address_id\": null,\n                \"city\": {\n                    \"id\": 1,\n                    \"name\": \"الرياض\"\n                },\n                \"district\": {\n                    \"id\": 1,\n                    \"city_id\": 1,\n                    \"name\": \"العليا\"\n                },\n                \"street_address\": \"675 King Jamil Rd., 213 Alamal Dist.\",\n                \"postal_code\": \"23142\",\n                \"latitude\": null,\n                \"longitude\": null\n            },\n            \"images\": [],\n            \"offers_count\": 2,\n            \"created_at\": \"2026-10-19T03:59:43+00:00\"\n        },\n        \"offers\": [\n            {\n                \"id\": 9,\n                \"service_request_id\": 13,\n                \"status\": \"pending\",\n                \"status_label\": \"بانتظار الرد\",\n                \"provider\": {\n                    \"id\": 4,\n                    \"name\": \"Mohammed Al-Rashidi\",\n                    \"username\": \"abdul.1523\",\n                    \"avatar_url\": null,\n                    \"tagline\": \"Professional AC and Electronic Services\",\n                    \"rating_avg\": 4.5,\n                    \"reviews_count\": 8\n                },\n                \"description\": \"I will check the compressor, refill the gas if needed and clean the filters. Spare parts are not included.\",\n                \"price\": 250,\n                \"currency\": \"SAR\",\n                \"schedule_type\": \"customer_time\",\n                \"date\": \"2026-10-25\",\n                \"date_label\": \"الأحد 25 أكتوبر, 2026\",\n                \"time\": \"09:00\",\n                \"time_label\": \"09:00 ص\",\n                \"flexibility\": \"flexible\",\n                \"flexibility_label\": \"مرن\",\n                \"created_at\": \"2026-10-19T03:59:43+00:00\"\n            },\n            {\n                \"id\": 10,\n                \"service_request_id\": 13,\n                \"status\": \"pending\",\n                \"status_label\": \"بانتظار الرد\",\n                \"provider\": {\n                    \"id\": 5,\n                    \"name\": \"Khalid Al-Otaibi\",\n                    \"username\": \"khalid.cool\",\n                    \"avatar_url\": null,\n                    \"tagline\": \"Professional AC and Electronic Services\",\n                    \"rating_avg\": 0,\n                    \"reviews_count\": 0\n                },\n                \"description\": \"Full inspection and repair of the central unit. I am free one day later in the afternoon.\",\n                \"price\": 220,\n                \"currency\": \"SAR\",\n                \"schedule_type\": \"proposed\",\n                \"date\": \"2026-10-26\",\n                \"date_label\": \"الاثنين 26 أكتوبر, 2026\",\n                \"time\": \"16:00\",\n                \"time_label\": \"04:00 م\",\n                \"flexibility\": \"flexible\",\n                \"flexibility_label\": \"مرن\",\n                \"created_at\": \"2026-10-19T03:59:43+00:00\"\n            }\n        ],\n        \"current_page\": 1,\n        \"last_page\": 1,\n        \"total\": 2\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Offer details",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{lang}}",
+                "description": "ar or en"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/offers/{{offer_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "offers",
+                "{{offer_id}}"
+              ]
+            },
+            "description": "**Offer Details** screen. Also has everything for the **Accept Offer** sheets (no extra call needed):\n\n- Top part: same fields as an offer card + `provider` (\"View Profile\" -> **Provider details** with `provider.id`).\n- `can_accept`: show the **Accept Offer** button only when true.\n- `service_request`: service, work address -> **Confirm Details** sheet (Service, Service Provider, Date, Time, Service Location, Service Price = `price`).\n- `payment` -> **Payments** sheet:\n  - `methods`: \"Select Payment Method\" list (show `label`, send `value`).\n  - `amount` / `amount_halalas` / `currency`: \"Confirm and Pay SAR 250\". Moyasar SDK needs `amount_halalas`.\n  - `gateway`: `fake` on local/staging (skip the card form), `moyasar` on live.\n  - `publishable_key`, `apple_pay_merchant_id`: Moyasar SDK settings (null on local).\n\n404 if the offer is on another user's request."
+          },
+          "response": [
+            {
+              "name": "Success (English)",
+              "originalRequest": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "en",
+                    "description": "ar or en"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/offers/{{offer_id}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "offers",
+                    "{{offer_id}}"
+                  ]
+                },
+                "description": "**Offer Details** screen. Also has everything for the **Accept Offer** sheets (no extra call needed):\n\n- Top part: same fields as an offer card + `provider` (\"View Profile\" -> **Provider details** with `provider.id`).\n- `can_accept`: show the **Accept Offer** button only when true.\n- `service_request`: service, work address -> **Confirm Details** sheet (Service, Service Provider, Date, Time, Service Location, Service Price = `price`).\n- `payment` -> **Payments** sheet:\n  - `methods`: \"Select Payment Method\" list (show `label`, send `value`).\n  - `amount` / `amount_halalas` / `currency`: \"Confirm and Pay SAR 250\". Moyasar SDK needs `amount_halalas`.\n  - `gateway`: `fake` on local/staging (skip the card form), `moyasar` on live.\n  - `publishable_key`, `apple_pay_merchant_id`: Moyasar SDK settings (null on local).\n\n404 if the offer is on another user's request."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": null,\n    \"data\": {\n        \"id\": 10,\n        \"service_request_id\": 13,\n        \"status\": \"pending\",\n        \"status_label\": \"Pending\",\n        \"provider\": {\n            \"id\": 5,\n            \"name\": \"Khalid Al-Otaibi\",\n            \"username\": \"khalid.cool\",\n            \"avatar_url\": null,\n            \"tagline\": \"Professional AC and Electronic Services\",\n            \"rating_avg\": 0,\n            \"reviews_count\": 0\n        },\n        \"description\": \"Full inspection and repair of the central unit. I am free one day later in the afternoon.\",\n        \"price\": 220,\n        \"currency\": \"SAR\",\n        \"schedule_type\": \"proposed\",\n        \"date\": \"2026-10-26\",\n        \"date_label\": \"Monday 26 Oct, 2026\",\n        \"time\": \"16:00\",\n        \"time_label\": \"04:00 PM\",\n        \"flexibility\": \"flexible\",\n        \"flexibility_label\": \"Flexible\",\n        \"created_at\": \"2026-10-19T03:59:43+00:00\",\n        \"can_accept\": true,\n        \"service_request\": {\n            \"id\": 13,\n            \"reference\": \"REQ-883584\",\n            \"status\": \"open\",\n            \"status_label\": \"Open\",\n            \"service\": {\n                \"id\": 1,\n                \"slug\": \"ac-repair\",\n                \"name\": \"AC Repair\",\n                \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                \"icon_url\": null,\n                \"icon_bg_color\": \"#B8EBD0\",\n                \"image_url\": null\n            },\n            \"description\": \"Central AC unit not cooling - compressor makes loud noise when running.\",\n            \"budget\": 250,\n            \"currency\": \"SAR\",\n            \"preferred_date\": \"2026-10-25\",\n            \"preferred_date_label\": \"Sunday 25 Oct, 2026\",\n            \"preferred_time\": \"09:00\",\n            \"preferred_time_label\": \"09:00 AM\",\n            \"flexibility\": \"flexible\",\n            \"flexibility_label\": \"Flexible\",\n            \"address\": {\n                \"address_id\": null,\n                \"city\": {\n                    \"id\": 1,\n                    \"name\": \"Riyadh\"\n                },\n                \"district\": {\n                    \"id\": 1,\n                    \"city_id\": 1,\n                    \"name\": \"Al Olaya\"\n                },\n                \"street_address\": \"675 King Jamil Rd., 213 Alamal Dist.\",\n                \"postal_code\": \"23142\",\n                \"latitude\": null,\n                \"longitude\": null\n            },\n            \"images\": [],\n            \"offers_count\": 2,\n            \"created_at\": \"2026-10-19T03:59:43+00:00\"\n        },\n        \"payment\": {\n            \"gateway\": \"fake\",\n            \"publishable_key\": null,\n            \"apple_pay_merchant_id\": null,\n            \"amount\": 220,\n            \"amount_halalas\": 22000,\n            \"currency\": \"SAR\",\n            \"methods\": [\n                {\n                    \"value\": \"card\",\n                    \"label\": \"Credit/Debit Card\"\n                },\n                {\n                    \"value\": \"apple_pay\",\n                    \"label\": \"Apple Pay\"\n                }\n            ]\n        }\n    }\n}"
+            },
+            {
+              "name": "Success (Arabic)",
+              "originalRequest": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "ar",
+                    "description": "ar or en"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/offers/{{offer_id}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "offers",
+                    "{{offer_id}}"
+                  ]
+                },
+                "description": "**Offer Details** screen. Also has everything for the **Accept Offer** sheets (no extra call needed):\n\n- Top part: same fields as an offer card + `provider` (\"View Profile\" -> **Provider details** with `provider.id`).\n- `can_accept`: show the **Accept Offer** button only when true.\n- `service_request`: service, work address -> **Confirm Details** sheet (Service, Service Provider, Date, Time, Service Location, Service Price = `price`).\n- `payment` -> **Payments** sheet:\n  - `methods`: \"Select Payment Method\" list (show `label`, send `value`).\n  - `amount` / `amount_halalas` / `currency`: \"Confirm and Pay SAR 250\". Moyasar SDK needs `amount_halalas`.\n  - `gateway`: `fake` on local/staging (skip the card form), `moyasar` on live.\n  - `publishable_key`, `apple_pay_merchant_id`: Moyasar SDK settings (null on local).\n\n404 if the offer is on another user's request."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": null,\n    \"data\": {\n        \"id\": 10,\n        \"service_request_id\": 13,\n        \"status\": \"pending\",\n        \"status_label\": \"بانتظار الرد\",\n        \"provider\": {\n            \"id\": 5,\n            \"name\": \"Khalid Al-Otaibi\",\n            \"username\": \"khalid.cool\",\n            \"avatar_url\": null,\n            \"tagline\": \"Professional AC and Electronic Services\",\n            \"rating_avg\": 0,\n            \"reviews_count\": 0\n        },\n        \"description\": \"Full inspection and repair of the central unit. I am free one day later in the afternoon.\",\n        \"price\": 220,\n        \"currency\": \"SAR\",\n        \"schedule_type\": \"proposed\",\n        \"date\": \"2026-10-26\",\n        \"date_label\": \"الاثنين 26 أكتوبر, 2026\",\n        \"time\": \"16:00\",\n        \"time_label\": \"04:00 م\",\n        \"flexibility\": \"flexible\",\n        \"flexibility_label\": \"مرن\",\n        \"created_at\": \"2026-10-19T03:59:43+00:00\",\n        \"can_accept\": true,\n        \"service_request\": {\n            \"id\": 13,\n            \"reference\": \"REQ-883584\",\n            \"status\": \"open\",\n            \"status_label\": \"مفتوح\",\n            \"service\": {\n                \"id\": 1,\n                \"slug\": \"ac-repair\",\n                \"name\": \"تصليح التكييف\",\n                \"description\": \"حافظ على برودة وراحة منزلك. قم بوصف مشكلة المكيف (مثل عدم التبريد أو التسريب أو الضوضاء)، وحمّل الصور لتشخيص أسرع، واختر الوقت المناسب لك. سيتم إرسال طلبك إلى متخصصي تكييف معتمدين في منطقتك.\",\n                \"icon_url\": null,\n                \"icon_bg_color\": \"#B8EBD0\",\n                \"image_url\": null\n            },\n            \"description\": \"Central AC unit not cooling - compressor makes loud noise when running.\",\n            \"budget\": 250,\n            \"currency\": \"SAR\",\n            \"preferred_date\": \"2026-10-25\",\n            \"preferred_date_label\": \"الأحد 25 أكتوبر, 2026\",\n            \"preferred_time\": \"09:00\",\n            \"preferred_time_label\": \"09:00 ص\",\n            \"flexibility\": \"flexible\",\n            \"flexibility_label\": \"مرن\",\n            \"address\": {\n                \"address_id\": null,\n                \"city\": {\n                    \"id\": 1,\n                    \"name\": \"الرياض\"\n                },\n                \"district\": {\n                    \"id\": 1,\n                    \"city_id\": 1,\n                    \"name\": \"العليا\"\n                },\n                \"street_address\": \"675 King Jamil Rd., 213 Alamal Dist.\",\n                \"postal_code\": \"23142\",\n                \"latitude\": null,\n                \"longitude\": null\n            },\n            \"images\": [],\n            \"offers_count\": 2,\n            \"created_at\": \"2026-10-19T03:59:43+00:00\"\n        },\n        \"payment\": {\n            \"gateway\": \"fake\",\n            \"publishable_key\": null,\n            \"apple_pay_merchant_id\": null,\n            \"amount\": 220,\n            \"amount_halalas\": 22000,\n            \"currency\": \"SAR\",\n            \"methods\": [\n                {\n                    \"value\": \"card\",\n                    \"label\": \"بطاقة ائتمان/خصم\"\n                },\n                {\n                    \"value\": \"apple_pay\",\n                    \"label\": \"Apple Pay\"\n                }\n            ]\n        }\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Accept offer (Confirm and Pay)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.success && res.data && res.data.id) {",
+                  "    pm.collectionVariables.set(\"booking_id\", res.data.id);",
+                  "    pm.collectionVariables.set(\"receipt_url\", res.data.receipt_url);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{lang}}",
+                "description": "ar or en"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"payment_method\": \"card\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/offers/{{offer_id}}/accept",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "offers",
+                "{{offer_id}}",
+                "accept"
+              ]
+            },
+            "description": "**Confirm and Pay** on the Payments sheet. On success open **Booking Confirmed** with the returned booking.\n\n**Body**\n- `payment_method` (required): `card` | `apple_pay`.\n- `payment_id`: the payment id returned by the Moyasar Flutter SDK after the customer paid. Required on live (`gateway = moyasar`), optional on local/staging (`gateway = fake`, payment always succeeds). Each id can be used only once.\n\n**Live flow**: Offer details -> Moyasar SDK (publishable_key, amount_halalas, SAR) -> SDK returns `id` with status `paid` -> send it here. The server checks with Moyasar that it is paid, for the same amount, in SAR.\n\n**What happens**: offer -> accepted, other offers -> rejected, request -> accepted (Closed tab, \"Offer Accepted\"), booking + payment created, \"Payment successful\" notification added (with `booking_id`).\n\n**Errors (422)**: `errors.offer` = offer no longer available (already accepted / request cancelled); `errors.payment_id` = payment not completed; `errors.payment_method` = invalid method. 403 for guests.\n\n**Response `data`** (Booking Confirmed): `reference`, `receipt_number`, `service`, `provider`, `scheduled_date_label`, `scheduled_time_label`, `address`, `service_price`, `total_amount`, `payment_method_label`, `receipt_url` (\"Download Receipt\": open in the browser). \"View Bookings\" -> Bookings tab (next module).\n\nThe booking id is saved to `{{booking_id}}` and the receipt link to `{{receipt_url}}`.\n\n**Live body example**:\n```json\n{\n    \"payment_method\": \"card\",\n    \"payment_id\": \"760878ec-d1d3-5f72-9056-191683f55872\"\n}\n```"
+          },
+          "response": [
+            {
+              "name": "Success (English)",
+              "originalRequest": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "en",
+                    "description": "ar or en"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"payment_method\": \"card\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/offers/{{offer_id}}/accept",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "offers",
+                    "{{offer_id}}",
+                    "accept"
+                  ]
+                },
+                "description": "**Confirm and Pay** on the Payments sheet. On success open **Booking Confirmed** with the returned booking.\n\n**Body**\n- `payment_method` (required): `card` | `apple_pay`.\n- `payment_id`: the payment id returned by the Moyasar Flutter SDK after the customer paid. Required on live (`gateway = moyasar`), optional on local/staging (`gateway = fake`, payment always succeeds). Each id can be used only once.\n\n**Live flow**: Offer details -> Moyasar SDK (publishable_key, amount_halalas, SAR) -> SDK returns `id` with status `paid` -> send it here. The server checks with Moyasar that it is paid, for the same amount, in SAR.\n\n**What happens**: offer -> accepted, other offers -> rejected, request -> accepted (Closed tab, \"Offer Accepted\"), booking + payment created, \"Payment successful\" notification added (with `booking_id`).\n\n**Errors (422)**: `errors.offer` = offer no longer available (already accepted / request cancelled); `errors.payment_id` = payment not completed; `errors.payment_method` = invalid method. 403 for guests.\n\n**Response `data`** (Booking Confirmed): `reference`, `receipt_number`, `service`, `provider`, `scheduled_date_label`, `scheduled_time_label`, `address`, `service_price`, `total_amount`, `payment_method_label`, `receipt_url` (\"Download Receipt\": open in the browser). \"View Bookings\" -> Bookings tab (next module).\n\nThe booking id is saved to `{{booking_id}}` and the receipt link to `{{receipt_url}}`.\n\n**Live body example**:\n```json\n{\n    \"payment_method\": \"card\",\n    \"payment_id\": \"760878ec-d1d3-5f72-9056-191683f55872\"\n}\n```"
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Booking Confirmed\",\n    \"data\": {\n        \"id\": 10,\n        \"reference\": \"BK-925666\",\n        \"receipt_number\": \"RCPT-20261019-925666\",\n        \"service_request_id\": 17,\n        \"status\": \"confirmed\",\n        \"status_label\": \"Confirmed\",\n        \"service\": {\n            \"id\": 1,\n            \"slug\": \"ac-repair\",\n            \"name\": \"AC Repair\",\n            \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n            \"icon_url\": null,\n            \"icon_bg_color\": \"#B8EBD0\",\n            \"image_url\": null\n        },\n        \"provider\": {\n            \"id\": 4,\n            \"name\": \"Mohammed Al-Rashidi\",\n            \"username\": \"abdul.1523\",\n            \"avatar_url\": null,\n            \"tagline\": \"Professional AC and Electronic Services\",\n            \"rating_avg\": 4.5,\n            \"reviews_count\": 8\n        },\n        \"scheduled_date\": \"2026-10-23\",\n        \"scheduled_date_label\": \"Friday 23 Oct, 2026\",\n        \"scheduled_time\": \"09:00\",\n        \"scheduled_time_label\": \"09:00 AM\",\n        \"address\": {\n            \"city\": {\n                \"id\": 1,\n                \"name\": \"Riyadh\"\n            },\n            \"district\": {\n                \"id\": 1,\n                \"city_id\": 1,\n                \"name\": \"Al Olaya\"\n            },\n            \"street_address\": \"675 King Jamil Rd., 213 Alamal Dist.\",\n            \"postal_code\": \"23142\",\n            \"latitude\": null,\n            \"longitude\": null\n        },\n        \"service_price\": 250,\n        \"vat_amount\": 0,\n        \"total_amount\": 250,\n        \"currency\": \"SAR\",\n        \"payment_status\": \"paid\",\n        \"payment_method\": \"card\",\n        \"payment_method_label\": \"Credit/Debit Card\",\n        \"paid_at\": \"2026-10-19T04:00:18+00:00\",\n        \"receipt_url\": \"http://maham.test/receipts/10?lang=en&signature=eec454e4b096c81f549e03bb3a7baf3e6b220075ba5edf9b71aac5b609f69dd6\",\n        \"created_at\": \"2026-10-19T04:00:18+00:00\"\n    }\n}"
+            },
+            {
+              "name": "Offer no longer available (English)",
+              "originalRequest": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "en",
+                    "description": "ar or en"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"payment_method\": \"card\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/offers/{{offer_id}}/accept",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "offers",
+                    "{{offer_id}}",
+                    "accept"
+                  ]
+                },
+                "description": "**Confirm and Pay** on the Payments sheet. On success open **Booking Confirmed** with the returned booking.\n\n**Body**\n- `payment_method` (required): `card` | `apple_pay`.\n- `payment_id`: the payment id returned by the Moyasar Flutter SDK after the customer paid. Required on live (`gateway = moyasar`), optional on local/staging (`gateway = fake`, payment always succeeds). Each id can be used only once.\n\n**Live flow**: Offer details -> Moyasar SDK (publishable_key, amount_halalas, SAR) -> SDK returns `id` with status `paid` -> send it here. The server checks with Moyasar that it is paid, for the same amount, in SAR.\n\n**What happens**: offer -> accepted, other offers -> rejected, request -> accepted (Closed tab, \"Offer Accepted\"), booking + payment created, \"Payment successful\" notification added (with `booking_id`).\n\n**Errors (422)**: `errors.offer` = offer no longer available (already accepted / request cancelled); `errors.payment_id` = payment not completed; `errors.payment_method` = invalid method. 403 for guests.\n\n**Response `data`** (Booking Confirmed): `reference`, `receipt_number`, `service`, `provider`, `scheduled_date_label`, `scheduled_time_label`, `address`, `service_price`, `total_amount`, `payment_method_label`, `receipt_url` (\"Download Receipt\": open in the browser). \"View Bookings\" -> Bookings tab (next module).\n\nThe booking id is saved to `{{booking_id}}` and the receipt link to `{{receipt_url}}`.\n\n**Live body example**:\n```json\n{\n    \"payment_method\": \"card\",\n    \"payment_id\": \"760878ec-d1d3-5f72-9056-191683f55872\"\n}\n```"
+              },
+              "status": "Unprocessable Content",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": false,\n    \"message\": \"This offer can no longer be accepted.\",\n    \"errors\": {\n        \"offer\": [\n            \"This offer can no longer be accepted.\"\n        ]\n    }\n}"
+            },
+            {
+              "name": "Offer no longer available (Arabic)",
+              "originalRequest": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "ar",
+                    "description": "ar or en"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"payment_method\": \"card\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/offers/{{offer_id}}/accept",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "offers",
+                    "{{offer_id}}",
+                    "accept"
+                  ]
+                },
+                "description": "**Confirm and Pay** on the Payments sheet. On success open **Booking Confirmed** with the returned booking.\n\n**Body**\n- `payment_method` (required): `card` | `apple_pay`.\n- `payment_id`: the payment id returned by the Moyasar Flutter SDK after the customer paid. Required on live (`gateway = moyasar`), optional on local/staging (`gateway = fake`, payment always succeeds). Each id can be used only once.\n\n**Live flow**: Offer details -> Moyasar SDK (publishable_key, amount_halalas, SAR) -> SDK returns `id` with status `paid` -> send it here. The server checks with Moyasar that it is paid, for the same amount, in SAR.\n\n**What happens**: offer -> accepted, other offers -> rejected, request -> accepted (Closed tab, \"Offer Accepted\"), booking + payment created, \"Payment successful\" notification added (with `booking_id`).\n\n**Errors (422)**: `errors.offer` = offer no longer available (already accepted / request cancelled); `errors.payment_id` = payment not completed; `errors.payment_method` = invalid method. 403 for guests.\n\n**Response `data`** (Booking Confirmed): `reference`, `receipt_number`, `service`, `provider`, `scheduled_date_label`, `scheduled_time_label`, `address`, `service_price`, `total_amount`, `payment_method_label`, `receipt_url` (\"Download Receipt\": open in the browser). \"View Bookings\" -> Bookings tab (next module).\n\nThe booking id is saved to `{{booking_id}}` and the receipt link to `{{receipt_url}}`.\n\n**Live body example**:\n```json\n{\n    \"payment_method\": \"card\",\n    \"payment_id\": \"760878ec-d1d3-5f72-9056-191683f55872\"\n}\n```"
+              },
+              "status": "Unprocessable Content",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": false,\n    \"message\": \"لم يعد بالإمكان قبول هذا العرض.\",\n    \"errors\": {\n        \"offer\": [\n            \"لم يعد بالإمكان قبول هذا العرض.\"\n        ]\n    }\n}"
+            },
+            {
+              "name": "Validation error",
+              "originalRequest": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "en",
+                    "description": "ar or en"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"payment_method\": \"cash\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/offers/{{offer_id}}/accept",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "offers",
+                    "{{offer_id}}",
+                    "accept"
+                  ]
+                },
+                "description": "**Confirm and Pay** on the Payments sheet. On success open **Booking Confirmed** with the returned booking.\n\n**Body**\n- `payment_method` (required): `card` | `apple_pay`.\n- `payment_id`: the payment id returned by the Moyasar Flutter SDK after the customer paid. Required on live (`gateway = moyasar`), optional on local/staging (`gateway = fake`, payment always succeeds). Each id can be used only once.\n\n**Live flow**: Offer details -> Moyasar SDK (publishable_key, amount_halalas, SAR) -> SDK returns `id` with status `paid` -> send it here. The server checks with Moyasar that it is paid, for the same amount, in SAR.\n\n**What happens**: offer -> accepted, other offers -> rejected, request -> accepted (Closed tab, \"Offer Accepted\"), booking + payment created, \"Payment successful\" notification added (with `booking_id`).\n\n**Errors (422)**: `errors.offer` = offer no longer available (already accepted / request cancelled); `errors.payment_id` = payment not completed; `errors.payment_method` = invalid method. 403 for guests.\n\n**Response `data`** (Booking Confirmed): `reference`, `receipt_number`, `service`, `provider`, `scheduled_date_label`, `scheduled_time_label`, `address`, `service_price`, `total_amount`, `payment_method_label`, `receipt_url` (\"Download Receipt\": open in the browser). \"View Bookings\" -> Bookings tab (next module).\n\nThe booking id is saved to `{{booking_id}}` and the receipt link to `{{receipt_url}}`.\n\n**Live body example**:\n```json\n{\n    \"payment_method\": \"card\",\n    \"payment_id\": \"760878ec-d1d3-5f72-9056-191683f55872\"\n}\n```"
+              },
+              "status": "Unprocessable Content",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": false,\n    \"message\": \"The selected payment method is invalid.\",\n    \"errors\": {\n        \"payment_method\": [\n            \"The selected payment method is invalid.\"\n        ]\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Booking details",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{lang}}",
+                "description": "ar or en"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/bookings/{{booking_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "bookings",
+                "{{booking_id}}"
+              ]
+            },
+            "description": "One booking: **Booking Confirmed** screen again, or opened from a `payment_successful` notification (`booking_id`). Same fields as **Accept offer**. 404 if the booking belongs to another user."
+          },
+          "response": [
+            {
+              "name": "Success (English)",
+              "originalRequest": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "en",
+                    "description": "ar or en"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/bookings/{{booking_id}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "bookings",
+                    "{{booking_id}}"
+                  ]
+                },
+                "description": "One booking: **Booking Confirmed** screen again, or opened from a `payment_successful` notification (`booking_id`). Same fields as **Accept offer**. 404 if the booking belongs to another user."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": null,\n    \"data\": {\n        \"id\": 9,\n        \"reference\": \"BK-487421\",\n        \"receipt_number\": \"RCPT-20261019-487421\",\n        \"service_request_id\": 14,\n        \"status\": \"confirmed\",\n        \"status_label\": \"Confirmed\",\n        \"service\": {\n            \"id\": 1,\n            \"slug\": \"ac-repair\",\n            \"name\": \"AC Repair\",\n            \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n            \"icon_url\": null,\n            \"icon_bg_color\": \"#B8EBD0\",\n            \"image_url\": null\n        },\n        \"provider\": {\n            \"id\": 4,\n            \"name\": \"Mohammed Al-Rashidi\",\n            \"username\": \"abdul.1523\",\n            \"avatar_url\": null,\n            \"tagline\": \"Professional AC and Electronic Services\",\n            \"rating_avg\": 4.5,\n            \"reviews_count\": 8\n        },\n        \"scheduled_date\": \"2026-10-21\",\n        \"scheduled_date_label\": \"Wednesday 21 Oct, 2026\",\n        \"scheduled_time\": \"09:00\",\n        \"scheduled_time_label\": \"09:00 AM\",\n        \"address\": {\n            \"city\": {\n                \"id\": 1,\n                \"name\": \"Riyadh\"\n            },\n            \"district\": {\n                \"id\": 1,\n                \"city_id\": 1,\n                \"name\": \"Al Olaya\"\n            },\n            \"street_address\": \"675 King Jamil Rd., 213 Alamal Dist.\",\n            \"postal_code\": \"23142\",\n            \"latitude\": null,\n            \"longitude\": null\n        },\n        \"service_price\": 250,\n        \"vat_amount\": 0,\n        \"total_amount\": 250,\n        \"currency\": \"SAR\",\n        \"payment_status\": \"paid\",\n        \"payment_method\": \"card\",\n        \"payment_method_label\": \"Credit/Debit Card\",\n        \"paid_at\": \"2026-10-19T03:59:43+00:00\",\n        \"receipt_url\": \"http://maham.test/receipts/9?lang=en&signature=3f5023a00b53e65f750f26e7bbbf88a057e0f95869ff99c01477fe178139a5de\",\n        \"created_at\": \"2026-10-19T03:59:43+00:00\"\n    }\n}"
+            },
+            {
+              "name": "Success (Arabic)",
+              "originalRequest": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "ar",
+                    "description": "ar or en"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/bookings/{{booking_id}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "bookings",
+                    "{{booking_id}}"
+                  ]
+                },
+                "description": "One booking: **Booking Confirmed** screen again, or opened from a `payment_successful` notification (`booking_id`). Same fields as **Accept offer**. 404 if the booking belongs to another user."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": null,\n    \"data\": {\n        \"id\": 9,\n        \"reference\": \"BK-487421\",\n        \"receipt_number\": \"RCPT-20261019-487421\",\n        \"service_request_id\": 14,\n        \"status\": \"confirmed\",\n        \"status_label\": \"مؤكد\",\n        \"service\": {\n            \"id\": 1,\n            \"slug\": \"ac-repair\",\n            \"name\": \"تصليح التكييف\",\n            \"description\": \"حافظ على برودة وراحة منزلك. قم بوصف مشكلة المكيف (مثل عدم التبريد أو التسريب أو الضوضاء)، وحمّل الصور لتشخيص أسرع، واختر الوقت المناسب لك. سيتم إرسال طلبك إلى متخصصي تكييف معتمدين في منطقتك.\",\n            \"icon_url\": null,\n            \"icon_bg_color\": \"#B8EBD0\",\n            \"image_url\": null\n        },\n        \"provider\": {\n            \"id\": 4,\n            \"name\": \"Mohammed Al-Rashidi\",\n            \"username\": \"abdul.1523\",\n            \"avatar_url\": null,\n            \"tagline\": \"Professional AC and Electronic Services\",\n            \"rating_avg\": 4.5,\n            \"reviews_count\": 8\n        },\n        \"scheduled_date\": \"2026-10-21\",\n        \"scheduled_date_label\": \"الأربعاء 21 أكتوبر, 2026\",\n        \"scheduled_time\": \"09:00\",\n        \"scheduled_time_label\": \"09:00 ص\",\n        \"address\": {\n            \"city\": {\n                \"id\": 1,\n                \"name\": \"الرياض\"\n            },\n            \"district\": {\n                \"id\": 1,\n                \"city_id\": 1,\n                \"name\": \"العليا\"\n            },\n            \"street_address\": \"675 King Jamil Rd., 213 Alamal Dist.\",\n            \"postal_code\": \"23142\",\n            \"latitude\": null,\n            \"longitude\": null\n        },\n        \"service_price\": 250,\n        \"vat_amount\": 0,\n        \"total_amount\": 250,\n        \"currency\": \"SAR\",\n        \"payment_status\": \"paid\",\n        \"payment_method\": \"card\",\n        \"payment_method_label\": \"بطاقة ائتمان/خصم\",\n        \"paid_at\": \"2026-10-19T03:59:43+00:00\",\n        \"receipt_url\": \"http://maham.test/receipts/9?lang=ar&signature=2087f4d0b204c7c3604f4f6aa1db29870e5c30628de6b0cfa4ac188b367d33f0\",\n        \"created_at\": \"2026-10-19T03:59:43+00:00\"\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Download receipt (open receipt_url)",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{receipt_url}}",
+              "host": [
+                "{{receipt_url}}"
+              ]
+            },
+            "description": "\"Download Receipt\" button. Open `receipt_url` from the booking in the browser / WebView. It is an HTML page (Arabic when the booking was loaded with `Accept-Language: ar`) with a **Print / Save as PDF** button.\n\nThe link is signed: no token needed, but changing the booking id in it returns 403."
+          },
+          "response": [
+            {
+              "name": "Success (HTML page)",
+              "originalRequest": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{receipt_url}}",
+                  "host": [
+                    "{{receipt_url}}"
+                  ]
+                },
+                "description": "\"Download Receipt\" button. Open `receipt_url` from the booking in the browser / WebView. It is an HTML page (Arabic when the booking was loaded with `Accept-Language: ar`) with a **Print / Save as PDF** button.\n\nThe link is signed: no token needed, but changing the booking id in it returns 403."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "html",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/html; charset=UTF-8"
+                }
+              ],
+              "cookie": [],
+              "body": "<!DOCTYPE html>\n<html lang=\"en\" dir=\"ltr\">\n<head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>Payment Receipt RCPT-20261019-925666</title>\n    <style>\n        body { margin: 0; padding: 16px; background: #f4f4f4; font-family: Arial, Tahoma, sans-serif; color: #222; }\n        .receipt { max-width: 480px; margin: 0 auto; background: #fff; border-radius: 12px; padding: 24px; }\n        h1 { margin: 0 0 4px; font-size: 22px; color: #1aa260; text-align: center; }\n        .number { text-align: center; color: #777; font-size: 13px; margin-bottom: 20px; }\n        table { width: 100%; border-collapse: collapse; background: #fff4ec; border-radius: 8px; overflow: hidden; }\n        td { padding: 10px 12px; font-size: 14px; vertical-align: top; border-bottom: 1px solid #fde3d0; }\n        td:last-child { text-align: end; font-weight: bold; }\n        tr.total td { background: #ffc58f; font-size: 16px; }\n        .thanks { text-align: center; color: #777; font-size: 13px; margin-top: 20px; }\n        button { display: block; width: 100%; margin-top: 16px; padding: 12px; border: 0; border-radius: 8px; background: #1aa260; color: #fff; font-size: 15px; }\n        @media print { body { background: #fff; } button { display: none; } }\n    </style>\n<script id=\"browser-logger-active\">\n(function() {\n    const ENDPOINT = 'http://maham.test/_boost/browser-logs';\n    const logQueue = [];\n    let flushTimeout = null;\n    const captureTypes = [\"error\",\"warning\",\"info\",\"log\",\"debug\",\"table\"];\n\n    console.log('🔍 Browser logger active (MCP server detected). Posting to: ' + ENDPOINT);\n\n    // Store original console methods\n    const originalConsole = {\n        log: console.log,\n        debug: console.debug,\n        info: console.info,\n        error: console.error,\n        warn: console.warn,\n        table: console.table\n    };\n\n    // Walk own enumerable keys so JSON.stringify cannot auto-invoke a proxy fake toJSON (e.g. Livewire's `$wire`) and fire a real request.\n    function toSafeValue(value, seen) {\n        if (value === null || typeof value !== 'object') {\n            return value;\n        }\n        if (value instanceof Error) {\n            return { name: value.name, message: value.message, stack: value.stack };\n        }\n        // Date has no own enumerable keys, so the walk below would collapse it to {}.\n        if (value instanceof Date) {\n            return value.toISOString();\n        }\n        if (seen.has(value)) {\n            return '[Circular]';\n        }\n        seen.add(value);\n        if (Array.isArray(value)) {\n            return value.map((item) => toSafeValue(item, seen));\n        }\n        const plain = {};\n        for (const key of Object.keys(value)) {\n            if (key === 'toJSON') continue;\n            try {\n                plain[key] = toSafeValue(value[key], seen);\n            } catch (e) {\n                plain[key] = '[Unreadable]';\n            }\n        }\n        return plain;\n    }\n\n    // Helper to safely stringify values\n    function safeStringify(obj) {\n        return JSON.stringify(toSafeValue(obj, new WeakSet()));\n    }\n\n    // Normalize log type for consistency (e.g., 'warn' to 'warning')\n    function normalizeType(type) {\n        return type === 'warn' ? 'warning' : type;\n    }\n\n    // Determine if a log type should be captured based on configured levels\n    function shouldCapture(type) {\n        return captureTypes.includes(normalizeType(type));\n    }\n\n    // Batch and send logs\n    function flushLogs() {\n        if (logQueue.length === 0) return;\n\n        const batch = logQueue.splice(0, logQueue.length);\n\n        fetch(ENDPOINT, {\n            method: 'POST',\n            headers: {\n                'Content-Type': 'application/json',\n                'X-Requested-With': 'XMLHttpRequest'\n            },\n            body: JSON.stringify({ logs: batch })\n        }).catch(err => {\n            // Silently fail to avoid infinite loops\n            originalConsole.error('Failed to send logs:', err);\n        });\n    }\n\n    // Debounced flush (100ms)\n    function scheduleFlush() {\n        if (flushTimeout) clearTimeout(flushTimeout);\n        flushTimeout = setTimeout(flushLogs, 100);\n    }\n\n    // Intercept console methods\n    ['log', 'debug', 'info', 'error', 'warn', 'table'].forEach(method => {\n        console[method] = function(...args) {\n            // Call original method\n            originalConsole[method].apply(console, args);\n\n            // Capture log data\n            try {\n                if (!shouldCapture(method)) {\n                    return;\n                }\n\n                logQueue.push({\n                    type: method,\n                    timestamp: new Date().toISOString(),\n                    data: args.map(arg => {\n                        try {\n                            return typeof arg === 'object' ? JSON.parse(safeStringify(arg)) : arg;\n                        } catch (e) {\n                            return String(arg);\n                        }\n                    }),\n                    url: window.location.href,\n                    userAgent: navigator.userAgent\n                });\n\n                scheduleFlush();\n            } catch (e) {\n                // Fail silently\n            }\n        };\n    });\n\n    // Global error handlers for uncaught errors\n    const originalOnError = window.onerror;\n    window.onerror = function boostErrorHandler(errorMsg, url, lineNumber, colNumber, error) {\n        try {\n            if (shouldCapture('error')) {\n                logQueue.push({\n                    type: 'uncaught_error',\n                    timestamp: new Date().toISOString(),\n                    data: [{\n                        message: errorMsg,\n                        filename: url,\n                        lineno: lineNumber,\n                        colno: colNumber,\n                        error: error ? {\n                            name: error.name,\n                            message: error.message,\n                            stack: error.stack\n                        } : null\n                    }],\n                    url: window.location.href,\n                    userAgent: navigator.userAgent\n                });\n\n                scheduleFlush();\n            }\n\n        } catch (e) {\n            // Fail silently\n        }\n\n        // Call original handler if it exists\n        if (originalOnError && typeof originalOnError === 'function') {\n            return originalOnError(errorMsg, url, lineNumber, colNumber, error);\n        }\n\n        // Let the error continue to propagate\n        return false;\n    }\n    window.addEventListener('error', (event) => {\n        try {\n            if (!shouldCapture('error')) {\n                return false;\n            }\n\n            logQueue.push({\n                type: 'window_error',\n                timestamp: new Date().toISOString(),\n                data: [{\n                    message: event.message,\n                    filename: event.filename,\n                    lineno: event.lineno,\n                    colno: event.colno,\n                    error: event.error ? {\n                        name: event.error.name,\n                        message: event.error.message,\n                        stack: event.error.stack\n                    } : null\n                }],\n                url: window.location.href,\n                userAgent: navigator.userAgent\n            });\n\n            scheduleFlush();\n        } catch (e) {\n            // Fail silently\n        }\n\n        // Let the error continue to propagate\n        return false;\n    });\n    window.addEventListener('unhandledrejection', (event) => {\n        try {\n            if (!shouldCapture('error')) {\n                return false;\n            }\n\n            logQueue.push({\n                type: 'error',\n                timestamp: new Date().toISOString(),\n                data: [{\n                    message: 'Unhandled Promise Rejection',\n                    reason: toSafeValue(event.reason, new WeakSet())\n                }],\n                url: window.location.href,\n                userAgent: navigator.userAgent\n            });\n\n            scheduleFlush();\n        } catch (e) {\n            // Fail silently\n        }\n\n        // Let the rejection continue to propagate\n        return false;\n    });\n\n    // Flush on page unload\n    window.addEventListener('beforeunload', () => {\n        if (logQueue.length > 0) {\n            navigator.sendBeacon(ENDPOINT, JSON.stringify({ logs: logQueue }));\n        }\n    });\n})();\n</script>\n</head>\n<body>\n<div class=\"receipt\">\n    <h1>Payment Receipt</h1>\n    <div class=\"number\">Receipt No.: RCPT-20261019-925666</div>\n\n    <table>\n        <tr><td>Booking No.</td><td>BK-925666</td></tr>\n        <tr><td>Service</td><td>AC Repair</td></tr>\n        <tr><td>Service Provider</td><td>Mohammed Al-Rashidi</td></tr>\n        <tr><td>Customer</td><td>Demo Customer</td></tr>\n        <tr><td>Date</td><td>Friday 23 Oct, 2026</td></tr>\n                    <tr><td>Time</td><td>09:00 AM</td></tr>\n                <tr>\n            <td>Service Location</td>\n            <td>\n                675 King Jamil Rd., 213 Alamal Dist.<br>\n                Al Olaya - Riyadh - 23142\n            </td>\n        </tr>\n                    <tr><td>Payment Method</td><td>Credit/Debit Card</td></tr>\n            <tr><td>Paid On</td><td>19 Oct, 2026 04:00 AM</td></tr>\n                <tr><td>Service Price</td><td>SAR 250.00</td></tr>\n                <tr class=\"total\"><td>Total Paid</td><td>SAR 250.00</td></tr>\n    </table>\n\n    <div class=\"thanks\">Thank you for using Maham.</div>\n    <button type=\"button\" onclick=\"window.print()\">Print / Save as PDF</button>\n</div>\n</body>\n</html>\n"
+            }
+          ]
+        },
+        {
+          "name": "Provider details",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{lang}}",
+                "description": "ar or en"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/providers/{{provider_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "providers",
+                "{{provider_id}}"
+              ]
+            },
+            "description": "**Provider Details** (\"View Profile\" on Offer Details).\n\n- Header: `avatar_url`, `name`, `username`, `tagline`, `rating_avg`, `reviews_count`.\n- \"Skills and Experience\": `skills_experience`.\n- \"Services\": `services` (icon on a circle filled with `icon_bg_color`).\n- \"Customers Rating\": `rating_breakdown` (5 to 1 stars with counts; bar width = count / reviews_count).\n- \"Customers Reviews\": `latest_reviews` (3 newest). \"View More\" -> **Provider reviews**.\n- \"Send a Message\" -> Chat module (next).\n\n404 if the user is not an approved provider."
+          },
+          "response": [
+            {
+              "name": "Success (English)",
+              "originalRequest": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "en",
+                    "description": "ar or en"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/providers/{{provider_id}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "providers",
+                    "{{provider_id}}"
+                  ]
+                },
+                "description": "**Provider Details** (\"View Profile\" on Offer Details).\n\n- Header: `avatar_url`, `name`, `username`, `tagline`, `rating_avg`, `reviews_count`.\n- \"Skills and Experience\": `skills_experience`.\n- \"Services\": `services` (icon on a circle filled with `icon_bg_color`).\n- \"Customers Rating\": `rating_breakdown` (5 to 1 stars with counts; bar width = count / reviews_count).\n- \"Customers Reviews\": `latest_reviews` (3 newest). \"View More\" -> **Provider reviews**.\n- \"Send a Message\" -> Chat module (next).\n\n404 if the user is not an approved provider."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": null,\n    \"data\": {\n        \"id\": 4,\n        \"name\": \"Mohammed Al-Rashidi\",\n        \"username\": \"abdul.1523\",\n        \"avatar_url\": null,\n        \"tagline\": \"Professional AC and Electronic Services\",\n        \"rating_avg\": 4.5,\n        \"reviews_count\": 8,\n        \"skills_experience\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n        \"services\": [\n            {\n                \"id\": 1,\n                \"slug\": \"ac-repair\",\n                \"name\": \"AC Repair\",\n                \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                \"icon_url\": null,\n                \"icon_bg_color\": \"#B8EBD0\",\n                \"image_url\": null\n            },\n            {\n                \"id\": 5,\n                \"slug\": \"electronics\",\n                \"name\": \"Electronics\",\n                \"description\": null,\n                \"icon_url\": null,\n                \"icon_bg_color\": \"#FFB894\",\n                \"image_url\": null\n            }\n        ],\n        \"rating_breakdown\": [\n            {\n                \"stars\": 5,\n                \"count\": 5\n            },\n            {\n                \"stars\": 4,\n                \"count\": 2\n            },\n            {\n                \"stars\": 3,\n                \"count\": 1\n            },\n            {\n                \"stars\": 2,\n                \"count\": 0\n            },\n            {\n                \"stars\": 1,\n                \"count\": 0\n            }\n        ],\n        \"latest_reviews\": [\n            {\n                \"id\": 1,\n                \"rating\": 5,\n                \"comment\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                \"customer\": {\n                    \"id\": 6,\n                    \"name\": \"Mr. Raymundo Leffler\",\n                    \"avatar_url\": null\n                },\n                \"created_at\": \"2026-10-16T03:59:42+00:00\",\n                \"created_at_label\": \"16 Oct, 2026\"\n            },\n            {\n                \"id\": 2,\n                \"rating\": 5,\n                \"comment\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                \"customer\": {\n                    \"id\": 7,\n                    \"name\": \"Maximo Rosenbaum\",\n                    \"avatar_url\": null\n                },\n                \"created_at\": \"2026-10-13T03:59:42+00:00\",\n                \"created_at_label\": \"13 Oct, 2026\"\n            },\n            {\n                \"id\": 3,\n                \"rating\": 4,\n                \"comment\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                \"customer\": {\n                    \"id\": 8,\n                    \"name\": \"Evangeline Welch\",\n                    \"avatar_url\": null\n                },\n                \"created_at\": \"2026-10-10T03:59:42+00:00\",\n                \"created_at_label\": \"10 Oct, 2026\"\n            }\n        ]\n    }\n}"
+            },
+            {
+              "name": "Success (Arabic)",
+              "originalRequest": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "ar",
+                    "description": "ar or en"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/providers/{{provider_id}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "providers",
+                    "{{provider_id}}"
+                  ]
+                },
+                "description": "**Provider Details** (\"View Profile\" on Offer Details).\n\n- Header: `avatar_url`, `name`, `username`, `tagline`, `rating_avg`, `reviews_count`.\n- \"Skills and Experience\": `skills_experience`.\n- \"Services\": `services` (icon on a circle filled with `icon_bg_color`).\n- \"Customers Rating\": `rating_breakdown` (5 to 1 stars with counts; bar width = count / reviews_count).\n- \"Customers Reviews\": `latest_reviews` (3 newest). \"View More\" -> **Provider reviews**.\n- \"Send a Message\" -> Chat module (next).\n\n404 if the user is not an approved provider."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": null,\n    \"data\": {\n        \"id\": 4,\n        \"name\": \"Mohammed Al-Rashidi\",\n        \"username\": \"abdul.1523\",\n        \"avatar_url\": null,\n        \"tagline\": \"Professional AC and Electronic Services\",\n        \"rating_avg\": 4.5,\n        \"reviews_count\": 8,\n        \"skills_experience\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n        \"services\": [\n            {\n                \"id\": 1,\n                \"slug\": \"ac-repair\",\n                \"name\": \"تصليح التكييف\",\n                \"description\": \"حافظ على برودة وراحة منزلك. قم بوصف مشكلة المكيف (مثل عدم التبريد أو التسريب أو الضوضاء)، وحمّل الصور لتشخيص أسرع، واختر الوقت المناسب لك. سيتم إرسال طلبك إلى متخصصي تكييف معتمدين في منطقتك.\",\n                \"icon_url\": null,\n                \"icon_bg_color\": \"#B8EBD0\",\n                \"image_url\": null\n            },\n            {\n                \"id\": 5,\n                \"slug\": \"electronics\",\n                \"name\": \"الإلكترونيات\",\n                \"description\": null,\n                \"icon_url\": null,\n                \"icon_bg_color\": \"#FFB894\",\n                \"image_url\": null\n            }\n        ],\n        \"rating_breakdown\": [\n            {\n                \"stars\": 5,\n                \"count\": 5\n            },\n            {\n                \"stars\": 4,\n                \"count\": 2\n            },\n            {\n                \"stars\": 3,\n                \"count\": 1\n            },\n            {\n                \"stars\": 2,\n                \"count\": 0\n            },\n            {\n                \"stars\": 1,\n                \"count\": 0\n            }\n        ],\n        \"latest_reviews\": [\n            {\n                \"id\": 1,\n                \"rating\": 5,\n                \"comment\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                \"customer\": {\n                    \"id\": 6,\n                    \"name\": \"Mr. Raymundo Leffler\",\n                    \"avatar_url\": null\n                },\n                \"created_at\": \"2026-10-16T03:59:42+00:00\",\n                \"created_at_label\": \"16 أكتوبر, 2026\"\n            },\n            {\n                \"id\": 2,\n                \"rating\": 5,\n                \"comment\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                \"customer\": {\n                    \"id\": 7,\n                    \"name\": \"Maximo Rosenbaum\",\n                    \"avatar_url\": null\n                },\n                \"created_at\": \"2026-10-13T03:59:42+00:00\",\n                \"created_at_label\": \"13 أكتوبر, 2026\"\n            },\n            {\n                \"id\": 3,\n                \"rating\": 4,\n                \"comment\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                \"customer\": {\n                    \"id\": 8,\n                    \"name\": \"Evangeline Welch\",\n                    \"avatar_url\": null\n                },\n                \"created_at\": \"2026-10-10T03:59:42+00:00\",\n                \"created_at_label\": \"10 أكتوبر, 2026\"\n            }\n        ]\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Provider reviews",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{lang}}",
+                "description": "ar or en"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/providers/{{provider_id}}/reviews?page=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "providers",
+                "{{provider_id}}",
+                "reviews"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number"
+                }
+              ]
+            },
+            "description": "**Customers Reviews** sheet (\"View More\"), newest first, 20 per page. Load the next page while `current_page` < `last_page`.\n\nEach review: `customer` (name, avatar_url), `rating` (1-5 stars), `comment`, `created_at_label` (\"14 Aug, 2026\")."
+          },
+          "response": [
+            {
+              "name": "Success (English)",
+              "originalRequest": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "en",
+                    "description": "ar or en"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/providers/{{provider_id}}/reviews?page=1",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "providers",
+                    "{{provider_id}}",
+                    "reviews"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1",
+                      "description": "Page number"
+                    }
+                  ]
+                },
+                "description": "**Customers Reviews** sheet (\"View More\"), newest first, 20 per page. Load the next page while `current_page` < `last_page`.\n\nEach review: `customer` (name, avatar_url), `rating` (1-5 stars), `comment`, `created_at_label` (\"14 Aug, 2026\")."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": null,\n    \"data\": {\n        \"reviews\": [\n            {\n                \"id\": 1,\n                \"rating\": 5,\n                \"comment\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                \"customer\": {\n                    \"id\": 6,\n                    \"name\": \"Mr. Raymundo Leffler\",\n                    \"avatar_url\": null\n                },\n                \"created_at\": \"2026-10-16T03:59:42+00:00\",\n                \"created_at_label\": \"16 Oct, 2026\"\n            },\n            {\n                \"id\": 2,\n                \"rating\": 5,\n                \"comment\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                \"customer\": {\n                    \"id\": 7,\n                    \"name\": \"Maximo Rosenbaum\",\n                    \"avatar_url\": null\n                },\n                \"created_at\": \"2026-10-13T03:59:42+00:00\",\n                \"created_at_label\": \"13 Oct, 2026\"\n            },\n            {\n                \"id\": 3,\n                \"rating\": 4,\n                \"comment\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                \"customer\": {\n                    \"id\": 8,\n                    \"name\": \"Evangeline Welch\",\n                    \"avatar_url\": null\n                },\n                \"created_at\": \"2026-10-10T03:59:42+00:00\",\n                \"created_at_label\": \"10 Oct, 2026\"\n            },\n            {\n                \"id\": 4,\n                \"rating\": 5,\n                \"comment\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                \"customer\": {\n                    \"id\": 9,\n                    \"name\": \"Deon Bartoletti\",\n                    \"avatar_url\": null\n                },\n                \"created_at\": \"2026-10-07T03:59:42+00:00\",\n                \"created_at_label\": \"07 Oct, 2026\"\n            },\n            {\n                \"id\": 5,\n                \"rating\": 4,\n                \"comment\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                \"customer\": {\n                    \"id\": 10,\n                    \"name\": \"Joana Swift V\",\n                    \"avatar_url\": null\n                },\n                \"created_at\": \"2026-10-04T03:59:42+00:00\",\n                \"created_at_label\": \"04 Oct, 2026\"\n            },\n            {\n                \"id\": 6,\n                \"rating\": 5,\n                \"comment\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                \"customer\": {\n                    \"id\": 11,\n                    \"name\": \"Dr. Rossie Swaniawski\",\n                    \"avatar_url\": null\n                },\n                \"created_at\": \"2026-10-01T03:59:43+00:00\",\n                \"created_at_label\": \"01 Oct, 2026\"\n            },\n            {\n                \"id\": 7,\n                \"rating\": 3,\n                \"comment\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                \"customer\": {\n                    \"id\": 12,\n                    \"name\": \"Lucius Schinner III\",\n                    \"avatar_url\": null\n                },\n                \"created_at\": \"2026-09-28T03:59:43+00:00\",\n                \"created_at_label\": \"28 Sep, 2026\"\n            },\n            {\n                \"id\": 8,\n                \"rating\": 5,\n                \"comment\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                \"customer\": {\n                    \"id\": 13,\n                    \"name\": \"Daniela Koss\",\n                    \"avatar_url\": null\n                },\n                \"created_at\": \"2026-09-25T03:59:43+00:00\",\n                \"created_at_label\": \"25 Sep, 2026\"\n            }\n        ],\n        \"current_page\": 1,\n        \"last_page\": 1,\n        \"total\": 8\n    }\n}"
+            },
+            {
+              "name": "Success (Arabic)",
+              "originalRequest": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "ar",
+                    "description": "ar or en"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/providers/{{provider_id}}/reviews?page=1",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "providers",
+                    "{{provider_id}}",
+                    "reviews"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1",
+                      "description": "Page number"
+                    }
+                  ]
+                },
+                "description": "**Customers Reviews** sheet (\"View More\"), newest first, 20 per page. Load the next page while `current_page` < `last_page`.\n\nEach review: `customer` (name, avatar_url), `rating` (1-5 stars), `comment`, `created_at_label` (\"14 Aug, 2026\")."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": null,\n    \"data\": {\n        \"reviews\": [\n            {\n                \"id\": 1,\n                \"rating\": 5,\n                \"comment\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                \"customer\": {\n                    \"id\": 6,\n                    \"name\": \"Mr. Raymundo Leffler\",\n                    \"avatar_url\": null\n                },\n                \"created_at\": \"2026-10-16T03:59:42+00:00\",\n                \"created_at_label\": \"16 أكتوبر, 2026\"\n            },\n            {\n                \"id\": 2,\n                \"rating\": 5,\n                \"comment\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                \"customer\": {\n                    \"id\": 7,\n                    \"name\": \"Maximo Rosenbaum\",\n                    \"avatar_url\": null\n                },\n                \"created_at\": \"2026-10-13T03:59:42+00:00\",\n                \"created_at_label\": \"13 أكتوبر, 2026\"\n            },\n            {\n                \"id\": 3,\n                \"rating\": 4,\n                \"comment\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                \"customer\": {\n                    \"id\": 8,\n                    \"name\": \"Evangeline Welch\",\n                    \"avatar_url\": null\n                },\n                \"created_at\": \"2026-10-10T03:59:42+00:00\",\n                \"created_at_label\": \"10 أكتوبر, 2026\"\n            },\n            {\n                \"id\": 4,\n                \"rating\": 5,\n                \"comment\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                \"customer\": {\n                    \"id\": 9,\n                    \"name\": \"Deon Bartoletti\",\n                    \"avatar_url\": null\n                },\n                \"created_at\": \"2026-10-07T03:59:42+00:00\",\n                \"created_at_label\": \"07 أكتوبر, 2026\"\n            },\n            {\n                \"id\": 5,\n                \"rating\": 4,\n                \"comment\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                \"customer\": {\n                    \"id\": 10,\n                    \"name\": \"Joana Swift V\",\n                    \"avatar_url\": null\n                },\n                \"created_at\": \"2026-10-04T03:59:42+00:00\",\n                \"created_at_label\": \"04 أكتوبر, 2026\"\n            },\n            {\n                \"id\": 6,\n                \"rating\": 5,\n                \"comment\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                \"customer\": {\n                    \"id\": 11,\n                    \"name\": \"Dr. Rossie Swaniawski\",\n                    \"avatar_url\": null\n                },\n                \"created_at\": \"2026-10-01T03:59:43+00:00\",\n                \"created_at_label\": \"01 أكتوبر, 2026\"\n            },\n            {\n                \"id\": 7,\n                \"rating\": 3,\n                \"comment\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                \"customer\": {\n                    \"id\": 12,\n                    \"name\": \"Lucius Schinner III\",\n                    \"avatar_url\": null\n                },\n                \"created_at\": \"2026-09-28T03:59:43+00:00\",\n                \"created_at_label\": \"28 سبتمبر, 2026\"\n            },\n            {\n                \"id\": 8,\n                \"rating\": 5,\n                \"comment\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                \"customer\": {\n                    \"id\": 13,\n                    \"name\": \"Daniela Koss\",\n                    \"avatar_url\": null\n                },\n                \"created_at\": \"2026-09-25T03:59:43+00:00\",\n                \"created_at_label\": \"25 سبتمبر, 2026\"\n            }\n        ],\n        \"current_page\": 1,\n        \"last_page\": 1,\n        \"total\": 8\n    }\n}"
+            }
+          ]
+        }
+      ],
+      "description": "# My Requests, Offers & Booking (customer)\n\nScreens: **My Requests** (Open / Closed) -> **Request Details** -> **Offers Received** -> **Offer Details** -> **Accept Offer** (Confirm Details -> Payments) -> **Booking Confirmed**. Also **Provider Details** and **Customers Reviews**.\n\n## My Requests cards (use GET /service-requests from folder 8)\nBadge on each card:\n- `status = open` and `offers_count = 0` -> \"Awaiting Offers\" (buttons: View Details, Cancel Request)\n- `status = open` and `offers_count > 0` -> \"Offers (n)\" (also show **View Offers**)\n- `status = accepted` -> \"Offer Accepted\" (Closed tab)\n- `status = cancelled` -> \"Cancelled\" (Closed tab)\n\n**Request Again** (Closed tab): no new API. Open the Request Service steps pre-filled with the old request's values (service, address, description, budget, flexibility), let the user pick a new date, then call **Submit request**.\n\n## Demo data (local)\n`php artisan db:seed --class=DemoMarketplaceSeeder` adds 2 providers (Mohammed Al-Rashidi id 4 with 8 reviews, Khalid Al-Otaibi id 5) and requests for demo@maham.sa: one awaiting offers, one with 2 offers, one accepted with a booking, one cancelled.\n\n## Payments\nLocal / staging use `PAYMENT_DRIVER=fake` (every payment succeeds, `payment_id` optional). Live uses Moyasar: the app charges with the Moyasar Flutter SDK and sends the returned payment id to **Accept offer**."
     }
   ],
   "variable": [
@@ -4932,6 +6301,22 @@
     {
       "key": "service_request_id",
       "value": "1"
+    },
+    {
+      "key": "offer_id",
+      "value": "10"
+    },
+    {
+      "key": "booking_id",
+      "value": "9"
+    },
+    {
+      "key": "provider_id",
+      "value": "4"
+    },
+    {
+      "key": "receipt_url",
+      "value": ""
     }
   ]
 }

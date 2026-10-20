@@ -2,15 +2,14 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
     /**
      * Seed the application's database.
+     *
+     * Model events stay on: references like REQ-482913 / BK-482913 are created in model events.
      */
     public function run(): void
     {
@@ -21,6 +20,7 @@ class DatabaseSeeder extends Seeder
             OnboardingSlideSeeder::class,
             ServiceSeeder::class,
             DemoUserSeeder::class,
+            DemoMarketplaceSeeder::class,
         ]);
     }
 }

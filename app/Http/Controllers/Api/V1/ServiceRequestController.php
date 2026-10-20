@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreServiceRequestRequest;
 use App\Http\Resources\ServiceRequestResource;
+use App\Models\Offer;
 use App\Models\ServiceRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Customer "Request Service" flow:
@@ -94,5 +97,34 @@ class ServiceRequestController extends Controller
         $serviceRequest->load(['service.media', 'city', 'district', 'media']);
 
         return $this->success(new ServiceRequestResource($serviceRequest));
+    }
+
+    /**
+     * "Cancel Request" (My Requests card or Request Details) after the "Are you sure?" popup.
+     * Only open requests can be cancelled; their pending offers are rejected and it moves to the Closed tab.
+     */
+    public function cancel(Request $request, ServiceRequest $serviceRequest): JsonResponse
+    {
+        abort_unless($serviceRequest->customer_id === $request->user()->id, 404);
+
+        $request->validate(['reason' => ['nullable', 'string', 'max:255']]);
+
+        if (! $serviceRequest->isOpen()) {
+            throw ValidationException::withMessages(['service_request' => __('messages.request_cannot_be_cancelled')]);
+        }
+
+        DB::transaction(function () use ($request, $serviceRequest) {
+            $serviceRequest->forceFill([
+                'status' => ServiceRequest::STATUS_CANCELLED,
+                'cancelled_at' => now(),
+                'cancellation_reason' => $request->input('reason'),
+            ])->save();
+
+            $serviceRequest->offers()->where('status', Offer::STATUS_PENDING)->update(['status' => Offer::STATUS_REJECTED]);
+        });
+
+        $serviceRequest->load(['service.media', 'city', 'district', 'media']);
+
+        return $this->success(new ServiceRequestResource($serviceRequest), __('messages.request_cancelled'));
     }
 }

@@ -4,6 +4,7 @@ namespace Tests\Feature\Api;
 
 use App\Models\City;
 use App\Models\District;
+use App\Models\Offer;
 use App\Models\Service;
 use App\Models\ServiceRequest;
 use App\Models\User;
@@ -118,6 +119,36 @@ class ServiceRequestTest extends TestCase
             ->assertOk()
             ->assertJsonPath('data.max_images', 6)
             ->assertJsonPath('data.flexibilities.2.label', 'مرن جداً');
+    }
+
+    public function test_customer_can_cancel_an_open_request(): void
+    {
+        $serviceRequest = ServiceRequest::factory()->create();
+        $offer = Offer::factory()->for($serviceRequest)->create();
+
+        Sanctum::actingAs($serviceRequest->customer);
+
+        $this->postJson("/api/v1/service-requests/{$serviceRequest->id}/cancel", ['reason' => 'Fixed it myself'])
+            ->assertOk()
+            ->assertJsonPath('message', 'Your request has been cancelled.')
+            ->assertJsonPath('data.status', ServiceRequest::STATUS_CANCELLED);
+
+        $this->assertSame('Fixed it myself', $serviceRequest->fresh()->cancellation_reason);
+        $this->assertSame(Offer::STATUS_REJECTED, $offer->fresh()->status);
+    }
+
+    public function test_closed_or_someone_elses_request_cannot_be_cancelled(): void
+    {
+        $cancelled = ServiceRequest::factory()->cancelled()->create();
+        $someoneElses = ServiceRequest::factory()->create();
+
+        Sanctum::actingAs($cancelled->customer);
+
+        $this->postJson("/api/v1/service-requests/{$cancelled->id}/cancel")
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('service_request');
+
+        $this->postJson("/api/v1/service-requests/{$someoneElses->id}/cancel")->assertNotFound();
     }
 
     /**

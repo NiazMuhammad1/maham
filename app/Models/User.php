@@ -7,11 +7,13 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -120,6 +122,62 @@ class User extends Authenticatable implements HasMedia
     public function serviceRequests(): HasMany
     {
         return $this->hasMany(ServiceRequest::class, 'customer_id');
+    }
+
+    /**
+     * Business profile, only for service providers.
+     *
+     * @return HasOne<ProviderProfile, $this>
+     */
+    public function providerProfile(): HasOne
+    {
+        return $this->hasOne(ProviderProfile::class);
+    }
+
+    /**
+     * Services a provider works in ("Services" on Provider Details).
+     *
+     * @return BelongsToMany<Service, $this>
+     */
+    public function providedServices(): BelongsToMany
+    {
+        return $this->belongsToMany(Service::class, 'provider_services', 'provider_id')->withTimestamps();
+    }
+
+    /**
+     * Reviews customers left for this provider.
+     *
+     * @return HasMany<Review, $this>
+     */
+    public function receivedReviews(): HasMany
+    {
+        return $this->hasMany(Review::class, 'provider_id');
+    }
+
+    /**
+     * Bookings this user made as a customer.
+     *
+     * @return HasMany<Booking, $this>
+     */
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(Booking::class, 'customer_id');
+    }
+
+    /**
+     * Save an in-app notification. The title and body are translated when the list is read
+     * (see lang/{en,ar}/notifications.php), so only the type key and its :params are stored.
+     *
+     * @param  array<string, string>  $params
+     * @param  array<string, mixed>  $extra  e.g. ['booking_id' => 5] so the app knows which screen to open
+     */
+    public function addAppNotification(string $type, array $params, array $extra = []): void
+    {
+        $this->notifications()->create([
+            'id' => Str::uuid()->toString(),
+            'type' => $type,
+            'data' => ['params' => $params, ...$extra],
+        ]);
     }
 
     public function avatarUrl(): ?string

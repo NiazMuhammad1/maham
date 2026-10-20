@@ -60,6 +60,48 @@ return [
         'expired' => 'Expired',
     ],
 
+    // My Requests / Offers / Booking
+    'request_cancelled' => 'Your request has been cancelled.',
+    'request_cannot_be_cancelled' => 'Only open requests can be cancelled.',
+    'offer_not_available' => 'This offer can no longer be accepted.',
+    'booking_confirmed' => 'Booking Confirmed',
+    'payment_failed' => 'Payment was not completed. Please try again.',
+    'offer_status' => [
+        'pending' => 'Pending',
+        'accepted' => 'Accepted',
+        'rejected' => 'Not selected',
+        'withdrawn' => 'Withdrawn',
+    ],
+    'booking_status' => [
+        'pending_payment' => 'Pending payment',
+        'confirmed' => 'Confirmed',
+        'in_progress' => 'Work in progress',
+        'completed' => 'Completed',
+        'cancelled' => 'Cancelled',
+    ],
+    'payment_method' => [
+        'card' => 'Credit/Debit Card',
+        'apple_pay' => 'Apple Pay',
+    ],
+    'receipt' => [
+        'title' => 'Payment Receipt',
+        'receipt_number' => 'Receipt No.',
+        'booking_reference' => 'Booking No.',
+        'service' => 'Service',
+        'provider' => 'Service Provider',
+        'customer' => 'Customer',
+        'date' => 'Date',
+        'time' => 'Time',
+        'location' => 'Service Location',
+        'service_price' => 'Service Price',
+        'vat' => 'VAT',
+        'total' => 'Total Paid',
+        'payment_method' => 'Payment Method',
+        'paid_at' => 'Paid On',
+        'print' => 'Print / Save as PDF',
+        'thanks' => 'Thank you for using Maham.',
+    ],
+
     // Errors
     'unauthenticated' => 'Please log in to continue.',
     'forbidden' => 'You are not allowed to perform this action.',

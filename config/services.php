@@ -53,6 +53,20 @@ return [
         ],
     ],
 
+    /*
+    | Payment gateway used when the customer accepts an offer. Supported drivers:
+    | "fake" (every payment succeeds, for local / staging) and "moyasar" (live).
+    */
+    'payment' => [
+        'driver' => env('PAYMENT_DRIVER', 'fake'),
+
+        'moyasar' => [
+            'publishable_key' => env('MOYASAR_PUBLISHABLE_KEY'),
+            'secret_key' => env('MOYASAR_SECRET_KEY'),
+            'apple_pay_merchant_id' => env('MOYASAR_APPLE_PAY_MERCHANT_ID'),
+        ],
+    ],
+
     'google' => [
         // Comma separated OAuth client IDs (Android, iOS, Web) accepted as the ID token audience.
         'client_ids' => array_filter(explode(',', (string) env('GOOGLE_CLIENT_IDS', ''))),

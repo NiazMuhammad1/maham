@@ -12,13 +12,16 @@ use App\Http\Controllers\Api\V1\Auth\RegistrationController;
 use App\Http\Controllers\Api\V1\Auth\SessionController;
 use App\Http\Controllers\Api\V1\Auth\SocialLoginController;
 use App\Http\Controllers\Api\V1\Auth\UsernameAvailabilityController;
+use App\Http\Controllers\Api\V1\BookingController;
 use App\Http\Controllers\Api\V1\CityController;
 use App\Http\Controllers\Api\V1\DeviceTokenController;
 use App\Http\Controllers\Api\V1\HomeController;
 use App\Http\Controllers\Api\V1\LanguageController;
 use App\Http\Controllers\Api\V1\NotificationController;
+use App\Http\Controllers\Api\V1\OfferController;
 use App\Http\Controllers\Api\V1\OnboardingSlideController;
 use App\Http\Controllers\Api\V1\PageController;
+use App\Http\Controllers\Api\V1\ProviderController;
 use App\Http\Controllers\Api\V1\ServiceController;
 use App\Http\Controllers\Api\V1\ServiceRequestController;
 use Illuminate\Support\Facades\Route;
@@ -81,6 +84,19 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
         Route::get('service-requests', [ServiceRequestController::class, 'index'])->name('service-requests.index');
         Route::post('service-requests', [ServiceRequestController::class, 'store'])->name('service-requests.store');
         Route::get('service-requests/{serviceRequest}', [ServiceRequestController::class, 'show'])->name('service-requests.show');
+        Route::post('service-requests/{serviceRequest}/cancel', [ServiceRequestController::class, 'cancel'])->name('service-requests.cancel');
+
+        // Offers Received, Offer Details, Accept Offer (pay + book)
+        Route::get('service-requests/{serviceRequest}/offers', [OfferController::class, 'index'])->name('service-requests.offers');
+        Route::get('offers/{offer}', [OfferController::class, 'show'])->name('offers.show');
+        Route::post('offers/{offer}/accept', [OfferController::class, 'accept'])->middleware('throttle:10,1')->name('offers.accept');
+
+        // Booking Confirmed
+        Route::get('bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
+
+        // Provider Details and Customers Reviews
+        Route::get('providers/{provider}', [ProviderController::class, 'show'])->name('providers.show');
+        Route::get('providers/{provider}/reviews', [ProviderController::class, 'reviews'])->name('providers.reviews');
 
         // Notifications
         Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');

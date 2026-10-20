@@ -60,6 +60,48 @@ return [
         'expired' => 'منتهي',
     ],
 
+    // My Requests / Offers / Booking
+    'request_cancelled' => 'تم إلغاء طلبك.',
+    'request_cannot_be_cancelled' => 'يمكن إلغاء الطلبات المفتوحة فقط.',
+    'offer_not_available' => 'لم يعد بالإمكان قبول هذا العرض.',
+    'booking_confirmed' => 'تم تأكيد الحجز',
+    'payment_failed' => 'لم تتم عملية الدفع. يرجى المحاولة مرة أخرى.',
+    'offer_status' => [
+        'pending' => 'بانتظار الرد',
+        'accepted' => 'مقبول',
+        'rejected' => 'لم يتم اختياره',
+        'withdrawn' => 'مسحوب',
+    ],
+    'booking_status' => [
+        'pending_payment' => 'بانتظار الدفع',
+        'confirmed' => 'مؤكد',
+        'in_progress' => 'جاري العمل',
+        'completed' => 'مكتمل',
+        'cancelled' => 'ملغي',
+    ],
+    'payment_method' => [
+        'card' => 'بطاقة ائتمان/خصم',
+        'apple_pay' => 'Apple Pay',
+    ],
+    'receipt' => [
+        'title' => 'إيصال الدفع',
+        'receipt_number' => 'رقم الإيصال',
+        'booking_reference' => 'رقم الحجز',
+        'service' => 'الخدمة',
+        'provider' => 'مقدم الخدمة',
+        'customer' => 'العميل',
+        'date' => 'التاريخ',
+        'time' => 'الوقت',
+        'location' => 'مكان الخدمة',
+        'service_price' => 'سعر الخدمة',
+        'vat' => 'ضريبة القيمة المضافة',
+        'total' => 'المبلغ المدفوع',
+        'payment_method' => 'طريقة الدفع',
+        'paid_at' => 'تاريخ الدفع',
+        'print' => 'طباعة / حفظ PDF',
+        'thanks' => 'شكراً لاستخدامك مهام.',
+    ],
+
     // Errors
     'unauthenticated' => 'يرجى تسجيل الدخول للمتابعة.',
     'forbidden' => 'غير مسموح لك بتنفيذ هذا الإجراء.',

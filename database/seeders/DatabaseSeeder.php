@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             ServiceSeeder::class,
             DemoUserSeeder::class,
             DemoMarketplaceSeeder::class,
+            DemoBookingSeeder::class,
         ]);
     }
 }

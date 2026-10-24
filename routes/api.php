@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\V1\Auth\SocialLoginController;
 use App\Http\Controllers\Api\V1\Auth\UsernameAvailabilityController;
 use App\Http\Controllers\Api\V1\BookingController;
 use App\Http\Controllers\Api\V1\CityController;
+use App\Http\Controllers\Api\V1\ConversationController;
 use App\Http\Controllers\Api\V1\DeviceTokenController;
 use App\Http\Controllers\Api\V1\HomeController;
 use App\Http\Controllers\Api\V1\LanguageController;
@@ -21,6 +22,7 @@ use App\Http\Controllers\Api\V1\NotificationController;
 use App\Http\Controllers\Api\V1\OfferController;
 use App\Http\Controllers\Api\V1\OnboardingSlideController;
 use App\Http\Controllers\Api\V1\PageController;
+use App\Http\Controllers\Api\V1\Provider\BookingController as ProviderBookingController;
 use App\Http\Controllers\Api\V1\ProviderController;
 use App\Http\Controllers\Api\V1\ServiceController;
 use App\Http\Controllers\Api\V1\ServiceRequestController;
@@ -91,8 +93,22 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
         Route::get('offers/{offer}', [OfferController::class, 'show'])->name('offers.show');
         Route::post('offers/{offer}/accept', [OfferController::class, 'accept'])->middleware('throttle:10,1')->name('offers.accept');
 
-        // Booking Confirmed
+        // My Bookings, Booking Details (Booking Confirmed) and Rate Provider
+        Route::get('bookings', [BookingController::class, 'index'])->name('bookings.index');
         Route::get('bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
+        Route::post('bookings/{booking}/review', [BookingController::class, 'review'])->middleware('throttle:10,1')->name('bookings.review');
+
+        // Provider: Start Work / Complete Work (moves the booking along the timeline)
+        Route::prefix('provider')->name('provider.')->group(function () {
+            Route::post('bookings/{booking}/start', [ProviderBookingController::class, 'start'])->name('bookings.start');
+            Route::post('bookings/{booking}/complete', [ProviderBookingController::class, 'complete'])->name('bookings.complete');
+        });
+
+        // Chat
+        Route::get('conversations', [ConversationController::class, 'index'])->name('conversations.index');
+        Route::post('bookings/{booking}/conversation', [ConversationController::class, 'openFromBooking'])->name('bookings.conversation');
+        Route::get('conversations/{conversation}', [ConversationController::class, 'show'])->name('conversations.show');
+        Route::post('conversations/{conversation}/messages', [ConversationController::class, 'send'])->middleware('throttle:30,1')->name('conversations.messages.store');
 
         // Provider Details and Customers Reviews
         Route::get('providers/{provider}', [ProviderController::class, 'show'])->name('providers.show');

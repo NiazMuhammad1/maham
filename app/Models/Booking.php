@@ -37,6 +37,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
     'status',
     'payment_status',
     'confirmed_at',
+    'started_at',
+    'completed_at',
 ])]
 class Booking extends Model
 {
@@ -45,7 +47,12 @@ class Booking extends Model
 
     public const string STATUS_CONFIRMED = 'confirmed';
 
+    public const string STATUS_IN_PROGRESS = 'in_progress';
+
     public const string STATUS_COMPLETED = 'completed';
+
+    /** The 3 tabs on "My Bookings". */
+    public const array TABS = [self::STATUS_CONFIRMED, self::STATUS_IN_PROGRESS, self::STATUS_COMPLETED];
 
     protected function casts(): array
     {
@@ -160,5 +167,14 @@ class Booking extends Model
     public function review(): HasOne
     {
         return $this->hasOne(Review::class);
+    }
+
+    /**
+     * "Rate the Service Provider" is shown once the work is completed and until the customer rates it.
+     * Load `review` before calling it.
+     */
+    public function canBeReviewed(): bool
+    {
+        return $this->status === self::STATUS_COMPLETED && $this->review === null;
     }
 }

@@ -102,6 +102,36 @@ return [
         'thanks' => 'شكراً لاستخدامك مهام.',
     ],
 
+    // My Bookings / Booking Details / Rate Provider
+    'booking_timeline' => [
+        'confirmed' => [
+            'title' => 'تم تأكيد الحجز',
+            'message' => 'تم تأكيد حجزك لخدمة :service يوم :date الساعة :time.',
+        ],
+        'in_progress' => [
+            'title' => 'جاري العمل',
+            'message' => 'بدأ مقدم الخدمة :provider العمل. يمكنك استخدام المحادثة داخل التطبيق لمناقشة أي تفاصيل أثناء الخدمة.',
+        ],
+        'completed' => [
+            'title' => 'مكتمل',
+            'message' => 'تم الانتهاء من العمل! يرجى تقييم تجربتك مع :provider ومشاركة رأيك لمساعدة مجتمع مهام.',
+            'message_reviewed' => 'تم إنجاز مهمتك!',
+        ],
+    ],
+    'review_submitted' => 'تم إرسال تقييمك بنجاح.',
+    'review_not_allowed' => 'يمكنك تقييم مقدم الخدمة بعد اكتمال العمل.',
+    'review_already_submitted' => 'لقد قمت بتقييم هذا الحجز مسبقاً.',
+
+    // Provider: Start Work / Complete Work
+    'work_started' => 'بدأ العمل. تم إشعار العميل.',
+    'work_completed' => 'تم إنجاز العمل. تم إشعار العميل.',
+    'booking_cannot_be_started' => 'يمكن بدء الحجوزات المؤكدة فقط.',
+    'booking_cannot_be_completed' => 'يمكن إكمال الحجوزات الجارية فقط.',
+
+    // Chat
+    'chat_safety_warning' => 'لسلامتك، احرص على أن تكون جميع المدفوعات والمحادثات داخل تطبيق مهام. الاتفاقات خارج التطبيق لا يشملها ضمان مهام.',
+    'chat_photo' => 'صورة',
+
     // Errors
     'unauthenticated' => 'يرجى تسجيل الدخول للمتابعة.',
     'forbidden' => 'غير مسموح لك بتنفيذ هذا الإجراء.',

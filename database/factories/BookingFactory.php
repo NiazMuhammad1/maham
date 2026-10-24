@@ -40,10 +40,19 @@ class BookingFactory extends Factory
         ];
     }
 
+    public function inProgress(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => Booking::STATUS_IN_PROGRESS,
+            'started_at' => now(),
+        ]);
+    }
+
     public function completed(): static
     {
         return $this->state(fn (array $attributes) => [
             'status' => Booking::STATUS_COMPLETED,
+            'started_at' => now()->subHours(2),
             'completed_at' => now(),
         ]);
     }

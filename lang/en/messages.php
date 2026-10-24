@@ -102,6 +102,36 @@ return [
         'thanks' => 'Thank you for using Maham.',
     ],
 
+    // My Bookings / Booking Details / Rate Provider
+    'booking_timeline' => [
+        'confirmed' => [
+            'title' => 'Booking Confirmed',
+            'message' => 'Your booking for :service is confirmed for :date at :time.',
+        ],
+        'in_progress' => [
+            'title' => 'Work InProgress',
+            'message' => 'Your provider :provider has started the work. Feel free to use the in-app chat if you need to discuss any details during the service.',
+        ],
+        'completed' => [
+            'title' => 'Completed',
+            'message' => 'Your work is finished! Please rate your experience with :provider and share your feedback to help the Maham community.',
+            'message_reviewed' => 'Your task is finished!',
+        ],
+    ],
+    'review_submitted' => 'Your review submitted successfully.',
+    'review_not_allowed' => 'You can rate the provider once the work is completed.',
+    'review_already_submitted' => 'You have already rated this booking.',
+
+    // Provider: Start Work / Complete Work
+    'work_started' => 'Work started. The customer has been notified.',
+    'work_completed' => 'Work completed. The customer has been notified.',
+    'booking_cannot_be_started' => 'Only confirmed bookings can be started.',
+    'booking_cannot_be_completed' => 'Only bookings in progress can be completed.',
+
+    // Chat
+    'chat_safety_warning' => 'For your safety, keep all payments and conversations inside Maham. Deals made outside the app are not covered by the Maham guarantee.',
+    'chat_photo' => 'Photo',
+
     // Errors
     'unauthenticated' => 'Please log in to continue.',
     'forbidden' => 'You are not allowed to perform this action.',

@@ -9,9 +9,10 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\URL;
 
 /**
- * "Booking Confirmed" screen: service, provider, date, time, location and price, plus the receipt link.
+ * "Booking Confirmed", "My Bookings" cards and "Booking Details": service, provider, date, time,
+ * location and price, the receipt link, the status timeline and the customer's review.
  *
- * Load `service.media`, `provider.providerProfile`, `city`, `district` and `paidPayment` before using it.
+ * Load `service.media`, `provider.providerProfile`, `city`, `district`, `paidPayment` and `review` before using it.
  *
  * @mixin Booking
  */
@@ -68,7 +69,59 @@ class BookingResource extends JsonResource
             // "Download Receipt": open this link in the browser (it works without the login token)
             'receipt_url' => URL::signedRoute('bookings.receipt', ['booking' => $this->id, 'lang' => $locale]),
 
+            // Booking Details: Booking Confirmed -> Work InProgress -> Completed
+            'timeline' => $this->timeline($locale, $time),
+
+            // "Rate the Service Provider" button, and the stars + comment after rating
+            'can_review' => $this->canBeReviewed(),
+            'review' => $this->review ? (new ReviewResource($this->review))->resolve() : null,
+
             'created_at' => $this->created_at?->toIso8601String(),
         ];
+    }
+
+    /**
+     * The 3 steps on Booking Details. `is_done` = the step happened (green icon),
+     * `is_current` = the latest step that happened. `message` is the text in the white box under the step.
+     *
+     * @return list<array{key: string, title: string, is_done: bool, is_current: bool, date: ?string, date_label: ?string, message: ?string}>
+     */
+    private function timeline(string $locale, ?Carbon $time): array
+    {
+        $provider = $this->provider?->name;
+
+        $steps = [
+            Booking::STATUS_CONFIRMED => [
+                'date' => $this->confirmed_at,
+                'message' => __('messages.booking_timeline.confirmed.message', [
+                    'service' => $this->service?->localized('name'),
+                    'date' => $this->scheduled_date->locale($locale)->translatedFormat('l, d M Y'),
+                    'time' => $time?->locale($locale)->translatedFormat('h:i A'),
+                ]),
+            ],
+            Booking::STATUS_IN_PROGRESS => [
+                'date' => $this->started_at,
+                'message' => __('messages.booking_timeline.in_progress.message', ['provider' => $provider]),
+            ],
+            Booking::STATUS_COMPLETED => [
+                'date' => $this->completed_at,
+                'message' => $this->review
+                    ? __('messages.booking_timeline.completed.message_reviewed')
+                    : __('messages.booking_timeline.completed.message', ['provider' => $provider]),
+            ],
+        ];
+
+        $currentStep = collect($steps)->filter(fn (array $step) => $step['date'] !== null)->keys()->last();
+
+        return collect($steps)->map(fn (array $step, string $key) => [
+            'key' => $key,
+            'title' => __("messages.booking_timeline.{$key}.title"),
+            'is_done' => $step['date'] !== null,
+            'is_current' => $key === $currentStep,
+            'date' => $step['date']?->toIso8601String(),
+            'date_label' => $step['date']?->locale($locale)->translatedFormat('l d M, Y'),
+            // No text under steps that did not happen yet
+            'message' => $step['date'] !== null ? $step['message'] : null,
+        ])->values()->all();
     }
 }

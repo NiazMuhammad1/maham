@@ -19,6 +19,10 @@ class OtpService
 
     public const string PURPOSE_FORGOT_PASSWORD = 'forgot_password';
 
+    public const string PURPOSE_UPDATE_PASSWORD = 'update_password';
+
+    public const string PURPOSE_UPDATE_PHONE = 'update_phone';
+
     public function __construct(private SmsService $sms) {}
 
     /**

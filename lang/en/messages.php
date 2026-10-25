@@ -45,6 +45,13 @@ return [
     'notifications_marked_read' => 'All notifications marked as read.',
     'language_updated' => 'Language updated.',
 
+    // Account Settings
+    'changes_saved' => 'Changes saved.',
+    'phone_updated' => 'Phone number verified.',
+    'phone_missing' => 'Please add a verified phone number to your account first.',
+    'phone_same_as_current' => 'This is already your current phone number.',
+    'phone_taken' => 'This phone number is used by another account.',
+
     // Request service
     'request_submitted' => 'Your request submitted successfully.',
     'request_date_past' => 'Please pick today or a later date.',

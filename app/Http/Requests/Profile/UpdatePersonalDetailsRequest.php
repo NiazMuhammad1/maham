@@ -1,0 +1,39 @@
+<?php
+
+namespace App\Http\Requests\Profile;
+
+use App\Rules\SaudiNationalId;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
+/**
+ * Account Settings > Personal Details. Email and phone are read-only here
+ * (the phone has its own "Update Phone Number" OTP flow).
+ */
+class UpdatePersonalDetailsRequest extends FormRequest
+{
+    public function authorize(): bool
+    {
+        return ! $this->user()->is_guest;
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'username' => mb_strtolower(trim((string) $this->input('username'))),
+            'national_id' => preg_replace('/\D/', '', (string) $this->input('national_id')),
+        ]);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function rules(): array
+    {
+        return [
+            'name' => ['required', 'string', 'min:3', 'max:100'],
+            'username' => ['required', 'string', 'min:3', 'max:30', 'regex:/^[a-z0-9_.]+$/', Rule::unique('users')->ignore($this->user())],
+            'national_id' => ['required', 'string', new SaudiNationalId, Rule::unique('users')->ignore($this->user())],
+        ];
+    }
+}

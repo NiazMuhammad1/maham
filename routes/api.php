@@ -22,6 +22,9 @@ use App\Http\Controllers\Api\V1\NotificationController;
 use App\Http\Controllers\Api\V1\OfferController;
 use App\Http\Controllers\Api\V1\OnboardingSlideController;
 use App\Http\Controllers\Api\V1\PageController;
+use App\Http\Controllers\Api\V1\Profile\PasswordController as ProfilePasswordController;
+use App\Http\Controllers\Api\V1\Profile\PhoneController as ProfilePhoneController;
+use App\Http\Controllers\Api\V1\Profile\ProfileController;
 use App\Http\Controllers\Api\V1\Provider\BookingController as ProviderBookingController;
 use App\Http\Controllers\Api\V1\ProviderController;
 use App\Http\Controllers\Api\V1\ServiceController;
@@ -121,5 +124,19 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
 
         // Side menu
         Route::put('profile/language', [LanguageController::class, 'update'])->name('profile.language');
+
+        // Account Settings: Personal Details, Home Address, Notification Settings
+        Route::get('profile', [ProfileController::class, 'show'])->name('profile.show');
+        Route::put('profile/personal-details', [ProfileController::class, 'updatePersonalDetails'])->name('profile.personal-details');
+        Route::put('profile/address', [ProfileController::class, 'updateAddress'])->name('profile.address');
+        Route::put('profile/notifications', [ProfileController::class, 'updateNotifications'])->name('profile.notifications');
+
+        // Account Settings: Update Password and Update Phone Number (both confirmed by OTP)
+        Route::middleware('throttle:otp')->group(function () {
+            Route::post('profile/password/send-otp', [ProfilePasswordController::class, 'sendOtp'])->name('profile.password.send-otp');
+            Route::post('profile/password', [ProfilePasswordController::class, 'update'])->name('profile.password.update');
+            Route::post('profile/phone/send-otp', [ProfilePhoneController::class, 'sendOtp'])->name('profile.phone.send-otp');
+            Route::post('profile/phone/verify-otp', [ProfilePhoneController::class, 'verifyOtp'])->name('profile.phone.verify-otp');
+        });
     });
 });

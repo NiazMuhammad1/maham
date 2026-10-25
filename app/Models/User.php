@@ -28,6 +28,8 @@ use Spatie\MediaLibrary\InteractsWithMedia;
     'national_id',
     'language',
     'is_guest',
+    'push_notifications',
+    'email_notifications',
 ])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements HasMedia

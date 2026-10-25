@@ -45,6 +45,13 @@ return [
     'notifications_marked_read' => 'تم تحديد جميع الإشعارات كمقروءة.',
     'language_updated' => 'تم تحديث اللغة.',
 
+    // Account Settings
+    'changes_saved' => 'تم حفظ التغييرات.',
+    'phone_updated' => 'تم التحقق من رقم الجوال.',
+    'phone_missing' => 'يرجى إضافة رقم جوال موثق إلى حسابك أولاً.',
+    'phone_same_as_current' => 'هذا هو رقم جوالك الحالي.',
+    'phone_taken' => 'رقم الجوال مستخدم في حساب آخر.',
+
     // Request service
     'request_submitted' => 'تم تقديم الطلب بنجاح.',
     'request_date_past' => 'يرجى اختيار تاريخ اليوم أو تاريخ لاحق.',

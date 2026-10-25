@@ -30,6 +30,8 @@ class UserResource extends JsonResource
             'national_id' => $this->national_id,
             'avatar_url' => $this->avatarUrl(),
             'language' => $this->language,
+            'push_notifications' => $this->push_notifications,
+            'email_notifications' => $this->email_notifications,
             'is_guest' => $this->is_guest,
             'is_provider' => $this->is_provider,
             'active_mode' => $this->active_mode,

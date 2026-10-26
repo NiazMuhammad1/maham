@@ -25,6 +25,7 @@ use App\Http\Controllers\Api\V1\PageController;
 use App\Http\Controllers\Api\V1\Profile\PasswordController as ProfilePasswordController;
 use App\Http\Controllers\Api\V1\Profile\PhoneController as ProfilePhoneController;
 use App\Http\Controllers\Api\V1\Profile\ProfileController;
+use App\Http\Controllers\Api\V1\Provider\ApplicationController as ProviderApplicationController;
 use App\Http\Controllers\Api\V1\Provider\BookingController as ProviderBookingController;
 use App\Http\Controllers\Api\V1\ProviderController;
 use App\Http\Controllers\Api\V1\ServiceController;
@@ -101,10 +102,17 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
         Route::get('bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
         Route::post('bookings/{booking}/review', [BookingController::class, 'review'])->middleware('throttle:10,1')->name('bookings.review');
 
-        // Provider: Start Work / Complete Work (moves the booking along the timeline)
+        // Provider: Start Work / Complete Work (moves the booking along the timeline) and Become a Service Provider
         Route::prefix('provider')->name('provider.')->group(function () {
             Route::post('bookings/{booking}/start', [ProviderBookingController::class, 'start'])->name('bookings.start');
             Route::post('bookings/{booking}/complete', [ProviderBookingController::class, 'complete'])->name('bookings.complete');
+
+            // Become a Service Provider: Select Service -> Service Area -> Business Details -> Upload Logo (submit)
+            Route::get('application', [ProviderApplicationController::class, 'show'])->name('application.show');
+            Route::post('application/services', [ProviderApplicationController::class, 'services'])->name('application.services');
+            Route::post('application/service-area', [ProviderApplicationController::class, 'serviceArea'])->name('application.service-area');
+            Route::post('application/business-details', [ProviderApplicationController::class, 'businessDetails'])->name('application.business-details');
+            Route::post('application/submit', [ProviderApplicationController::class, 'submit'])->middleware('throttle:10,1')->name('application.submit');
         });
 
         // Chat

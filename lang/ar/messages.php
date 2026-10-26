@@ -135,6 +135,13 @@ return [
     'booking_cannot_be_started' => 'يمكن بدء الحجوزات المؤكدة فقط.',
     'booking_cannot_be_completed' => 'يمكن إكمال الحجوزات الجارية فقط.',
 
+    // Become a Service Provider
+    'provider_application_not_allowed' => 'يرجى إكمال تسجيل حسابك قبل التقديم كمقدم خدمة (:step).',
+    'provider_application_incomplete' => 'يرجى إكمال الخطوات السابقة أولاً (:step).',
+    'provider_application_submitted' => 'تم إرسال الطلب!',
+    'provider_application_under_review' => 'طلبك قيد المراجعة. يمكنك تعديله مرة أخرى فقط في حال رفضه.',
+    'provider_application_closed' => 'لم يعد بالإمكان تعديل طلب مقدم الخدمة الخاص بك.',
+
     // Chat
     'chat_safety_warning' => 'لسلامتك، احرص على أن تكون جميع المدفوعات والمحادثات داخل تطبيق مهام. الاتفاقات خارج التطبيق لا يشملها ضمان مهام.',
     'chat_photo' => 'صورة',

@@ -6,13 +6,17 @@ return [
     'between' => [
         'numeric' => 'يجب أن تكون قيمة :attribute بين :min و :max.',
         'string' => 'يجب أن يكون طول :attribute بين :min و :max حرفاً.',
+        'array' => 'يجب أن يحتوي :attribute على عدد عناصر بين :min و :max.',
+        'file' => 'يجب أن يكون حجم :attribute بين :min و :max كيلوبايت.',
     ],
+    'boolean' => 'يجب أن تكون قيمة :attribute صحيحة أو خاطئة.',
     'confirmed' => 'تأكيد :attribute غير متطابق.',
     'current_password' => 'كلمة المرور الحالية غير صحيحة.',
     'date' => 'يجب أن يكون :attribute تاريخاً صحيحاً.',
     'date_format' => 'يجب أن يكون :attribute بالصيغة :format.',
     'different' => 'يجب أن يكون :attribute مختلفاً عن :other.',
     'digits' => 'يجب أن يتكون :attribute من :digits أرقام.',
+    'distinct' => 'حقل :attribute يحتوي على قيمة مكررة.',
     'email' => 'يجب أن يكون :attribute بريداً إلكترونياً صحيحاً.',
     'exists' => ':attribute المحدد غير صحيح.',
     'image' => 'يجب أن يكون :attribute صورة.',
@@ -26,6 +30,8 @@ return [
     ],
     'mimes' => 'يجب أن يكون :attribute ملفاً من نوع: :values.',
     'min' => [
+        'array' => 'يجب أن يحتوي :attribute على :min عنصر على الأقل.',
+        'file' => 'يجب أن يكون حجم :attribute :min كيلوبايت على الأقل.',
         'numeric' => 'يجب أن تكون قيمة :attribute :min على الأقل.',
         'string' => 'يجب أن يتكون :attribute من :min أحرف على الأقل.',
     ],
@@ -40,9 +46,11 @@ return [
     'regex' => 'صيغة :attribute غير صحيحة.',
     'required' => 'حقل :attribute مطلوب.',
     'required_if' => 'حقل :attribute مطلوب.',
+    'required_without' => 'حقل :attribute مطلوب عند عدم وجود :values.',
     'required_with' => 'حقل :attribute مطلوب عند وجود :values.',
     'string' => 'يجب أن يكون :attribute نصاً.',
     'unique' => ':attribute مستخدم مسبقاً.',
+    'url' => 'يجب أن يكون :attribute رابطاً صحيحاً.',
     'uploaded' => 'فشل رفع :attribute.',
 
     'attributes' => [
@@ -78,5 +86,29 @@ return [
         'images' => 'الصور',
         'images.*' => 'الصورة',
         'tab' => 'التبويب',
+
+        // Chat, Rate Provider, Account Settings, Payment
+        'body' => 'الرسالة',
+        'image' => 'الصورة',
+        'before_id' => 'الرسالة',
+        'after_id' => 'الرسالة',
+        'rating' => 'التقييم',
+        'comment' => 'التعليق',
+        'reason' => 'السبب',
+        'language' => 'اللغة',
+        'push_notifications' => 'الإشعارات الفورية',
+        'email_notifications' => 'إشعارات البريد الإلكتروني',
+        'payment_id' => 'عملية الدفع',
+        'payment_method' => 'طريقة الدفع',
+        'device_name' => 'اسم الجهاز',
+
+        // Become a Service Provider
+        'service_ids' => 'الخدمات',
+        'service_ids.*' => 'الخدمة',
+        'business_name' => 'اسم النشاط التجاري',
+        'tagline' => 'الوصف المهني المختصر',
+        'skills_experience' => 'المهارات والخبرات',
+        'website' => 'رابط الموقع الإلكتروني',
+        'logo' => 'شعار النشاط التجاري',
     ],
 ];

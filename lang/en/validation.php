@@ -212,6 +212,14 @@ return [
         'preferred_time' => 'time',
         'description' => 'work description',
         'images.*' => 'image',
+
+        // Become a Service Provider
+        'service_ids' => 'services',
+        'service_ids.*' => 'service',
+        'tagline' => 'professional tagline',
+        'skills_experience' => 'skills and experience',
+        'website' => 'website link',
+        'logo' => 'business logo',
     ],
 
 ];

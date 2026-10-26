@@ -40,5 +40,30 @@ class OnboardingSlideSeeder extends Seeder
 
             $this->attachImage($slide, $image, 'image');
         }
+
+        $this->seedProviderSlide();
+    }
+
+    /**
+     * "Start Earning with Maham" screen before Become a Service Provider (`?audience=provider`).
+     * Image: database/seeders/images/onboarding/provider-1.png.
+     */
+    private function seedProviderSlide(): void
+    {
+        $slide = OnboardingSlide::updateOrCreate(
+            ['audience' => 'provider', 'sort_order' => 1],
+            [
+                'title_en' => 'Start Earning with Maham',
+                'title_ar' => 'ابدأ الكسب مع مهام',
+                'description_en' => "Work how, when, and where you want\n\n"
+                    ."Join the Maham platform as a verified service provider. Offer your skills in different categories from AC cleaning and repairs to plumbing, assembly, and logistics.\n\n"
+                    .'You build your business, set your own rates, and receive 100% of your earnings securely through our app',
+                'description_ar' => "اعمل بالطريقة والوقت والمكان الذي تريده\n\n"
+                    ."انضم إلى منصة مهام كمقدم خدمة موثّق. قدّم مهاراتك في فئات مختلفة من تنظيف وإصلاح المكيفات إلى السباكة والتركيب والخدمات اللوجستية.\n\n"
+                    .'أنت تبني عملك، وتحدد أسعارك، وتحصل على 100% من أرباحك بأمان عبر تطبيقنا',
+            ],
+        );
+
+        $this->attachImage($slide, 'onboarding/provider-1.png', 'image');
     }
 }

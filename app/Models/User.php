@@ -53,6 +53,21 @@ class User extends Authenticatable implements HasMedia
 
     public const string STEP_GUEST = 'guest';
 
+    // "Become a Service Provider" application: status and next screen
+    public const string APPLICATION_NOT_STARTED = 'not_started';
+
+    public const string APPLICATION_DRAFT = 'draft';
+
+    public const string APPLICATION_STEP_SERVICES = 'services';
+
+    public const string APPLICATION_STEP_SERVICE_AREA = 'service_area';
+
+    public const string APPLICATION_STEP_BUSINESS_DETAILS = 'business_details';
+
+    public const string APPLICATION_STEP_LOGO = 'logo';
+
+    public const string APPLICATION_STEP_SUBMITTED = 'submitted';
+
     /**
      * Get the attributes that should be cast.
      *
@@ -144,6 +159,50 @@ class User extends Authenticatable implements HasMedia
     public function providedServices(): BelongsToMany
     {
         return $this->belongsToMany(Service::class, 'provider_services', 'provider_id')->withTimestamps();
+    }
+
+    /**
+     * Cities / districts a provider works in ("Choose Service Area").
+     *
+     * @return HasMany<ProviderServiceArea, $this>
+     */
+    public function serviceAreas(): HasMany
+    {
+        return $this->hasMany(ProviderServiceArea::class, 'provider_id');
+    }
+
+    /**
+     * Where the "Become a Service Provider" application is:
+     * not_started, draft, pending (waiting for admin review), approved, rejected or suspended.
+     */
+    public function providerApplicationStatus(): string
+    {
+        $profile = $this->providerProfile;
+
+        return match (true) {
+            $profile === null => self::APPLICATION_NOT_STARTED,
+            $profile->status === ProviderProfile::STATUS_PENDING && $profile->submitted_at === null => self::APPLICATION_DRAFT,
+            default => $profile->status,
+        };
+    }
+
+    /**
+     * The "Become a Service Provider" screen the app should open next, so an interrupted application can be resumed.
+     */
+    public function nextProviderApplicationStep(): string
+    {
+        $profile = $this->providerProfile;
+
+        if ($profile !== null && ! $profile->isEditable()) {
+            return self::APPLICATION_STEP_SUBMITTED;
+        }
+
+        return match (true) {
+            ! $this->providedServices()->exists() => self::APPLICATION_STEP_SERVICES,
+            ! $this->serviceAreas()->exists() => self::APPLICATION_STEP_SERVICE_AREA,
+            blank($profile?->business_name) => self::APPLICATION_STEP_BUSINESS_DETAILS,
+            default => self::APPLICATION_STEP_LOGO,
+        };
     }
 
     /**

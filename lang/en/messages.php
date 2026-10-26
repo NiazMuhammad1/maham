@@ -135,6 +135,13 @@ return [
     'booking_cannot_be_started' => 'Only confirmed bookings can be started.',
     'booking_cannot_be_completed' => 'Only bookings in progress can be completed.',
 
+    // Become a Service Provider
+    'provider_application_not_allowed' => 'Please complete your account registration before applying as a service provider (:step).',
+    'provider_application_incomplete' => 'Please complete the previous steps first (:step).',
+    'provider_application_submitted' => 'Application Submitted!',
+    'provider_application_under_review' => 'Your application is under review. You can edit it again only if it is rejected.',
+    'provider_application_closed' => 'Your service provider application can no longer be changed.',
+
     // Chat
     'chat_safety_warning' => 'For your safety, keep all payments and conversations inside Maham. Deals made outside the app are not covered by the Maham guarantee.',
     'chat_photo' => 'Photo',

@@ -96,6 +96,12 @@ class BookingController extends Controller
 
         $booking->provider->providerProfile?->refreshRatingStats();
 
+        // "Work completed ... has rated your service" in the provider's Notifications list
+        $booking->provider->addProviderNotification('provider_work_rated', [
+            'customer' => $booking->customer->name,
+            'rating' => (string) $review->rating,
+        ], ['booking_id' => $booking->id]);
+
         $review->load('customer.media');
 
         return $this->success(new ReviewResource($review), __('messages.review_submitted'), 201);

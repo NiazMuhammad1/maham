@@ -10,6 +10,8 @@ use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Account Settings screens: profile card, Personal Details, Home Address and Notification Settings.
@@ -62,6 +64,27 @@ class ProfileController extends Controller
             'push_notifications' => $user->push_notifications,
             'email_notifications' => $user->email_notifications,
         ], __('messages.changes_saved'));
+    }
+
+    /**
+     * Side menu > "Provider Mode" / "Customer Mode". Provider Mode is only for approved providers.
+     * The app opens the provider Home or the customer Home from `active_mode`.
+     */
+    public function updateMode(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'mode' => ['required', Rule::in([User::MODE_CUSTOMER, User::MODE_PROVIDER])],
+        ]);
+
+        $user = $request->user();
+
+        if ($validated['mode'] === User::MODE_PROVIDER && ! $user->isApprovedProvider()) {
+            throw ValidationException::withMessages(['mode' => __('messages.provider_only')]);
+        }
+
+        $user->forceFill(['active_mode' => $validated['mode']])->save();
+
+        return $this->userResponse($user, __('messages.mode_switched.'.$validated['mode']));
     }
 
     private function userResponse(User $user, ?string $message = null): JsonResponse

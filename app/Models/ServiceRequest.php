@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Database\Factories\ServiceRequestFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -127,6 +128,34 @@ class ServiceRequest extends Model implements HasMedia
     public function isOpen(): bool
     {
         return $this->status === self::STATUS_OPEN;
+    }
+
+    /**
+     * Open requests a provider can send an offer on ("Recent Requests" on the provider Home):
+     * in one of their services, inside one of their service areas, not in the past,
+     * not their own request, and they have not sent an offer on it yet.
+     *
+     * @param  Builder<ServiceRequest>  $query
+     */
+    public function scopeMatchingProvider(Builder $query, User $provider): void
+    {
+        $query->where('status', self::STATUS_OPEN)
+            ->where('customer_id', '!=', $provider->id)
+            ->whereDate('preferred_date', '>=', today())
+            ->whereIn('service_id', $provider->providedServices()->select('services.id'))
+            ->whereDoesntHave('offers', fn (Builder $offers) => $offers->where('provider_id', $provider->id))
+            ->where(function (Builder $areaQuery) use ($provider) {
+                // No service area yet = no matching requests
+                $areaQuery->whereRaw('1 = 0');
+
+                // A service area without a district covers the whole city
+                foreach ($provider->serviceAreas as $area) {
+                    $areaQuery->orWhere(function (Builder $cityQuery) use ($area) {
+                        $cityQuery->where('city_id', $area->city_id)
+                            ->when($area->district_id, fn (Builder $q) => $q->where('district_id', $area->district_id));
+                    });
+                }
+            });
     }
 
     /**

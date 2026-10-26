@@ -48,6 +48,12 @@ class BookingController extends Controller
             'provider' => $booking->provider->name,
         ], ['booking_id' => $booking->id]);
 
+        // "Work started" in the provider's own Notifications list
+        $booking->provider->addProviderNotification('provider_work_started', [
+            'customer' => $booking->customer->name,
+            'service' => $booking->service->nameTranslations(),
+        ], ['booking_id' => $booking->id]);
+
         $booking->load(self::RELATIONS);
 
         return $this->success(new BookingResource($booking), __('messages.work_started'));

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\AddressResource;
 use App\Http\Resources\ServiceResource;
 use App\Models\Service;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -24,7 +25,8 @@ class HomeController extends Controller
 
         return $this->success([
             'address' => $address ? new AddressResource($address) : null,
-            'unread_notifications_count' => $user->unreadNotifications()->count(),
+            // The customer list only; Provider Mode has its own count on the provider Home
+            'unread_notifications_count' => $user->notificationsFor(User::MODE_CUSTOMER)->whereNull('read_at')->count(),
             'show_become_provider' => ! $user->is_provider,
             'popular_services' => ServiceResource::collection($popularServices),
         ]);

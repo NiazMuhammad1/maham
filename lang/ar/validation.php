@@ -102,6 +102,10 @@ return [
         'payment_method' => 'طريقة الدفع',
         'device_name' => 'اسم الجهاز',
 
+        'mode' => 'الوضع',
+        'month' => 'الشهر',
+        'period' => 'الفترة',
+
         // Become a Service Provider
         'service_ids' => 'الخدمات',
         'service_ids.*' => 'الخدمة',

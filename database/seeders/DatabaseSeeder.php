@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             DemoUserSeeder::class,
             DemoMarketplaceSeeder::class,
             DemoBookingSeeder::class,
+            DemoProviderDashboardSeeder::class,
         ]);
     }
 }

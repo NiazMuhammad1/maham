@@ -21,7 +21,11 @@ class NotificationResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $params = $this->data['params'] ?? [];
+        // A param saved in both languages (['en' => ..., 'ar' => ...]) is shown in the reader's language
+        $locale = app()->getLocale();
+        $params = collect($this->data['params'] ?? [])
+            ->map(fn (mixed $value) => is_array($value) ? ($value[$locale] ?? $value['en'] ?? '') : $value)
+            ->all();
 
         return [
             'id' => $this->id,

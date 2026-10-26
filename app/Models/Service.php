@@ -47,6 +47,16 @@ class Service extends Model implements HasMedia
     }
 
     /**
+     * The name in both languages, for notifications that are read later in the reader's language.
+     *
+     * @return array{en: string, ar: string}
+     */
+    public function nameTranslations(): array
+    {
+        return ['en' => $this->name_en, 'ar' => $this->name_ar];
+    }
+
+    /**
      * @return HasMany<SubService, $this>
      */
     public function subServices(): HasMany

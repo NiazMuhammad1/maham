@@ -142,6 +142,20 @@ return [
     'provider_application_under_review' => 'Your application is under review. You can edit it again only if it is rejected.',
     'provider_application_closed' => 'Your service provider application can no longer be changed.',
 
+    // Provider Dashboard / Earnings / Mode switch
+    'provider_only' => 'This section is available for approved service providers only.',
+    'mode_switched' => [
+        'customer' => 'Switched to Customer Mode.',
+        'provider' => 'Switched to Provider Mode.',
+    ],
+    'earning_periods' => [
+        'daily' => 'Daily',
+        'weekly' => 'Weekly',
+        'monthly' => 'Monthly',
+        'yearly' => 'Yearly',
+        'all' => 'All',
+    ],
+
     // Chat
     'chat_safety_warning' => 'For your safety, keep all payments and conversations inside Maham. Deals made outside the app are not covered by the Maham guarantee.',
     'chat_photo' => 'Photo',

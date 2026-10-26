@@ -213,6 +213,10 @@ return [
         'description' => 'work description',
         'images.*' => 'image',
 
+        'mode' => 'mode',
+        'month' => 'month',
+        'period' => 'period',
+
         // Become a Service Provider
         'service_ids' => 'services',
         'service_ids.*' => 'service',

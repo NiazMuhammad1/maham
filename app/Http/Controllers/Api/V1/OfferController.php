@@ -158,9 +158,17 @@ class OfferController extends Controller
         $bookingData = (new BookingResource($booking))->resolve();
 
         // "Payment successful" in the customer's Notifications list (booking_id tells the app which booking to open)
+        // Service name and date are saved in both languages, so each reader sees their own language.
         $request->user()->addAppNotification('payment_successful', [
-            'service' => $booking->service->localized('name'),
-            'date' => trim($bookingData['scheduled_date_label'].' '.$bookingData['scheduled_time_label']),
+            'service' => $booking->service->nameTranslations(),
+            'date' => $booking->scheduledAtTranslations(),
+        ], ['booking_id' => $booking->id, 'service_request_id' => $serviceRequest->id]);
+
+        // "Booking Confirmed!" in the provider's Notifications list
+        $booking->provider->addProviderNotification('provider_booking_confirmed', [
+            'customer' => $request->user()->name,
+            'service' => $booking->service->nameTranslations(),
+            'date' => $booking->scheduledAtTranslations(),
         ], ['booking_id' => $booking->id, 'service_request_id' => $serviceRequest->id]);
 
         return $this->success($bookingData, __('messages.booking_confirmed'), 201);

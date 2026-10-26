@@ -10934,6 +10934,1203 @@
           ]
         }
       ]
+    },
+    {
+      "name": "15. Provider - Dashboard & Earnings",
+      "description": "# Provider Dashboard\n\nProvider **Home** (Your performance, Upcoming Bookings, Recent Requests), side menu (**Customer Mode** / **Provider Mode**), provider **Notifications** and **Earnings**.\n\nOnly for approved providers (403 `This section is available for approved service providers only.` otherwise).\n\n## Try it (local)\n1. **Provider login** in folder 12 (saves `{{provider_token}}`, demo provider `abdul.1523@maham.sa` / `password`).\n2. Run the requests of this folder.\n\nDemo data comes from `DemoProviderDashboardSeeder` (`php artisan migrate:fresh --seed`).",
+      "item": [
+        {
+          "name": "Switch to Provider Mode",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{provider_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{lang}}",
+                "description": "ar or en"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"mode\": \"provider\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/profile/mode",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "profile",
+                "mode"
+              ]
+            },
+            "description": "Side menu **Provider Mode** button (customer menu). Saves `active_mode = provider`; then open the provider Home (**Provider dashboard**).\n\nBody: `mode` = `provider` or `customer`.\n\nOnly approved providers can switch to Provider Mode (422 `errors.mode` otherwise; check `user.is_provider` to show the button).\n\nOn app launch, open the provider Home when `user.active_mode = provider` (from **Me**).\n\nUses `{{provider_token}}` (run **Provider login** in folder 12 first)."
+          },
+          "response": [
+            {
+              "name": "Switched",
+              "originalRequest": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{provider_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "en",
+                    "description": "ar or en"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"mode\": \"provider\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/profile/mode",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "profile",
+                    "mode"
+                  ]
+                },
+                "description": "Side menu **Provider Mode** button (customer menu). Saves `active_mode = provider`; then open the provider Home (**Provider dashboard**).\n\nBody: `mode` = `provider` or `customer`.\n\nOnly approved providers can switch to Provider Mode (422 `errors.mode` otherwise; check `user.is_provider` to show the button).\n\nOn app launch, open the provider Home when `user.active_mode = provider` (from **Me**).\n\nUses `{{provider_token}}` (run **Provider login** in folder 12 first)."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Switched to Provider Mode.\",\n    \"data\": {\n        \"user\": {\n            \"id\": 2,\n            \"name\": \"Mohammed Al-Rashidi\",\n            \"username\": \"abdul.1523\",\n            \"email\": \"abdul.1523@maham.sa\",\n            \"email_verified\": true,\n            \"phone_country_code\": \"+966\",\n            \"phone\": \"500000002\",\n            \"phone_verified\": true,\n            \"national_id\": null,\n            \"avatar_url\": null,\n            \"language\": \"en\",\n            \"push_notifications\": true,\n            \"email_notifications\": true,\n            \"is_guest\": false,\n            \"is_provider\": true,\n            \"active_mode\": \"provider\",\n            \"has_password\": true,\n            \"registration_completed\": true,\n            \"next_step\": \"personal_details\",\n            \"default_address\": null,\n            \"created_at\": \"2026-10-26T04:16:48+00:00\"\n        }\n    }\n}"
+            },
+            {
+              "name": "Not an approved provider (customer token)",
+              "originalRequest": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "en",
+                    "description": "ar or en"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"mode\": \"provider\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/profile/mode",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "profile",
+                    "mode"
+                  ]
+                },
+                "description": "Side menu **Provider Mode** button (customer menu). Saves `active_mode = provider`; then open the provider Home (**Provider dashboard**).\n\nBody: `mode` = `provider` or `customer`.\n\nOnly approved providers can switch to Provider Mode (422 `errors.mode` otherwise; check `user.is_provider` to show the button).\n\nOn app launch, open the provider Home when `user.active_mode = provider` (from **Me**).\n\nUses `{{provider_token}}` (run **Provider login** in folder 12 first)."
+              },
+              "status": "Unprocessable Content",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": false,\n    \"message\": \"This section is available for approved service providers only.\",\n    \"errors\": {\n        \"mode\": [\n            \"This section is available for approved service providers only.\"\n        ]\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Switch to Customer Mode",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{provider_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{lang}}",
+                "description": "ar or en"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"mode\": \"customer\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/profile/mode",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "profile",
+                "mode"
+              ]
+            },
+            "description": "Side menu **Customer Mode** button (provider menu). Saves `active_mode = customer`; then open the customer Home."
+          },
+          "response": [
+            {
+              "name": "Switched",
+              "originalRequest": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{provider_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "en",
+                    "description": "ar or en"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"mode\": \"customer\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/profile/mode",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "profile",
+                    "mode"
+                  ]
+                },
+                "description": "Side menu **Customer Mode** button (provider menu). Saves `active_mode = customer`; then open the customer Home."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Switched to Customer Mode.\",\n    \"data\": {\n        \"user\": {\n            \"id\": 2,\n            \"name\": \"Mohammed Al-Rashidi\",\n            \"username\": \"abdul.1523\",\n            \"email\": \"abdul.1523@maham.sa\",\n            \"email_verified\": true,\n            \"phone_country_code\": \"+966\",\n            \"phone\": \"500000002\",\n            \"phone_verified\": true,\n            \"national_id\": null,\n            \"avatar_url\": null,\n            \"language\": \"en\",\n            \"push_notifications\": true,\n            \"email_notifications\": true,\n            \"is_guest\": false,\n            \"is_provider\": true,\n            \"active_mode\": \"customer\",\n            \"has_password\": true,\n            \"registration_completed\": true,\n            \"next_step\": \"personal_details\",\n            \"default_address\": null,\n            \"created_at\": \"2026-10-26T04:16:48+00:00\"\n        }\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Provider dashboard (Home)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{provider_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{lang}}",
+                "description": "ar or en"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/provider/dashboard",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "provider",
+                "dashboard"
+              ]
+            },
+            "description": "Provider **Home** screen.\n\n- `provider` - header name + side menu card (photo, name, @username)\n- `unread_notifications_count` - green dot on the bell (provider notifications only)\n- `performance` - **Your performance** box for `month`: `earnings` (SAR the provider earned from work completed that month), `completed_bookings`, `rating_avg` (average stars of the reviews received that month, `null` = no reviews, show `-`)\n- `months` - values for the month dropdown (this month and the 11 before). Send the chosen `value` as `?month=`\n- `upcoming_bookings` - next 3 confirmed bookings (date today or later, nearest first): `scheduled_day_label` = \"09 Aug\", `scheduled_time_label` = \"10:30 AM\", district + city, price. **View All** -> provider bookings list (next step)\n- `recent_requests` - newest 3 open customer requests in the provider's services and service area that they have not sent an offer on yet. **View All** -> Customer Requests (next step)\n\n403 when the user is not an approved provider."
+          },
+          "response": [
+            {
+              "name": "Dashboard",
+              "originalRequest": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{provider_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "en",
+                    "description": "ar or en"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/provider/dashboard",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "provider",
+                    "dashboard"
+                  ]
+                },
+                "description": "Provider **Home** screen.\n\n- `provider` - header name + side menu card (photo, name, @username)\n- `unread_notifications_count` - green dot on the bell (provider notifications only)\n- `performance` - **Your performance** box for `month`: `earnings` (SAR the provider earned from work completed that month), `completed_bookings`, `rating_avg` (average stars of the reviews received that month, `null` = no reviews, show `-`)\n- `months` - values for the month dropdown (this month and the 11 before). Send the chosen `value` as `?month=`\n- `upcoming_bookings` - next 3 confirmed bookings (date today or later, nearest first): `scheduled_day_label` = \"09 Aug\", `scheduled_time_label` = \"10:30 AM\", district + city, price. **View All** -> provider bookings list (next step)\n- `recent_requests` - newest 3 open customer requests in the provider's services and service area that they have not sent an offer on yet. **View All** -> Customer Requests (next step)\n\n403 when the user is not an approved provider."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": null,\n    \"data\": {\n        \"provider\": {\n            \"id\": 2,\n            \"name\": \"Mohammed Al-Rashidi\",\n            \"username\": \"abdul.1523\",\n            \"avatar_url\": null\n        },\n        \"unread_notifications_count\": 1,\n        \"performance\": {\n            \"month\": \"2026-10\",\n            \"month_label\": \"October 2026\",\n            \"earnings\": 2250,\n            \"completed_bookings\": 9,\n            \"rating_avg\": 4.6,\n            \"currency\": \"SAR\"\n        },\n        \"months\": [\n            {\n                \"value\": \"2026-10\",\n                \"label\": \"October 2026\"\n            },\n            {\n                \"value\": \"2026-09\",\n                \"label\": \"September 2026\"\n            },\n            {\n                \"value\": \"2026-08\",\n                \"label\": \"August 2026\"\n            },\n            {\n                \"value\": \"2026-07\",\n                \"label\": \"July 2026\"\n            },\n            {\n                \"value\": \"2026-06\",\n                \"label\": \"June 2026\"\n            },\n            {\n                \"value\": \"2026-05\",\n                \"label\": \"May 2026\"\n            },\n            {\n                \"value\": \"2026-04\",\n                \"label\": \"April 2026\"\n            },\n            {\n                \"value\": \"2026-03\",\n                \"label\": \"March 2026\"\n            },\n            {\n                \"value\": \"2026-02\",\n                \"label\": \"February 2026\"\n            },\n            {\n                \"value\": \"2026-01\",\n                \"label\": \"January 2026\"\n            },\n            {\n                \"value\": \"2025-12\",\n                \"label\": \"December 2025\"\n            },\n            {\n                \"value\": \"2025-11\",\n                \"label\": \"November 2025\"\n            }\n        ],\n        \"upcoming_bookings\": [\n            {\n                \"id\": 9,\n                \"reference\": \"BK-755082\",\n                \"status\": \"confirmed\",\n                \"status_label\": \"Confirmed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 1,\n                    \"name\": \"Demo Customer\",\n                    \"username\": \"demo_customer\",\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-28\",\n                \"scheduled_date_label\": \"Wednesday 28 Oct, 2026\",\n                \"scheduled_day_label\": \"28 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": {\n                        \"id\": 1,\n                        \"city_id\": 1,\n                        \"name\": \"Al Olaya\"\n                    },\n                    \"street_address\": \"675 King Jamil Rd., 213 Alamal Dist.\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": null\n            },\n            {\n                \"id\": 13,\n                \"reference\": \"BK-971401\",\n                \"status\": \"confirmed\",\n                \"status_label\": \"Confirmed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 12,\n                    \"name\": \"Abdul Rehman\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-29\",\n                \"scheduled_date_label\": \"Thursday 29 Oct, 2026\",\n                \"scheduled_day_label\": \"29 Oct\",\n                \"scheduled_time\": \"10:30\",\n                \"scheduled_time_label\": \"10:30 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": {\n                        \"id\": 1,\n                        \"city_id\": 1,\n                        \"name\": \"Al Olaya\"\n                    },\n                    \"street_address\": \"675 King Jamil Rd., 213 Alamal Dist.\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": null\n            },\n            {\n                \"id\": 14,\n                \"reference\": \"BK-152308\",\n                \"status\": \"confirmed\",\n                \"status_label\": \"Confirmed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 13,\n                    \"name\": \"Sara Al-Qahtani\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-30\",\n                \"scheduled_date_label\": \"Friday 30 Oct, 2026\",\n                \"scheduled_day_label\": \"30 Oct\",\n                \"scheduled_time\": \"10:30\",\n                \"scheduled_time_label\": \"10:30 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": {\n                        \"id\": 1,\n                        \"city_id\": 1,\n                        \"name\": \"Al Olaya\"\n                    },\n                    \"street_address\": \"675 King Jamil Rd., 213 Alamal Dist.\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": null\n            }\n        ],\n        \"recent_requests\": [\n            {\n                \"id\": 9,\n                \"reference\": \"REQ-215765\",\n                \"status\": \"open\",\n                \"status_label\": \"Open\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"description\": \"Central AC unit not cooling - compressor makes loud noise when running.\",\n                \"budget\": 250,\n                \"currency\": \"SAR\",\n                \"preferred_date\": \"2026-10-31\",\n                \"preferred_date_label\": \"Saturday 31 Oct, 2026\",\n                \"preferred_time\": \"10:30\",\n                \"preferred_time_label\": \"10:30 AM\",\n                \"flexibility\": \"flexible\",\n                \"flexibility_label\": \"Flexible\",\n                \"address\": {\n                    \"address_id\": null,\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": {\n                        \"id\": 1,\n                        \"city_id\": 1,\n                        \"name\": \"Al Olaya\"\n                    },\n                    \"street_address\": \"675 King Jamil Rd., 213 Alamal Dist.\",\n                    \"postal_code\": \"23142\",\n                    \"latitude\": null,\n                    \"longitude\": null\n                },\n                \"images\": [],\n                \"offers_count\": 0,\n                \"created_at\": \"2026-10-26T04:16:48+00:00\"\n            },\n            {\n                \"id\": 16,\n                \"reference\": \"REQ-657035\",\n                \"status\": \"open\",\n                \"status_label\": \"Open\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"description\": \"Central AC unit not cooling - compressor makes loud noise when running.\",\n                \"budget\": 250,\n                \"currency\": \"SAR\",\n                \"preferred_date\": \"2026-10-30\",\n                \"preferred_date_label\": \"Friday 30 Oct, 2026\",\n                \"preferred_time\": \"10:30\",\n                \"preferred_time_label\": \"10:30 AM\",\n                \"flexibility\": \"flexible\",\n                \"flexibility_label\": \"Flexible\",\n                \"address\": {\n                    \"address_id\": null,\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": {\n                        \"id\": 1,\n                        \"city_id\": 1,\n                        \"name\": \"Al Olaya\"\n                    },\n                    \"street_address\": \"675 King Jamil Rd., 213 Alamal Dist.\",\n                    \"postal_code\": \"23142\",\n                    \"latitude\": null,\n                    \"longitude\": null\n                },\n                \"images\": [],\n                \"offers_count\": 0,\n                \"created_at\": \"2026-10-26T03:16:48+00:00\"\n            },\n            {\n                \"id\": 17,\n                \"reference\": \"REQ-935012\",\n                \"status\": \"open\",\n                \"status_label\": \"Open\",\n                \"service\": {\n                    \"id\": 5,\n                    \"slug\": \"electronics\",\n                    \"name\": \"Electronics\",\n                    \"description\": null,\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#FFB894\",\n                    \"image_url\": null\n                },\n                \"description\": \"Central AC unit not cooling - compressor makes loud noise when running.\",\n                \"budget\": 250,\n                \"currency\": \"SAR\",\n                \"preferred_date\": \"2026-10-31\",\n                \"preferred_date_label\": \"Saturday 31 Oct, 2026\",\n                \"preferred_time\": \"10:30\",\n                \"preferred_time_label\": \"10:30 AM\",\n                \"flexibility\": \"flexible\",\n                \"flexibility_label\": \"Flexible\",\n                \"address\": {\n                    \"address_id\": null,\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": {\n                        \"id\": 1,\n                        \"city_id\": 1,\n                        \"name\": \"Al Olaya\"\n                    },\n                    \"street_address\": \"675 King Jamil Rd., 213 Alamal Dist.\",\n                    \"postal_code\": \"23142\",\n                    \"latitude\": null,\n                    \"longitude\": null\n                },\n                \"images\": [],\n                \"offers_count\": 0,\n                \"created_at\": \"2026-10-26T02:16:48+00:00\"\n            }\n        ]\n    }\n}"
+            },
+            {
+              "name": "Dashboard (Arabic)",
+              "originalRequest": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{provider_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "ar",
+                    "description": "ar or en"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/provider/dashboard",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "provider",
+                    "dashboard"
+                  ]
+                },
+                "description": "Provider **Home** screen.\n\n- `provider` - header name + side menu card (photo, name, @username)\n- `unread_notifications_count` - green dot on the bell (provider notifications only)\n- `performance` - **Your performance** box for `month`: `earnings` (SAR the provider earned from work completed that month), `completed_bookings`, `rating_avg` (average stars of the reviews received that month, `null` = no reviews, show `-`)\n- `months` - values for the month dropdown (this month and the 11 before). Send the chosen `value` as `?month=`\n- `upcoming_bookings` - next 3 confirmed bookings (date today or later, nearest first): `scheduled_day_label` = \"09 Aug\", `scheduled_time_label` = \"10:30 AM\", district + city, price. **View All** -> provider bookings list (next step)\n- `recent_requests` - newest 3 open customer requests in the provider's services and service area that they have not sent an offer on yet. **View All** -> Customer Requests (next step)\n\n403 when the user is not an approved provider."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": null,\n    \"data\": {\n        \"provider\": {\n            \"id\": 2,\n            \"name\": \"Mohammed Al-Rashidi\",\n            \"username\": \"abdul.1523\",\n            \"avatar_url\": null\n        },\n        \"unread_notifications_count\": 1,\n        \"performance\": {\n            \"month\": \"2026-10\",\n            \"month_label\": \"أكتوبر 2026\",\n            \"earnings\": 2250,\n            \"completed_bookings\": 9,\n            \"rating_avg\": 4.6,\n            \"currency\": \"SAR\"\n        },\n        \"months\": [\n            {\n                \"value\": \"2026-10\",\n                \"label\": \"أكتوبر 2026\"\n            },\n            {\n                \"value\": \"2026-09\",\n                \"label\": \"سبتمبر 2026\"\n            },\n            {\n                \"value\": \"2026-08\",\n                \"label\": \"أغسطس 2026\"\n            },\n            {\n                \"value\": \"2026-07\",\n                \"label\": \"يوليو 2026\"\n            },\n            {\n                \"value\": \"2026-06\",\n                \"label\": \"يونيو 2026\"\n            },\n            {\n                \"value\": \"2026-05\",\n                \"label\": \"مايو 2026\"\n            },\n            {\n                \"value\": \"2026-04\",\n                \"label\": \"أبريل 2026\"\n            },\n            {\n                \"value\": \"2026-03\",\n                \"label\": \"مارس 2026\"\n            },\n            {\n                \"value\": \"2026-02\",\n                \"label\": \"فبراير 2026\"\n            },\n            {\n                \"value\": \"2026-01\",\n                \"label\": \"يناير 2026\"\n            },\n            {\n                \"value\": \"2025-12\",\n                \"label\": \"ديسمبر 2025\"\n            },\n            {\n                \"value\": \"2025-11\",\n                \"label\": \"نوفمبر 2025\"\n            }\n        ],\n        \"upcoming_bookings\": [\n            {\n                \"id\": 9,\n                \"reference\": \"BK-755082\",\n                \"status\": \"confirmed\",\n                \"status_label\": \"مؤكد\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"تصليح التكييف\",\n                    \"description\": \"حافظ على برودة وراحة منزلك. قم بوصف مشكلة المكيف (مثل عدم التبريد أو التسريب أو الضوضاء)، وحمّل الصور لتشخيص أسرع، واختر الوقت المناسب لك. سيتم إرسال طلبك إلى متخصصي تكييف معتمدين في منطقتك.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 1,\n                    \"name\": \"Demo Customer\",\n                    \"username\": \"demo_customer\",\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-28\",\n                \"scheduled_date_label\": \"الأربعاء 28 أكتوبر, 2026\",\n                \"scheduled_day_label\": \"28 أكتوبر\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 ص\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"الرياض\"\n                    },\n                    \"district\": {\n                        \"id\": 1,\n                        \"city_id\": 1,\n                        \"name\": \"العليا\"\n                    },\n                    \"street_address\": \"675 King Jamil Rd., 213 Alamal Dist.\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": null\n            },\n            {\n                \"id\": 13,\n                \"reference\": \"BK-971401\",\n                \"status\": \"confirmed\",\n                \"status_label\": \"مؤكد\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"تصليح التكييف\",\n                    \"description\": \"حافظ على برودة وراحة منزلك. قم بوصف مشكلة المكيف (مثل عدم التبريد أو التسريب أو الضوضاء)، وحمّل الصور لتشخيص أسرع، واختر الوقت المناسب لك. سيتم إرسال طلبك إلى متخصصي تكييف معتمدين في منطقتك.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 12,\n                    \"name\": \"Abdul Rehman\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-29\",\n                \"scheduled_date_label\": \"الخميس 29 أكتوبر, 2026\",\n                \"scheduled_day_label\": \"29 أكتوبر\",\n                \"scheduled_time\": \"10:30\",\n                \"scheduled_time_label\": \"10:30 ص\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"الرياض\"\n                    },\n                    \"district\": {\n                        \"id\": 1,\n                        \"city_id\": 1,\n                        \"name\": \"العليا\"\n                    },\n                    \"street_address\": \"675 King Jamil Rd., 213 Alamal Dist.\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": null\n            },\n            {\n                \"id\": 14,\n                \"reference\": \"BK-152308\",\n                \"status\": \"confirmed\",\n                \"status_label\": \"مؤكد\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"تصليح التكييف\",\n                    \"description\": \"حافظ على برودة وراحة منزلك. قم بوصف مشكلة المكيف (مثل عدم التبريد أو التسريب أو الضوضاء)، وحمّل الصور لتشخيص أسرع، واختر الوقت المناسب لك. سيتم إرسال طلبك إلى متخصصي تكييف معتمدين في منطقتك.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 13,\n                    \"name\": \"Sara Al-Qahtani\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-30\",\n                \"scheduled_date_label\": \"الجمعة 30 أكتوبر, 2026\",\n                \"scheduled_day_label\": \"30 أكتوبر\",\n                \"scheduled_time\": \"10:30\",\n                \"scheduled_time_label\": \"10:30 ص\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"الرياض\"\n                    },\n                    \"district\": {\n                        \"id\": 1,\n                        \"city_id\": 1,\n                        \"name\": \"العليا\"\n                    },\n                    \"street_address\": \"675 King Jamil Rd., 213 Alamal Dist.\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": null\n            }\n        ],\n        \"recent_requests\": [\n            {\n                \"id\": 9,\n                \"reference\": \"REQ-215765\",\n                \"status\": \"open\",\n                \"status_label\": \"مفتوح\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"تصليح التكييف\",\n                    \"description\": \"حافظ على برودة وراحة منزلك. قم بوصف مشكلة المكيف (مثل عدم التبريد أو التسريب أو الضوضاء)، وحمّل الصور لتشخيص أسرع، واختر الوقت المناسب لك. سيتم إرسال طلبك إلى متخصصي تكييف معتمدين في منطقتك.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"description\": \"Central AC unit not cooling - compressor makes loud noise when running.\",\n                \"budget\": 250,\n                \"currency\": \"SAR\",\n                \"preferred_date\": \"2026-10-31\",\n                \"preferred_date_label\": \"السبت 31 أكتوبر, 2026\",\n                \"preferred_time\": \"10:30\",\n                \"preferred_time_label\": \"10:30 ص\",\n                \"flexibility\": \"flexible\",\n                \"flexibility_label\": \"مرن\",\n                \"address\": {\n                    \"address_id\": null,\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"الرياض\"\n                    },\n                    \"district\": {\n                        \"id\": 1,\n                        \"city_id\": 1,\n                        \"name\": \"العليا\"\n                    },\n                    \"street_address\": \"675 King Jamil Rd., 213 Alamal Dist.\",\n                    \"postal_code\": \"23142\",\n                    \"latitude\": null,\n                    \"longitude\": null\n                },\n                \"images\": [],\n                \"offers_count\": 0,\n                \"created_at\": \"2026-10-26T04:16:48+00:00\"\n            },\n            {\n                \"id\": 16,\n                \"reference\": \"REQ-657035\",\n                \"status\": \"open\",\n                \"status_label\": \"مفتوح\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"تصليح التكييف\",\n                    \"description\": \"حافظ على برودة وراحة منزلك. قم بوصف مشكلة المكيف (مثل عدم التبريد أو التسريب أو الضوضاء)، وحمّل الصور لتشخيص أسرع، واختر الوقت المناسب لك. سيتم إرسال طلبك إلى متخصصي تكييف معتمدين في منطقتك.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"description\": \"Central AC unit not cooling - compressor makes loud noise when running.\",\n                \"budget\": 250,\n                \"currency\": \"SAR\",\n                \"preferred_date\": \"2026-10-30\",\n                \"preferred_date_label\": \"الجمعة 30 أكتوبر, 2026\",\n                \"preferred_time\": \"10:30\",\n                \"preferred_time_label\": \"10:30 ص\",\n                \"flexibility\": \"flexible\",\n                \"flexibility_label\": \"مرن\",\n                \"address\": {\n                    \"address_id\": null,\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"الرياض\"\n                    },\n                    \"district\": {\n                        \"id\": 1,\n                        \"city_id\": 1,\n                        \"name\": \"العليا\"\n                    },\n                    \"street_address\": \"675 King Jamil Rd., 213 Alamal Dist.\",\n                    \"postal_code\": \"23142\",\n                    \"latitude\": null,\n                    \"longitude\": null\n                },\n                \"images\": [],\n                \"offers_count\": 0,\n                \"created_at\": \"2026-10-26T03:16:48+00:00\"\n            },\n            {\n                \"id\": 17,\n                \"reference\": \"REQ-935012\",\n                \"status\": \"open\",\n                \"status_label\": \"مفتوح\",\n                \"service\": {\n                    \"id\": 5,\n                    \"slug\": \"electronics\",\n                    \"name\": \"الإلكترونيات\",\n                    \"description\": null,\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#FFB894\",\n                    \"image_url\": null\n                },\n                \"description\": \"Central AC unit not cooling - compressor makes loud noise when running.\",\n                \"budget\": 250,\n                \"currency\": \"SAR\",\n                \"preferred_date\": \"2026-10-31\",\n                \"preferred_date_label\": \"السبت 31 أكتوبر, 2026\",\n                \"preferred_time\": \"10:30\",\n                \"preferred_time_label\": \"10:30 ص\",\n                \"flexibility\": \"flexible\",\n                \"flexibility_label\": \"مرن\",\n                \"address\": {\n                    \"address_id\": null,\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"الرياض\"\n                    },\n                    \"district\": {\n                        \"id\": 1,\n                        \"city_id\": 1,\n                        \"name\": \"العليا\"\n                    },\n                    \"street_address\": \"675 King Jamil Rd., 213 Alamal Dist.\",\n                    \"postal_code\": \"23142\",\n                    \"latitude\": null,\n                    \"longitude\": null\n                },\n                \"images\": [],\n                \"offers_count\": 0,\n                \"created_at\": \"2026-10-26T02:16:48+00:00\"\n            }\n        ]\n    }\n}"
+            },
+            {
+              "name": "Not an approved provider (customer token)",
+              "originalRequest": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "en",
+                    "description": "ar or en"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/provider/dashboard",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "provider",
+                    "dashboard"
+                  ]
+                },
+                "description": "Provider **Home** screen.\n\n- `provider` - header name + side menu card (photo, name, @username)\n- `unread_notifications_count` - green dot on the bell (provider notifications only)\n- `performance` - **Your performance** box for `month`: `earnings` (SAR the provider earned from work completed that month), `completed_bookings`, `rating_avg` (average stars of the reviews received that month, `null` = no reviews, show `-`)\n- `months` - values for the month dropdown (this month and the 11 before). Send the chosen `value` as `?month=`\n- `upcoming_bookings` - next 3 confirmed bookings (date today or later, nearest first): `scheduled_day_label` = \"09 Aug\", `scheduled_time_label` = \"10:30 AM\", district + city, price. **View All** -> provider bookings list (next step)\n- `recent_requests` - newest 3 open customer requests in the provider's services and service area that they have not sent an offer on yet. **View All** -> Customer Requests (next step)\n\n403 when the user is not an approved provider."
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": false,\n    \"message\": \"This section is available for approved service providers only.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Provider dashboard (other month)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{provider_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{lang}}",
+                "description": "ar or en"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/provider/dashboard?month=2026-09",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "provider",
+                "dashboard"
+              ],
+              "query": [
+                {
+                  "key": "month",
+                  "value": "2026-09"
+                }
+              ]
+            },
+            "description": "Same as **Provider dashboard** with the month picked in the **Your performance** dropdown (`month` = `YYYY-MM`, from `months[].value`)."
+          },
+          "response": [
+            {
+              "name": "Month without completed work",
+              "originalRequest": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{provider_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "en",
+                    "description": "ar or en"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/provider/dashboard?month=2026-09",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "provider",
+                    "dashboard"
+                  ],
+                  "query": [
+                    {
+                      "key": "month",
+                      "value": "2026-09"
+                    }
+                  ]
+                },
+                "description": "Same as **Provider dashboard** with the month picked in the **Your performance** dropdown (`month` = `YYYY-MM`, from `months[].value`)."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": null,\n    \"data\": {\n        \"provider\": {\n            \"id\": 2,\n            \"name\": \"Mohammed Al-Rashidi\",\n            \"username\": \"abdul.1523\",\n            \"avatar_url\": null\n        },\n        \"unread_notifications_count\": 1,\n        \"performance\": {\n            \"month\": \"2026-09\",\n            \"month_label\": \"September 2026\",\n            \"earnings\": 0,\n            \"completed_bookings\": 0,\n            \"rating_avg\": null,\n            \"currency\": \"SAR\"\n        },\n        \"months\": [\n            {\n                \"value\": \"2026-10\",\n                \"label\": \"October 2026\"\n            },\n            {\n                \"value\": \"2026-09\",\n                \"label\": \"September 2026\"\n            },\n            {\n                \"value\": \"2026-08\",\n                \"label\": \"August 2026\"\n            },\n            {\n                \"value\": \"2026-07\",\n                \"label\": \"July 2026\"\n            },\n            {\n                \"value\": \"2026-06\",\n                \"label\": \"June 2026\"\n            },\n            {\n                \"value\": \"2026-05\",\n                \"label\": \"May 2026\"\n            },\n            {\n                \"value\": \"2026-04\",\n                \"label\": \"April 2026\"\n            },\n            {\n                \"value\": \"2026-03\",\n                \"label\": \"March 2026\"\n            },\n            {\n                \"value\": \"2026-02\",\n                \"label\": \"February 2026\"\n            },\n            {\n                \"value\": \"2026-01\",\n                \"label\": \"January 2026\"\n            },\n            {\n                \"value\": \"2025-12\",\n                \"label\": \"December 2025\"\n            },\n            {\n                \"value\": \"2025-11\",\n                \"label\": \"November 2025\"\n            }\n        ],\n        \"upcoming_bookings\": [\n            {\n                \"id\": 9,\n                \"reference\": \"BK-755082\",\n                \"status\": \"confirmed\",\n                \"status_label\": \"Confirmed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 1,\n                    \"name\": \"Demo Customer\",\n                    \"username\": \"demo_customer\",\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-28\",\n                \"scheduled_date_label\": \"Wednesday 28 Oct, 2026\",\n                \"scheduled_day_label\": \"28 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": {\n                        \"id\": 1,\n                        \"city_id\": 1,\n                        \"name\": \"Al Olaya\"\n                    },\n                    \"street_address\": \"675 King Jamil Rd., 213 Alamal Dist.\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": null\n            },\n            {\n                \"id\": 13,\n                \"reference\": \"BK-971401\",\n                \"status\": \"confirmed\",\n                \"status_label\": \"Confirmed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 12,\n                    \"name\": \"Abdul Rehman\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-29\",\n                \"scheduled_date_label\": \"Thursday 29 Oct, 2026\",\n                \"scheduled_day_label\": \"29 Oct\",\n                \"scheduled_time\": \"10:30\",\n                \"scheduled_time_label\": \"10:30 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": {\n                        \"id\": 1,\n                        \"city_id\": 1,\n                        \"name\": \"Al Olaya\"\n                    },\n                    \"street_address\": \"675 King Jamil Rd., 213 Alamal Dist.\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": null\n            },\n            {\n                \"id\": 14,\n                \"reference\": \"BK-152308\",\n                \"status\": \"confirmed\",\n                \"status_label\": \"Confirmed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 13,\n                    \"name\": \"Sara Al-Qahtani\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-30\",\n                \"scheduled_date_label\": \"Friday 30 Oct, 2026\",\n                \"scheduled_day_label\": \"30 Oct\",\n                \"scheduled_time\": \"10:30\",\n                \"scheduled_time_label\": \"10:30 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": {\n                        \"id\": 1,\n                        \"city_id\": 1,\n                        \"name\": \"Al Olaya\"\n                    },\n                    \"street_address\": \"675 King Jamil Rd., 213 Alamal Dist.\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": null\n            }\n        ],\n        \"recent_requests\": [\n            {\n                \"id\": 9,\n                \"reference\": \"REQ-215765\",\n                \"status\": \"open\",\n                \"status_label\": \"Open\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"description\": \"Central AC unit not cooling - compressor makes loud noise when running.\",\n                \"budget\": 250,\n                \"currency\": \"SAR\",\n                \"preferred_date\": \"2026-10-31\",\n                \"preferred_date_label\": \"Saturday 31 Oct, 2026\",\n                \"preferred_time\": \"10:30\",\n                \"preferred_time_label\": \"10:30 AM\",\n                \"flexibility\": \"flexible\",\n                \"flexibility_label\": \"Flexible\",\n                \"address\": {\n                    \"address_id\": null,\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": {\n                        \"id\": 1,\n                        \"city_id\": 1,\n                        \"name\": \"Al Olaya\"\n                    },\n                    \"street_address\": \"675 King Jamil Rd., 213 Alamal Dist.\",\n                    \"postal_code\": \"23142\",\n                    \"latitude\": null,\n                    \"longitude\": null\n                },\n                \"images\": [],\n                \"offers_count\": 0,\n                \"created_at\": \"2026-10-26T04:16:48+00:00\"\n            },\n            {\n                \"id\": 16,\n                \"reference\": \"REQ-657035\",\n                \"status\": \"open\",\n                \"status_label\": \"Open\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"description\": \"Central AC unit not cooling - compressor makes loud noise when running.\",\n                \"budget\": 250,\n                \"currency\": \"SAR\",\n                \"preferred_date\": \"2026-10-30\",\n                \"preferred_date_label\": \"Friday 30 Oct, 2026\",\n                \"preferred_time\": \"10:30\",\n                \"preferred_time_label\": \"10:30 AM\",\n                \"flexibility\": \"flexible\",\n                \"flexibility_label\": \"Flexible\",\n                \"address\": {\n                    \"address_id\": null,\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": {\n                        \"id\": 1,\n                        \"city_id\": 1,\n                        \"name\": \"Al Olaya\"\n                    },\n                    \"street_address\": \"675 King Jamil Rd., 213 Alamal Dist.\",\n                    \"postal_code\": \"23142\",\n                    \"latitude\": null,\n                    \"longitude\": null\n                },\n                \"images\": [],\n                \"offers_count\": 0,\n                \"created_at\": \"2026-10-26T03:16:48+00:00\"\n            },\n            {\n                \"id\": 17,\n                \"reference\": \"REQ-935012\",\n                \"status\": \"open\",\n                \"status_label\": \"Open\",\n                \"service\": {\n                    \"id\": 5,\n                    \"slug\": \"electronics\",\n                    \"name\": \"Electronics\",\n                    \"description\": null,\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#FFB894\",\n                    \"image_url\": null\n                },\n                \"description\": \"Central AC unit not cooling - compressor makes loud noise when running.\",\n                \"budget\": 250,\n                \"currency\": \"SAR\",\n                \"preferred_date\": \"2026-10-31\",\n                \"preferred_date_label\": \"Saturday 31 Oct, 2026\",\n                \"preferred_time\": \"10:30\",\n                \"preferred_time_label\": \"10:30 AM\",\n                \"flexibility\": \"flexible\",\n                \"flexibility_label\": \"Flexible\",\n                \"address\": {\n                    \"address_id\": null,\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": {\n                        \"id\": 1,\n                        \"city_id\": 1,\n                        \"name\": \"Al Olaya\"\n                    },\n                    \"street_address\": \"675 King Jamil Rd., 213 Alamal Dist.\",\n                    \"postal_code\": \"23142\",\n                    \"latitude\": null,\n                    \"longitude\": null\n                },\n                \"images\": [],\n                \"offers_count\": 0,\n                \"created_at\": \"2026-10-26T02:16:48+00:00\"\n            }\n        ]\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Earnings",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{provider_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{lang}}",
+                "description": "ar or en"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/provider/earnings?period=weekly&page=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "provider",
+                "earnings"
+              ],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "weekly"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Side menu **Earnings** screen.\n\n`period` = tab at the top: `daily` (today), `weekly` (this week, Sunday-Saturday, default), `monthly` (this month), `yearly` (this year), `all`. `periods` has the translated tab labels.\n\n- `earnings` - green card total (SAR earned from completed work in the period)\n- `completed_bookings` - number of completed bookings in the period\n- `bookings` - the completed bookings (newest first, 20 per page): service icon + name, `scheduled_date_label` + `scheduled_time_label`, district + city, `provider_earning`\n\n403 when the user is not an approved provider."
+          },
+          "response": [
+            {
+              "name": "Weekly",
+              "originalRequest": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{provider_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "en",
+                    "description": "ar or en"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/provider/earnings?period=weekly&page=1",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "provider",
+                    "earnings"
+                  ],
+                  "query": [
+                    {
+                      "key": "period",
+                      "value": "weekly"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ]
+                },
+                "description": "Side menu **Earnings** screen.\n\n`period` = tab at the top: `daily` (today), `weekly` (this week, Sunday-Saturday, default), `monthly` (this month), `yearly` (this year), `all`. `periods` has the translated tab labels.\n\n- `earnings` - green card total (SAR earned from completed work in the period)\n- `completed_bookings` - number of completed bookings in the period\n- `bookings` - the completed bookings (newest first, 20 per page): service icon + name, `scheduled_date_label` + `scheduled_time_label`, district + city, `provider_earning`\n\n403 when the user is not an approved provider."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": null,\n    \"data\": {\n        \"period\": \"weekly\",\n        \"periods\": [\n            {\n                \"value\": \"daily\",\n                \"label\": \"Daily\"\n            },\n            {\n                \"value\": \"weekly\",\n                \"label\": \"Weekly\"\n            },\n            {\n                \"value\": \"monthly\",\n                \"label\": \"Monthly\"\n            },\n            {\n                \"value\": \"yearly\",\n                \"label\": \"Yearly\"\n            },\n            {\n                \"value\": \"all\",\n                \"label\": \"All\"\n            }\n        ],\n        \"earnings\": 2000,\n        \"completed_bookings\": 8,\n        \"currency\": \"SAR\",\n        \"bookings\": [\n            {\n                \"id\": 1,\n                \"reference\": \"BK-699058\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 4,\n                    \"name\": \"Dr. Lindsey Stanton V\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-29\",\n                \"scheduled_date_label\": \"Thursday 29 Oct, 2026\",\n                \"scheduled_day_label\": \"29 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"26142 Nelson Drive\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-26T04:16:48+00:00\"\n            },\n            {\n                \"id\": 2,\n                \"reference\": \"BK-380607\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 5,\n                    \"name\": \"Guy Mohr\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-29\",\n                \"scheduled_date_label\": \"Thursday 29 Oct, 2026\",\n                \"scheduled_day_label\": \"29 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"7192 Gabe Freeway\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-26T04:16:48+00:00\"\n            },\n            {\n                \"id\": 3,\n                \"reference\": \"BK-923285\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 6,\n                    \"name\": \"Elody Russel\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-29\",\n                \"scheduled_date_label\": \"Thursday 29 Oct, 2026\",\n                \"scheduled_day_label\": \"29 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"565 Eleanore Locks Suite 611\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-26T04:16:48+00:00\"\n            },\n            {\n                \"id\": 4,\n                \"reference\": \"BK-281598\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 7,\n                    \"name\": \"Prof. Kenneth Yundt V\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-29\",\n                \"scheduled_date_label\": \"Thursday 29 Oct, 2026\",\n                \"scheduled_day_label\": \"29 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"3713 Wilkinson Station Apt. 604\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-26T04:16:48+00:00\"\n            },\n            {\n                \"id\": 5,\n                \"reference\": \"BK-836681\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 8,\n                    \"name\": \"Markus Ullrich\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-29\",\n                \"scheduled_date_label\": \"Thursday 29 Oct, 2026\",\n                \"scheduled_day_label\": \"29 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"64258 Noe Vista Suite 376\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-26T04:16:48+00:00\"\n            },\n            {\n                \"id\": 6,\n                \"reference\": \"BK-230419\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 9,\n                    \"name\": \"Dr. Johann O'Reilly Jr.\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-29\",\n                \"scheduled_date_label\": \"Thursday 29 Oct, 2026\",\n                \"scheduled_day_label\": \"29 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"16044 Dach Land\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-26T04:16:48+00:00\"\n            },\n            {\n                \"id\": 7,\n                \"reference\": \"BK-409744\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 10,\n                    \"name\": \"Xander Bergnaum\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-29\",\n                \"scheduled_date_label\": \"Thursday 29 Oct, 2026\",\n                \"scheduled_day_label\": \"29 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"35416 Jude Course Suite 896\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-26T04:16:48+00:00\"\n            },\n            {\n                \"id\": 8,\n                \"reference\": \"BK-459492\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 11,\n                    \"name\": \"Dr. Felicia Orn MD\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-29\",\n                \"scheduled_date_label\": \"Thursday 29 Oct, 2026\",\n                \"scheduled_day_label\": \"29 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"3139 Sauer Parkways Apt. 750\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-26T04:16:48+00:00\"\n            }\n        ],\n        \"current_page\": 1,\n        \"last_page\": 1,\n        \"total\": 8\n    }\n}"
+            },
+            {
+              "name": "Daily",
+              "originalRequest": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{provider_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "en",
+                    "description": "ar or en"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/provider/earnings?period=daily&page=1",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "provider",
+                    "earnings"
+                  ],
+                  "query": [
+                    {
+                      "key": "period",
+                      "value": "daily"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ]
+                },
+                "description": "Side menu **Earnings** screen.\n\n`period` = tab at the top: `daily` (today), `weekly` (this week, Sunday-Saturday, default), `monthly` (this month), `yearly` (this year), `all`. `periods` has the translated tab labels.\n\n- `earnings` - green card total (SAR earned from completed work in the period)\n- `completed_bookings` - number of completed bookings in the period\n- `bookings` - the completed bookings (newest first, 20 per page): service icon + name, `scheduled_date_label` + `scheduled_time_label`, district + city, `provider_earning`\n\n403 when the user is not an approved provider."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": null,\n    \"data\": {\n        \"period\": \"daily\",\n        \"periods\": [\n            {\n                \"value\": \"daily\",\n                \"label\": \"Daily\"\n            },\n            {\n                \"value\": \"weekly\",\n                \"label\": \"Weekly\"\n            },\n            {\n                \"value\": \"monthly\",\n                \"label\": \"Monthly\"\n            },\n            {\n                \"value\": \"yearly\",\n                \"label\": \"Yearly\"\n            },\n            {\n                \"value\": \"all\",\n                \"label\": \"All\"\n            }\n        ],\n        \"earnings\": 2000,\n        \"completed_bookings\": 8,\n        \"currency\": \"SAR\",\n        \"bookings\": [\n            {\n                \"id\": 1,\n                \"reference\": \"BK-699058\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 4,\n                    \"name\": \"Dr. Lindsey Stanton V\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-29\",\n                \"scheduled_date_label\": \"Thursday 29 Oct, 2026\",\n                \"scheduled_day_label\": \"29 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"26142 Nelson Drive\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-26T04:16:48+00:00\"\n            },\n            {\n                \"id\": 2,\n                \"reference\": \"BK-380607\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 5,\n                    \"name\": \"Guy Mohr\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-29\",\n                \"scheduled_date_label\": \"Thursday 29 Oct, 2026\",\n                \"scheduled_day_label\": \"29 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"7192 Gabe Freeway\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-26T04:16:48+00:00\"\n            },\n            {\n                \"id\": 3,\n                \"reference\": \"BK-923285\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 6,\n                    \"name\": \"Elody Russel\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-29\",\n                \"scheduled_date_label\": \"Thursday 29 Oct, 2026\",\n                \"scheduled_day_label\": \"29 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"565 Eleanore Locks Suite 611\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-26T04:16:48+00:00\"\n            },\n            {\n                \"id\": 4,\n                \"reference\": \"BK-281598\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 7,\n                    \"name\": \"Prof. Kenneth Yundt V\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-29\",\n                \"scheduled_date_label\": \"Thursday 29 Oct, 2026\",\n                \"scheduled_day_label\": \"29 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"3713 Wilkinson Station Apt. 604\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-26T04:16:48+00:00\"\n            },\n            {\n                \"id\": 5,\n                \"reference\": \"BK-836681\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 8,\n                    \"name\": \"Markus Ullrich\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-29\",\n                \"scheduled_date_label\": \"Thursday 29 Oct, 2026\",\n                \"scheduled_day_label\": \"29 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"64258 Noe Vista Suite 376\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-26T04:16:48+00:00\"\n            },\n            {\n                \"id\": 6,\n                \"reference\": \"BK-230419\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 9,\n                    \"name\": \"Dr. Johann O'Reilly Jr.\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-29\",\n                \"scheduled_date_label\": \"Thursday 29 Oct, 2026\",\n                \"scheduled_day_label\": \"29 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"16044 Dach Land\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-26T04:16:48+00:00\"\n            },\n            {\n                \"id\": 7,\n                \"reference\": \"BK-409744\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 10,\n                    \"name\": \"Xander Bergnaum\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-29\",\n                \"scheduled_date_label\": \"Thursday 29 Oct, 2026\",\n                \"scheduled_day_label\": \"29 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"35416 Jude Course Suite 896\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-26T04:16:48+00:00\"\n            },\n            {\n                \"id\": 8,\n                \"reference\": \"BK-459492\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 11,\n                    \"name\": \"Dr. Felicia Orn MD\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-29\",\n                \"scheduled_date_label\": \"Thursday 29 Oct, 2026\",\n                \"scheduled_day_label\": \"29 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"3139 Sauer Parkways Apt. 750\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-26T04:16:48+00:00\"\n            }\n        ],\n        \"current_page\": 1,\n        \"last_page\": 1,\n        \"total\": 8\n    }\n}"
+            },
+            {
+              "name": "Monthly",
+              "originalRequest": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{provider_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "en",
+                    "description": "ar or en"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/provider/earnings?period=monthly&page=1",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "provider",
+                    "earnings"
+                  ],
+                  "query": [
+                    {
+                      "key": "period",
+                      "value": "monthly"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ]
+                },
+                "description": "Side menu **Earnings** screen.\n\n`period` = tab at the top: `daily` (today), `weekly` (this week, Sunday-Saturday, default), `monthly` (this month), `yearly` (this year), `all`. `periods` has the translated tab labels.\n\n- `earnings` - green card total (SAR earned from completed work in the period)\n- `completed_bookings` - number of completed bookings in the period\n- `bookings` - the completed bookings (newest first, 20 per page): service icon + name, `scheduled_date_label` + `scheduled_time_label`, district + city, `provider_earning`\n\n403 when the user is not an approved provider."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": null,\n    \"data\": {\n        \"period\": \"monthly\",\n        \"periods\": [\n            {\n                \"value\": \"daily\",\n                \"label\": \"Daily\"\n            },\n            {\n                \"value\": \"weekly\",\n                \"label\": \"Weekly\"\n            },\n            {\n                \"value\": \"monthly\",\n                \"label\": \"Monthly\"\n            },\n            {\n                \"value\": \"yearly\",\n                \"label\": \"Yearly\"\n            },\n            {\n                \"value\": \"all\",\n                \"label\": \"All\"\n            }\n        ],\n        \"earnings\": 2250,\n        \"completed_bookings\": 9,\n        \"currency\": \"SAR\",\n        \"bookings\": [\n            {\n                \"id\": 6,\n                \"reference\": \"BK-290639\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 11,\n                    \"name\": \"Dr. Rossie Swaniawski\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-22\",\n                \"scheduled_date_label\": \"Thursday 22 Oct, 2026\",\n                \"scheduled_day_label\": \"22 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"79169 Hills Cove Suite 293\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-19T03:59:43+00:00\"\n            },\n            {\n                \"id\": 7,\n                \"reference\": \"BK-851278\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 12,\n                    \"name\": \"Lucius Schinner III\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-22\",\n                \"scheduled_date_label\": \"Thursday 22 Oct, 2026\",\n                \"scheduled_day_label\": \"22 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"469 Kirlin Lake\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-19T03:59:43+00:00\"\n            },\n            {\n                \"id\": 8,\n                \"reference\": \"BK-760991\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 13,\n                    \"name\": \"Daniela Koss\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-22\",\n                \"scheduled_date_label\": \"Thursday 22 Oct, 2026\",\n                \"scheduled_day_label\": \"22 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"98164 Parisian Place\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-19T03:59:43+00:00\"\n            },\n            {\n                \"id\": 1,\n                \"reference\": \"BK-371065\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 6,\n                    \"name\": \"Mr. Raymundo Leffler\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-22\",\n                \"scheduled_date_label\": \"Thursday 22 Oct, 2026\",\n                \"scheduled_day_label\": \"22 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"2277 McClure Glens Suite 919\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-19T03:59:42+00:00\"\n            },\n            {\n                \"id\": 2,\n                \"reference\": \"BK-270696\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 7,\n                    \"name\": \"Maximo Rosenbaum\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-22\",\n                \"scheduled_date_label\": \"Thursday 22 Oct, 2026\",\n                \"scheduled_day_label\": \"22 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"561 Rosa Station\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-19T03:59:42+00:00\"\n            },\n            {\n                \"id\": 3,\n                \"reference\": \"BK-701298\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 8,\n                    \"name\": \"Evangeline Welch\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-22\",\n                \"scheduled_date_label\": \"Thursday 22 Oct, 2026\",\n                \"scheduled_day_label\": \"22 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"159 Kuhn Tunnel\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-19T03:59:42+00:00\"\n            },\n            {\n                \"id\": 4,\n                \"reference\": \"BK-531364\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 9,\n                    \"name\": \"Deon Bartoletti\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-22\",\n                \"scheduled_date_label\": \"Thursday 22 Oct, 2026\",\n                \"scheduled_day_label\": \"22 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"3886 Johns Rest Apt. 773\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-19T03:59:42+00:00\"\n            },\n            {\n                \"id\": 5,\n                \"reference\": \"BK-187761\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 10,\n                    \"name\": \"Joana Swift V\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-22\",\n                \"scheduled_date_label\": \"Thursday 22 Oct, 2026\",\n                \"scheduled_day_label\": \"22 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"1317 O'Connell Expressway Suite 060\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-19T03:59:42+00:00\"\n            },\n            {\n                \"id\": 15,\n                \"reference\": \"BK-964254\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 1,\n                    \"name\": \"Demo Customer1\",\n                    \"username\": \"demo_customer\",\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-11\",\n                \"scheduled_date_label\": \"Sunday 11 Oct, 2026\",\n                \"scheduled_day_label\": \"11 Oct\",\n                \"scheduled_time\": \"10:30\",\n                \"scheduled_time_label\": \"10:30 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": {\n                        \"id\": 1,\n                        \"city_id\": 1,\n                        \"name\": \"Al Olaya\"\n                    },\n                    \"street_address\": \"675 King Jamil Rd., 213 Alamal Dist.\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-11T06:22:21+00:00\"\n            }\n        ],\n        \"current_page\": 1,\n        \"last_page\": 1,\n        \"total\": 9\n    }\n}"
+            },
+            {
+              "name": "Yearly",
+              "originalRequest": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{provider_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "en",
+                    "description": "ar or en"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/provider/earnings?period=yearly&page=1",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "provider",
+                    "earnings"
+                  ],
+                  "query": [
+                    {
+                      "key": "period",
+                      "value": "yearly"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ]
+                },
+                "description": "Side menu **Earnings** screen.\n\n`period` = tab at the top: `daily` (today), `weekly` (this week, Sunday-Saturday, default), `monthly` (this month), `yearly` (this year), `all`. `periods` has the translated tab labels.\n\n- `earnings` - green card total (SAR earned from completed work in the period)\n- `completed_bookings` - number of completed bookings in the period\n- `bookings` - the completed bookings (newest first, 20 per page): service icon + name, `scheduled_date_label` + `scheduled_time_label`, district + city, `provider_earning`\n\n403 when the user is not an approved provider."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": null,\n    \"data\": {\n        \"period\": \"yearly\",\n        \"periods\": [\n            {\n                \"value\": \"daily\",\n                \"label\": \"Daily\"\n            },\n            {\n                \"value\": \"weekly\",\n                \"label\": \"Weekly\"\n            },\n            {\n                \"value\": \"monthly\",\n                \"label\": \"Monthly\"\n            },\n            {\n                \"value\": \"yearly\",\n                \"label\": \"Yearly\"\n            },\n            {\n                \"value\": \"all\",\n                \"label\": \"All\"\n            }\n        ],\n        \"earnings\": 2250,\n        \"completed_bookings\": 9,\n        \"currency\": \"SAR\",\n        \"bookings\": [\n            {\n                \"id\": 6,\n                \"reference\": \"BK-290639\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 11,\n                    \"name\": \"Dr. Rossie Swaniawski\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-22\",\n                \"scheduled_date_label\": \"Thursday 22 Oct, 2026\",\n                \"scheduled_day_label\": \"22 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"79169 Hills Cove Suite 293\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-19T03:59:43+00:00\"\n            },\n            {\n                \"id\": 7,\n                \"reference\": \"BK-851278\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 12,\n                    \"name\": \"Lucius Schinner III\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-22\",\n                \"scheduled_date_label\": \"Thursday 22 Oct, 2026\",\n                \"scheduled_day_label\": \"22 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"469 Kirlin Lake\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-19T03:59:43+00:00\"\n            },\n            {\n                \"id\": 8,\n                \"reference\": \"BK-760991\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 13,\n                    \"name\": \"Daniela Koss\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-22\",\n                \"scheduled_date_label\": \"Thursday 22 Oct, 2026\",\n                \"scheduled_day_label\": \"22 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"98164 Parisian Place\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-19T03:59:43+00:00\"\n            },\n            {\n                \"id\": 1,\n                \"reference\": \"BK-371065\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 6,\n                    \"name\": \"Mr. Raymundo Leffler\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-22\",\n                \"scheduled_date_label\": \"Thursday 22 Oct, 2026\",\n                \"scheduled_day_label\": \"22 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"2277 McClure Glens Suite 919\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-19T03:59:42+00:00\"\n            },\n            {\n                \"id\": 2,\n                \"reference\": \"BK-270696\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 7,\n                    \"name\": \"Maximo Rosenbaum\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-22\",\n                \"scheduled_date_label\": \"Thursday 22 Oct, 2026\",\n                \"scheduled_day_label\": \"22 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"561 Rosa Station\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-19T03:59:42+00:00\"\n            },\n            {\n                \"id\": 3,\n                \"reference\": \"BK-701298\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 8,\n                    \"name\": \"Evangeline Welch\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-22\",\n                \"scheduled_date_label\": \"Thursday 22 Oct, 2026\",\n                \"scheduled_day_label\": \"22 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"159 Kuhn Tunnel\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-19T03:59:42+00:00\"\n            },\n            {\n                \"id\": 4,\n                \"reference\": \"BK-531364\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 9,\n                    \"name\": \"Deon Bartoletti\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-22\",\n                \"scheduled_date_label\": \"Thursday 22 Oct, 2026\",\n                \"scheduled_day_label\": \"22 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"3886 Johns Rest Apt. 773\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-19T03:59:42+00:00\"\n            },\n            {\n                \"id\": 5,\n                \"reference\": \"BK-187761\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 10,\n                    \"name\": \"Joana Swift V\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-22\",\n                \"scheduled_date_label\": \"Thursday 22 Oct, 2026\",\n                \"scheduled_day_label\": \"22 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"1317 O'Connell Expressway Suite 060\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-19T03:59:42+00:00\"\n            },\n            {\n                \"id\": 15,\n                \"reference\": \"BK-964254\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 1,\n                    \"name\": \"Demo Customer1\",\n                    \"username\": \"demo_customer\",\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-11\",\n                \"scheduled_date_label\": \"Sunday 11 Oct, 2026\",\n                \"scheduled_day_label\": \"11 Oct\",\n                \"scheduled_time\": \"10:30\",\n                \"scheduled_time_label\": \"10:30 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": {\n                        \"id\": 1,\n                        \"city_id\": 1,\n                        \"name\": \"Al Olaya\"\n                    },\n                    \"street_address\": \"675 King Jamil Rd., 213 Alamal Dist.\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-11T06:22:21+00:00\"\n            }\n        ],\n        \"current_page\": 1,\n        \"last_page\": 1,\n        \"total\": 9\n    }\n}"
+            },
+            {
+              "name": "All",
+              "originalRequest": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{provider_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "en",
+                    "description": "ar or en"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/provider/earnings?period=all&page=1",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "provider",
+                    "earnings"
+                  ],
+                  "query": [
+                    {
+                      "key": "period",
+                      "value": "all"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ]
+                },
+                "description": "Side menu **Earnings** screen.\n\n`period` = tab at the top: `daily` (today), `weekly` (this week, Sunday-Saturday, default), `monthly` (this month), `yearly` (this year), `all`. `periods` has the translated tab labels.\n\n- `earnings` - green card total (SAR earned from completed work in the period)\n- `completed_bookings` - number of completed bookings in the period\n- `bookings` - the completed bookings (newest first, 20 per page): service icon + name, `scheduled_date_label` + `scheduled_time_label`, district + city, `provider_earning`\n\n403 when the user is not an approved provider."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": null,\n    \"data\": {\n        \"period\": \"all\",\n        \"periods\": [\n            {\n                \"value\": \"daily\",\n                \"label\": \"Daily\"\n            },\n            {\n                \"value\": \"weekly\",\n                \"label\": \"Weekly\"\n            },\n            {\n                \"value\": \"monthly\",\n                \"label\": \"Monthly\"\n            },\n            {\n                \"value\": \"yearly\",\n                \"label\": \"Yearly\"\n            },\n            {\n                \"value\": \"all\",\n                \"label\": \"All\"\n            }\n        ],\n        \"earnings\": 2250,\n        \"completed_bookings\": 9,\n        \"currency\": \"SAR\",\n        \"bookings\": [\n            {\n                \"id\": 1,\n                \"reference\": \"BK-699058\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 4,\n                    \"name\": \"Dr. Lindsey Stanton V\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-29\",\n                \"scheduled_date_label\": \"Thursday 29 Oct, 2026\",\n                \"scheduled_day_label\": \"29 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"26142 Nelson Drive\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-26T04:16:48+00:00\"\n            },\n            {\n                \"id\": 2,\n                \"reference\": \"BK-380607\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 5,\n                    \"name\": \"Guy Mohr\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-29\",\n                \"scheduled_date_label\": \"Thursday 29 Oct, 2026\",\n                \"scheduled_day_label\": \"29 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"7192 Gabe Freeway\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-26T04:16:48+00:00\"\n            },\n            {\n                \"id\": 3,\n                \"reference\": \"BK-923285\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 6,\n                    \"name\": \"Elody Russel\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-29\",\n                \"scheduled_date_label\": \"Thursday 29 Oct, 2026\",\n                \"scheduled_day_label\": \"29 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"565 Eleanore Locks Suite 611\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-26T04:16:48+00:00\"\n            },\n            {\n                \"id\": 4,\n                \"reference\": \"BK-281598\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 7,\n                    \"name\": \"Prof. Kenneth Yundt V\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-29\",\n                \"scheduled_date_label\": \"Thursday 29 Oct, 2026\",\n                \"scheduled_day_label\": \"29 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"3713 Wilkinson Station Apt. 604\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-26T04:16:48+00:00\"\n            },\n            {\n                \"id\": 5,\n                \"reference\": \"BK-836681\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 8,\n                    \"name\": \"Markus Ullrich\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-29\",\n                \"scheduled_date_label\": \"Thursday 29 Oct, 2026\",\n                \"scheduled_day_label\": \"29 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"64258 Noe Vista Suite 376\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-26T04:16:48+00:00\"\n            },\n            {\n                \"id\": 6,\n                \"reference\": \"BK-230419\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 9,\n                    \"name\": \"Dr. Johann O'Reilly Jr.\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-29\",\n                \"scheduled_date_label\": \"Thursday 29 Oct, 2026\",\n                \"scheduled_day_label\": \"29 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"16044 Dach Land\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-26T04:16:48+00:00\"\n            },\n            {\n                \"id\": 7,\n                \"reference\": \"BK-409744\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 10,\n                    \"name\": \"Xander Bergnaum\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-29\",\n                \"scheduled_date_label\": \"Thursday 29 Oct, 2026\",\n                \"scheduled_day_label\": \"29 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"35416 Jude Course Suite 896\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-26T04:16:48+00:00\"\n            },\n            {\n                \"id\": 8,\n                \"reference\": \"BK-459492\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 11,\n                    \"name\": \"Dr. Felicia Orn MD\",\n                    \"username\": null,\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-29\",\n                \"scheduled_date_label\": \"Thursday 29 Oct, 2026\",\n                \"scheduled_day_label\": \"29 Oct\",\n                \"scheduled_time\": \"09:00\",\n                \"scheduled_time_label\": \"09:00 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": null,\n                    \"street_address\": \"3139 Sauer Parkways Apt. 750\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-26T04:16:48+00:00\"\n            },\n            {\n                \"id\": 12,\n                \"reference\": \"BK-365863\",\n                \"status\": \"completed\",\n                \"status_label\": \"Completed\",\n                \"service\": {\n                    \"id\": 1,\n                    \"slug\": \"ac-repair\",\n                    \"name\": \"AC Repair\",\n                    \"description\": \"Keep your home cool and comfortable. Describe the issue with your AC unit (e.g., not cooling, leaking, or noisy), upload photos for a faster diagnosis, and pick a time that works for you. Your request will be sent to verified HVAC specialists in your area.\",\n                    \"icon_url\": null,\n                    \"icon_bg_color\": \"#B8EBD0\",\n                    \"image_url\": null\n                },\n                \"customer\": {\n                    \"id\": 1,\n                    \"name\": \"Demo Customer\",\n                    \"username\": \"demo_customer\",\n                    \"avatar_url\": null\n                },\n                \"scheduled_date\": \"2026-10-16\",\n                \"scheduled_date_label\": \"Friday 16 Oct, 2026\",\n                \"scheduled_day_label\": \"16 Oct\",\n                \"scheduled_time\": \"10:30\",\n                \"scheduled_time_label\": \"10:30 AM\",\n                \"address\": {\n                    \"city\": {\n                        \"id\": 1,\n                        \"name\": \"Riyadh\"\n                    },\n                    \"district\": {\n                        \"id\": 1,\n                        \"city_id\": 1,\n                        \"name\": \"Al Olaya\"\n                    },\n                    \"street_address\": \"675 King Jamil Rd., 213 Alamal Dist.\"\n                },\n                \"service_price\": 250,\n                \"provider_earning\": 250,\n                \"currency\": \"SAR\",\n                \"completed_at\": \"2026-10-16T06:16:48+00:00\"\n            }\n        ],\n        \"current_page\": 1,\n        \"last_page\": 1,\n        \"total\": 9\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Provider notifications",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{provider_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{lang}}",
+                "description": "ar or en"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/notifications?mode=provider&page=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "notifications"
+              ],
+              "query": [
+                {
+                  "key": "mode",
+                  "value": "provider"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "**Notifications** in Provider Mode (same endpoint as the customer list in folder 7, with `mode=provider`). Customer and provider notifications are separate lists; without `mode` you get the customer list.\n\nProvider types:\n- `provider_offer_sent` - **Offer Sent** (after sending an offer; comes with the Send Offer step)\n- `provider_booking_confirmed` - **Booking Confirmed!** the customer accepted and paid (`booking_id`)\n- `provider_work_started` - **Work started** (`booking_id`)\n- `provider_work_rated` - **Work completed** the customer rated the service (`booking_id`)\n\nService names and dates are shown in the reader's language (`Accept-Language`). `unread_count` counts this list only. Mark one as read with **Mark notification as read** (folder 7)."
+          },
+          "response": [
+            {
+              "name": "Provider notifications",
+              "originalRequest": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{provider_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "en",
+                    "description": "ar or en"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/notifications?mode=provider&page=1",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "notifications"
+                  ],
+                  "query": [
+                    {
+                      "key": "mode",
+                      "value": "provider"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ]
+                },
+                "description": "**Notifications** in Provider Mode (same endpoint as the customer list in folder 7, with `mode=provider`). Customer and provider notifications are separate lists; without `mode` you get the customer list.\n\nProvider types:\n- `provider_offer_sent` - **Offer Sent** (after sending an offer; comes with the Send Offer step)\n- `provider_booking_confirmed` - **Booking Confirmed!** the customer accepted and paid (`booking_id`)\n- `provider_work_started` - **Work started** (`booking_id`)\n- `provider_work_rated` - **Work completed** the customer rated the service (`booking_id`)\n\nService names and dates are shown in the reader's language (`Accept-Language`). `unread_count` counts this list only. Mark one as read with **Mark notification as read** (folder 7)."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": null,\n    \"data\": {\n        \"mode\": \"provider\",\n        \"notifications\": [\n            {\n                \"id\": \"6868f4a8-8ec4-4036-ba6f-f6aaec7e4ee4\",\n                \"type\": \"provider_offer_sent\",\n                \"title\": \"Offer Sent\",\n                \"body\": \"Your offer for the AC Repair request from Abdul Rehman has been submitted. We will notify you once they make a decision.\",\n                \"service_request_id\": null,\n                \"booking_id\": null,\n                \"is_read\": false,\n                \"created_at\": \"2026-10-26T04:16:48+00:00\"\n            },\n            {\n                \"id\": \"d18103fb-1568-4b9f-8931-6f1f495c0c3d\",\n                \"type\": \"provider_booking_confirmed\",\n                \"title\": \"Booking Confirmed!\",\n                \"body\": \"Abdul Rehman has accepted your offer and completed the payment for AC Repair on Monday 17 Aug, 2026 10:30 AM.\",\n                \"service_request_id\": null,\n                \"booking_id\": null,\n                \"is_read\": true,\n                \"created_at\": \"2026-10-26T03:16:48+00:00\"\n            },\n            {\n                \"id\": \"f29b8e65-448d-4d65-ae00-231e21f0d980\",\n                \"type\": \"provider_work_started\",\n                \"title\": \"Work started\",\n                \"body\": \"You have started working on the AC Repair request for Abdul Rehman.\",\n                \"service_request_id\": null,\n                \"booking_id\": null,\n                \"is_read\": true,\n                \"created_at\": \"2026-10-26T02:16:48+00:00\"\n            },\n            {\n                \"id\": \"120578fb-5cca-4c79-a52a-6a2fbb6e3432\",\n                \"type\": \"provider_work_rated\",\n                \"title\": \"Work completed\",\n                \"body\": \"The work has been marked as completed! Abdul Rehman has rated your service 5 stars.\",\n                \"service_request_id\": null,\n                \"booking_id\": null,\n                \"is_read\": true,\n                \"created_at\": \"2026-10-26T01:16:48+00:00\"\n            }\n        ],\n        \"unread_count\": 1,\n        \"current_page\": 1,\n        \"last_page\": 1,\n        \"total\": 4\n    }\n}"
+            },
+            {
+              "name": "Provider notifications (Arabic)",
+              "originalRequest": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{provider_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "ar",
+                    "description": "ar or en"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/notifications?mode=provider&page=1",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "notifications"
+                  ],
+                  "query": [
+                    {
+                      "key": "mode",
+                      "value": "provider"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ]
+                },
+                "description": "**Notifications** in Provider Mode (same endpoint as the customer list in folder 7, with `mode=provider`). Customer and provider notifications are separate lists; without `mode` you get the customer list.\n\nProvider types:\n- `provider_offer_sent` - **Offer Sent** (after sending an offer; comes with the Send Offer step)\n- `provider_booking_confirmed` - **Booking Confirmed!** the customer accepted and paid (`booking_id`)\n- `provider_work_started` - **Work started** (`booking_id`)\n- `provider_work_rated` - **Work completed** the customer rated the service (`booking_id`)\n\nService names and dates are shown in the reader's language (`Accept-Language`). `unread_count` counts this list only. Mark one as read with **Mark notification as read** (folder 7)."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": null,\n    \"data\": {\n        \"mode\": \"provider\",\n        \"notifications\": [\n            {\n                \"id\": \"6868f4a8-8ec4-4036-ba6f-f6aaec7e4ee4\",\n                \"type\": \"provider_offer_sent\",\n                \"title\": \"تم إرسال العرض\",\n                \"body\": \"تم إرسال عرضك لطلب تصليح التكييف من Abdul Rehman. سنُعلمك فور اتخاذه القرار.\",\n                \"service_request_id\": null,\n                \"booking_id\": null,\n                \"is_read\": false,\n                \"created_at\": \"2026-10-26T04:16:48+00:00\"\n            },\n            {\n                \"id\": \"d18103fb-1568-4b9f-8931-6f1f495c0c3d\",\n                \"type\": \"provider_booking_confirmed\",\n                \"title\": \"تم تأكيد الحجز!\",\n                \"body\": \"قبل Abdul Rehman عرضك وأكمل الدفع لخدمة تصليح التكييف يوم الاثنين 17 أغسطس، 2026 10:30 ص.\",\n                \"service_request_id\": null,\n                \"booking_id\": null,\n                \"is_read\": true,\n                \"created_at\": \"2026-10-26T03:16:48+00:00\"\n            },\n            {\n                \"id\": \"f29b8e65-448d-4d65-ae00-231e21f0d980\",\n                \"type\": \"provider_work_started\",\n                \"title\": \"بدأ العمل\",\n                \"body\": \"لقد بدأت العمل على طلب تصليح التكييف الخاص بـ Abdul Rehman.\",\n                \"service_request_id\": null,\n                \"booking_id\": null,\n                \"is_read\": true,\n                \"created_at\": \"2026-10-26T02:16:48+00:00\"\n            },\n            {\n                \"id\": \"120578fb-5cca-4c79-a52a-6a2fbb6e3432\",\n                \"type\": \"provider_work_rated\",\n                \"title\": \"تم إنجاز العمل\",\n                \"body\": \"تم تحديد العمل كمكتمل! قام Abdul Rehman بتقييم خدمتك بـ 5 نجوم.\",\n                \"service_request_id\": null,\n                \"booking_id\": null,\n                \"is_read\": true,\n                \"created_at\": \"2026-10-26T01:16:48+00:00\"\n            }\n        ],\n        \"unread_count\": 1,\n        \"current_page\": 1,\n        \"last_page\": 1,\n        \"total\": 4\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Mark all provider notifications as read",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{provider_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{lang}}",
+                "description": "ar or en"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/notifications/read-all?mode=provider",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "notifications",
+                "read-all"
+              ],
+              "query": [
+                {
+                  "key": "mode",
+                  "value": "provider"
+                }
+              ]
+            },
+            "description": "Marks the provider list as read (the customer list is not changed). Same endpoint as folder 7 with `mode=provider`."
+          },
+          "response": [
+            {
+              "name": "Done",
+              "originalRequest": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{provider_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept-Language",
+                    "value": "en",
+                    "description": "ar or en"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/notifications/read-all?mode=provider",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "notifications",
+                    "read-all"
+                  ],
+                  "query": [
+                    {
+                      "key": "mode",
+                      "value": "provider"
+                    }
+                  ]
+                },
+                "description": "Marks the provider list as read (the customer list is not changed). Same endpoint as folder 7 with `mode=provider`."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"All notifications marked as read.\",\n    \"data\": null\n}"
+            }
+          ]
+        }
+      ]
     }
   ],
   "variable": [

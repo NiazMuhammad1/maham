@@ -142,6 +142,20 @@ return [
     'provider_application_under_review' => 'طلبك قيد المراجعة. يمكنك تعديله مرة أخرى فقط في حال رفضه.',
     'provider_application_closed' => 'لم يعد بالإمكان تعديل طلب مقدم الخدمة الخاص بك.',
 
+    // Provider Dashboard / Earnings / Mode switch
+    'provider_only' => 'هذا القسم متاح لمقدمي الخدمة المعتمدين فقط.',
+    'mode_switched' => [
+        'customer' => 'تم التبديل إلى وضع العميل.',
+        'provider' => 'تم التبديل إلى وضع مقدم الخدمة.',
+    ],
+    'earning_periods' => [
+        'daily' => 'يومي',
+        'weekly' => 'أسبوعي',
+        'monthly' => 'شهري',
+        'yearly' => 'سنوي',
+        'all' => 'الكل',
+    ],
+
     // Chat
     'chat_safety_warning' => 'لسلامتك، احرص على أن تكون جميع المدفوعات والمحادثات داخل تطبيق مهام. الاتفاقات خارج التطبيق لا يشملها ضمان مهام.',
     'chat_photo' => 'صورة',

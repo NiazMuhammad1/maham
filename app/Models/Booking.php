@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Carbon;
 
 /**
  * Created when the customer accepts an offer and pays ("Booking Confirmed").
@@ -167,6 +168,21 @@ class Booking extends Model
     public function review(): HasOne
     {
         return $this->hasOne(Review::class);
+    }
+
+    /**
+     * "Sunday 09 Aug, 2026 10:30 AM" in both languages, for notifications.
+     *
+     * @return array{en: string, ar: string}
+     */
+    public function scheduledAtTranslations(): array
+    {
+        $time = $this->scheduled_time ? Carbon::createFromTimeString($this->scheduled_time) : null;
+
+        return collect(['en', 'ar'])->mapWithKeys(fn (string $locale) => [
+            $locale => trim($this->scheduled_date->locale($locale)->translatedFormat('l d M, Y').' '
+                .$time?->locale($locale)->translatedFormat('h:i A')),
+        ])->all();
     }
 
     /**

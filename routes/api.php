@@ -27,6 +27,8 @@ use App\Http\Controllers\Api\V1\Profile\PhoneController as ProfilePhoneControlle
 use App\Http\Controllers\Api\V1\Profile\ProfileController;
 use App\Http\Controllers\Api\V1\Provider\ApplicationController as ProviderApplicationController;
 use App\Http\Controllers\Api\V1\Provider\BookingController as ProviderBookingController;
+use App\Http\Controllers\Api\V1\Provider\DashboardController as ProviderDashboardController;
+use App\Http\Controllers\Api\V1\Provider\EarningsController as ProviderEarningsController;
 use App\Http\Controllers\Api\V1\ProviderController;
 use App\Http\Controllers\Api\V1\ServiceController;
 use App\Http\Controllers\Api\V1\ServiceRequestController;
@@ -113,6 +115,10 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
             Route::post('application/service-area', [ProviderApplicationController::class, 'serviceArea'])->name('application.service-area');
             Route::post('application/business-details', [ProviderApplicationController::class, 'businessDetails'])->name('application.business-details');
             Route::post('application/submit', [ProviderApplicationController::class, 'submit'])->middleware('throttle:10,1')->name('application.submit');
+
+            // Provider Home (Dashboard) and Earnings (approved providers only)
+            Route::get('dashboard', ProviderDashboardController::class)->name('dashboard');
+            Route::get('earnings', ProviderEarningsController::class)->name('earnings');
         });
 
         // Chat
@@ -132,6 +138,7 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
 
         // Side menu
         Route::put('profile/language', [LanguageController::class, 'update'])->name('profile.language');
+        Route::put('profile/mode', [ProfileController::class, 'updateMode'])->name('profile.mode');
 
         // Account Settings: Personal Details, Home Address, Notification Settings
         Route::get('profile', [ProfileController::class, 'show'])->name('profile.show');

@@ -23,6 +23,14 @@ abstract class Controller
     }
 
     /**
+     * Provider screens (Dashboard, Earnings ...) are only for providers approved by the admin team.
+     */
+    protected function ensureProviderCanUseDashboard(User $user): void
+    {
+        abort_unless($user->isApprovedProvider(), 403, __('messages.provider_only'));
+    }
+
+    /**
      * Log the user in: create a Sanctum token, remember the device push token and build the auth payload.
      *
      * @return array{token: string, token_type: string, next_step: string, user: UserResource}

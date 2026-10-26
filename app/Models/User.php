@@ -10,8 +10,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
@@ -52,6 +54,11 @@ class User extends Authenticatable implements HasMedia
     public const string STEP_COMPLETED = 'completed';
 
     public const string STEP_GUEST = 'guest';
+
+    // Side menu "Customer Mode" / "Provider Mode" (`active_mode`); also which notifications list is shown
+    public const string MODE_CUSTOMER = 'customer';
+
+    public const string MODE_PROVIDER = 'provider';
 
     // "Become a Service Provider" application: status and next screen
     public const string APPLICATION_NOT_STARTED = 'not_started';
@@ -226,10 +233,31 @@ class User extends Authenticatable implements HasMedia
     }
 
     /**
+     * Bookings this user works on as a provider.
+     *
+     * @return HasMany<Booking, $this>
+     */
+    public function providerBookings(): HasMany
+    {
+        return $this->hasMany(Booking::class, 'provider_id');
+    }
+
+    /**
+     * A provider whose application was approved by the admin team (can use the provider screens).
+     */
+    public function isApprovedProvider(): bool
+    {
+        return $this->is_provider && $this->providerProfile?->status === ProviderProfile::STATUS_APPROVED;
+    }
+
+    /**
      * Save an in-app notification. The title and body are translated when the list is read
      * (see lang/{en,ar}/notifications.php), so only the type key and its :params are stored.
      *
-     * @param  array<string, string>  $params
+     * A param can also be ['en' => ..., 'ar' => ...] (e.g. a service name or a date), so the reader sees it
+     * in their own language even when the notification was created by someone using the other language.
+     *
+     * @param  array<string, string|array{en: string, ar: string}>  $params
      * @param  array<string, mixed>  $extra  e.g. ['booking_id' => 5] so the app knows which screen to open
      */
     public function addAppNotification(string $type, array $params, array $extra = []): void
@@ -239,6 +267,30 @@ class User extends Authenticatable implements HasMedia
             'type' => $type,
             'data' => ['params' => $params, ...$extra],
         ]);
+    }
+
+    /**
+     * A notification for the provider side ("Notifications" in Provider Mode).
+     *
+     * @param  array<string, string|array{en: string, ar: string}>  $params
+     * @param  array<string, mixed>  $extra
+     */
+    public function addProviderNotification(string $type, array $params, array $extra = []): void
+    {
+        $this->addAppNotification($type, $params, [...$extra, 'mode' => self::MODE_PROVIDER]);
+    }
+
+    /**
+     * Notifications of one side of the app: provider notifications are saved with data.mode = provider,
+     * customer notifications have no mode.
+     *
+     * @return MorphMany<DatabaseNotification, $this>
+     */
+    public function notificationsFor(string $mode): MorphMany
+    {
+        return $mode === self::MODE_PROVIDER
+            ? $this->notifications()->where('data->mode', self::MODE_PROVIDER)
+            : $this->notifications()->whereNull('data->mode');
     }
 
     public function avatarUrl(): ?string

@@ -224,6 +224,12 @@ return [
         'skills_experience' => 'skills and experience',
         'website' => 'website link',
         'logo' => 'business logo',
+
+        // Business Profile -> Payment Settings
+        'bank_id' => 'bank',
+        'account_holder_name' => 'account holder name',
+        'iban' => 'IBAN',
+        'swift_code' => 'Swift / BIC code',
     ],
 
 ];

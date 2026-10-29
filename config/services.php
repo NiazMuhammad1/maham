@@ -54,8 +54,10 @@ return [
     ],
 
     /*
-    | Payment gateway used when the customer accepts an offer. Supported drivers:
-    | "fake" (every payment succeeds, for local / staging) and "moyasar" (live).
+    | Payment gateways used when the customer accepts an offer. Drivers:
+    | "fake" (every payment succeeds, for local / staging) and "live" (real gateways:
+    | Moyasar for card / Apple Pay, Tabby and Tamara for "buy now, pay later").
+    | "moyasar" is the old name of "live" and still works.
     */
     'payment' => [
         'driver' => env('PAYMENT_DRIVER', 'fake'),
@@ -64,6 +66,26 @@ return [
             'publishable_key' => env('MOYASAR_PUBLISHABLE_KEY'),
             'secret_key' => env('MOYASAR_SECRET_KEY'),
             'apple_pay_merchant_id' => env('MOYASAR_APPLE_PAY_MERCHANT_ID'),
+        ],
+
+        // Tabby (tabby.ai). Test keys work on the same URL.
+        'tabby' => [
+            'secret_key' => env('TABBY_SECRET_KEY'),
+            'merchant_code' => env('TABBY_MERCHANT_CODE'),
+            'base_url' => env('TABBY_BASE_URL', 'https://api.tabby.ai'),
+        ],
+
+        // Tamara (tamara.co). Live URL: https://api.tamara.co
+        'tamara' => [
+            'api_token' => env('TAMARA_API_TOKEN'),
+            'base_url' => env('TAMARA_BASE_URL', 'https://api-sandbox.tamara.co'),
+        ],
+
+        // Tabby / Tamara send the customer back to these pages; the app's WebView watches for them.
+        'redirect_urls' => [
+            'success' => env('PAYMENT_SUCCESS_URL', env('APP_URL').'/payments/success'),
+            'cancel' => env('PAYMENT_CANCEL_URL', env('APP_URL').'/payments/cancel'),
+            'failure' => env('PAYMENT_FAILURE_URL', env('APP_URL').'/payments/failure'),
         ],
     ],
 

@@ -27,8 +27,10 @@ use App\Http\Controllers\Api\V1\Profile\PhoneController as ProfilePhoneControlle
 use App\Http\Controllers\Api\V1\Profile\ProfileController;
 use App\Http\Controllers\Api\V1\Provider\ApplicationController as ProviderApplicationController;
 use App\Http\Controllers\Api\V1\Provider\BookingController as ProviderBookingController;
+use App\Http\Controllers\Api\V1\Provider\BusinessProfileController as ProviderBusinessProfileController;
 use App\Http\Controllers\Api\V1\Provider\DashboardController as ProviderDashboardController;
 use App\Http\Controllers\Api\V1\Provider\EarningsController as ProviderEarningsController;
+use App\Http\Controllers\Api\V1\Provider\PayoutAccountController as ProviderPayoutAccountController;
 use App\Http\Controllers\Api\V1\ProviderController;
 use App\Http\Controllers\Api\V1\ServiceController;
 use App\Http\Controllers\Api\V1\ServiceRequestController;
@@ -97,6 +99,7 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
         // Offers Received, Offer Details, Accept Offer (pay + book)
         Route::get('service-requests/{serviceRequest}/offers', [OfferController::class, 'index'])->name('service-requests.offers');
         Route::get('offers/{offer}', [OfferController::class, 'show'])->name('offers.show');
+        Route::post('offers/{offer}/checkout', [OfferController::class, 'checkout'])->middleware('throttle:10,1')->name('offers.checkout');
         Route::post('offers/{offer}/accept', [OfferController::class, 'accept'])->middleware('throttle:10,1')->name('offers.accept');
 
         // My Bookings, Booking Details (Booking Confirmed) and Rate Provider
@@ -119,6 +122,14 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
             // Provider Home (Dashboard) and Earnings (approved providers only)
             Route::get('dashboard', ProviderDashboardController::class)->name('dashboard');
             Route::get('earnings', ProviderEarningsController::class)->name('earnings');
+
+            // Business Profile: Manage Services, Service Area, Business Details, Payment Settings (approved providers only)
+            Route::get('business-profile', [ProviderBusinessProfileController::class, 'show'])->name('business-profile.show');
+            Route::put('business-profile/services', [ProviderBusinessProfileController::class, 'updateServices'])->name('business-profile.services');
+            Route::put('business-profile/service-area', [ProviderBusinessProfileController::class, 'updateServiceArea'])->name('business-profile.service-area');
+            Route::put('business-profile/business-details', [ProviderBusinessProfileController::class, 'updateBusinessDetails'])->name('business-profile.business-details');
+            Route::get('payout-account', [ProviderPayoutAccountController::class, 'show'])->name('payout-account.show');
+            Route::put('payout-account', [ProviderPayoutAccountController::class, 'update'])->middleware('throttle:10,1')->name('payout-account.update');
         });
 
         // Chat

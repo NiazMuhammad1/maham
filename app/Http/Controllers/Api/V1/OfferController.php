@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AcceptOfferRequest;
+use App\Http\Requests\StartCheckoutRequest;
 use App\Http\Resources\BookingResource;
 use App\Http\Resources\OfferResource;
 use App\Http\Resources\ServiceRequestResource;
@@ -65,20 +66,59 @@ class OfferController extends Controller
 
         $offer->load(['provider.providerProfile', 'provider.media', 'serviceRequest.service.media', 'serviceRequest.city', 'serviceRequest.district', 'serviceRequest.media']);
 
+        $price = $offer->priceBreakdown();
+
         return $this->success([
             ...(new OfferResource($offer))->resolve(),
             'can_accept' => $offer->status === Offer::STATUS_PENDING && $offer->serviceRequest->isOpen(),
             'service_request' => (new ServiceRequestResource($offer->serviceRequest))->resolve(),
             'payment' => [
                 ...$paymentService->clientConfig(),
-                'amount' => (float) $offer->price,
-                'amount_halalas' => (int) round($offer->price * 100), // Moyasar SDK wants the amount in halalas
+                // Payments sheet: "Service Price" + "Processing fee" = "Total" (the amount to charge)
+                'service_price' => $price['service_price'],
+                'processing_fee_percent' => $price['processing_fee_percent'],
+                'processing_fee' => $price['processing_fee'],
+                'amount' => $price['total_amount'],
+                'amount_halalas' => (int) round($price['total_amount'] * 100), // Moyasar SDK wants the amount in halalas
                 'currency' => $offer->currency,
-                'methods' => collect(Payment::METHODS)->map(fn (string $method) => [
+                'methods' => collect($paymentService->availableMethods())->map(fn (string $method) => [
                     'value' => $method,
                     'label' => __("messages.payment_method.{$method}"),
+                    // true = call "Start checkout" and open checkout_url in a WebView (Tabby / Tamara)
+                    'uses_checkout_page' => in_array($method, Payment::INSTALLMENT_METHODS, true),
                 ]),
             ],
+        ]);
+    }
+
+    /**
+     * Payments sheet with Tabby / Tamara selected -> "Confirm and Pay": open the gateway's checkout.
+     * The app opens checkout_url in a WebView; when it reaches the success link,
+     * it calls "accept" with the same payment_method and payment_id.
+     */
+    public function checkout(StartCheckoutRequest $request, Offer $offer, PaymentService $paymentService): JsonResponse
+    {
+        $this->ensureOwnsRequest($request, $offer->serviceRequest);
+        $this->ensureCanBeAccepted($offer);
+
+        $method = $request->input('payment_method');
+
+        if (! in_array($method, $paymentService->availableMethods(), true)) {
+            throw ValidationException::withMessages(['payment_method' => __('messages.installment_not_available')]);
+        }
+
+        $offer->load(['serviceRequest.service', 'serviceRequest.city']);
+        $amount = $offer->priceBreakdown()['total_amount'];
+        $checkout = $paymentService->createCheckout($method, $offer, $request->user(), $amount);
+
+        return $this->success([
+            'payment_method' => $method,
+            'payment_id' => $checkout['payment_id'],
+            'checkout_url' => $checkout['checkout_url'],
+            'amount' => $amount,
+            'currency' => $offer->currency,
+            // The WebView watches for these links: success -> call accept, cancel / failure -> back to the Payments sheet
+            'redirect_urls' => config('services.payment.redirect_urls'),
         ]);
     }
 
@@ -92,9 +132,18 @@ class OfferController extends Controller
         $this->ensureOwnsRequest($request, $serviceRequest);
         $this->ensureCanBeAccepted($offer);
 
+        // The customer pays the price + processing fee; the provider earns the price - commission
+        $price = $offer->priceBreakdown();
+
         // Throws a 422 when the gateway says the payment is not paid / wrong amount
-        $payment = $paymentService->verify($request->input('payment_id'), (float) $offer->price, $offer->currency);
-        $booking = DB::transaction(function () use ($request, $offer, $serviceRequest, $payment) {
+        $payment = $paymentService->verify(
+            $request->input('payment_method'),
+            $request->input('payment_id'),
+            $price['total_amount'],
+            $offer->currency,
+            PaymentService::reference($offer),
+        );
+        $booking = DB::transaction(function () use ($request, $offer, $serviceRequest, $payment, $price) {
             // Lock the request so two taps on "Confirm and Pay" cannot create two bookings
             $serviceRequest = ServiceRequest::lockForUpdate()->findOrFail($serviceRequest->id);
             $offer->refresh()->setRelation('serviceRequest', $serviceRequest);
@@ -127,11 +176,11 @@ class OfferController extends Controller
                 'postal_code' => $serviceRequest->postal_code,
                 'latitude' => $serviceRequest->latitude,
                 'longitude' => $serviceRequest->longitude,
-                'service_price' => $offer->price,
+                'service_price' => $price['service_price'],
                 'vat_amount' => 0,
-                'platform_fee' => 0,
-                'total_amount' => $offer->price,
-                'provider_earning' => $offer->price,
+                'platform_fee' => $price['processing_fee'], // "Processing fee" paid by the customer
+                'total_amount' => $price['total_amount'],
+                'provider_earning' => $price['provider_earning'], // price - Maham's commission
                 'currency' => $offer->currency,
                 'status' => Booking::STATUS_CONFIRMED,
                 'payment_status' => 'paid',
@@ -143,7 +192,7 @@ class OfferController extends Controller
                 'gateway' => $payment['gateway'],
                 'method' => $request->input('payment_method'),
                 'transaction_id' => $payment['transaction_id'],
-                'amount' => $offer->price,
+                'amount' => $price['total_amount'],
                 'currency' => $offer->currency,
                 'status' => 'paid',
                 'gateway_response' => $payment['response'],

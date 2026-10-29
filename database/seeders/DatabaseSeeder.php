@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             SettingSeeder::class,
             PageSeeder::class,
             LocationSeeder::class,
+            BankSeeder::class,
             OnboardingSlideSeeder::class,
             ServiceSeeder::class,
             DemoUserSeeder::class,

@@ -114,5 +114,11 @@ return [
         'skills_experience' => 'المهارات والخبرات',
         'website' => 'رابط الموقع الإلكتروني',
         'logo' => 'شعار النشاط التجاري',
+
+        // Business Profile -> Payment Settings
+        'bank_id' => 'البنك',
+        'account_holder_name' => 'اسم صاحب الحساب',
+        'iban' => 'رقم الآيبان',
+        'swift_code' => 'رمز السويفت / BIC',
     ],
 ];

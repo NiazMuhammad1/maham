@@ -73,6 +73,7 @@ return [
     'offer_not_available' => 'This offer can no longer be accepted.',
     'booking_confirmed' => 'Booking Confirmed',
     'payment_failed' => 'Payment was not completed. Please try again.',
+    'installment_not_available' => 'This payment option is not available for this booking. Please choose another payment method.',
     'offer_status' => [
         'pending' => 'Pending',
         'accepted' => 'Accepted',
@@ -89,6 +90,8 @@ return [
     'payment_method' => [
         'card' => 'Credit/Debit Card',
         'apple_pay' => 'Apple Pay',
+        'tabby' => 'Tabby - Split in 4 payments, no interest',
+        'tamara' => 'Tamara - Split in installments, no interest',
     ],
     'receipt' => [
         'title' => 'Payment Receipt',
@@ -101,6 +104,7 @@ return [
         'time' => 'Time',
         'location' => 'Service Location',
         'service_price' => 'Service Price',
+        'processing_fee' => 'Processing fee',
         'vat' => 'VAT',
         'total' => 'Total Paid',
         'payment_method' => 'Payment Method',
@@ -141,6 +145,9 @@ return [
     'provider_application_submitted' => 'Application Submitted!',
     'provider_application_under_review' => 'Your application is under review. You can edit it again only if it is rejected.',
     'provider_application_closed' => 'Your service provider application can no longer be changed.',
+
+    // Business Profile -> Payment Settings
+    'invalid_iban' => 'Please enter a valid Saudi IBAN: SA followed by 22 digits (24 characters).',
 
     // Provider Dashboard / Earnings / Mode switch
     'provider_only' => 'This section is available for approved service providers only.',

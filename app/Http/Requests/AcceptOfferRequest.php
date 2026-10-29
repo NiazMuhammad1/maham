@@ -31,10 +31,11 @@ class AcceptOfferRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // "Select Payment Method": card | apple_pay
+            // "Select Payment Method": card | apple_pay | tabby | tamara
             'payment_method' => ['required', Rule::in(Payment::METHODS)],
 
-            // Payment id returned by the Moyasar SDK after the customer paid.
+            // Payment id returned by the Moyasar SDK after the customer paid,
+            // or by "Start checkout" for Tabby / Tamara.
             // Not needed while PAYMENT_DRIVER=fake (local / staging). A payment id can only be used once.
             'payment_id' => [
                 Rule::requiredIf(config('services.payment.driver') !== 'fake'),

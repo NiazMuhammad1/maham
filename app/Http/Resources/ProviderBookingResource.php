@@ -56,8 +56,9 @@ class ProviderBookingResource extends JsonResource
                 'street_address' => $this->street_address,
             ],
 
-            // "SAR 250": the price of the job, and what the provider receives for it
+            // "SAR 250": the price of the job, Maham's commission, and what the provider receives for it
             'service_price' => (float) $this->service_price,
+            'commission' => round((float) $this->service_price - (float) $this->provider_earning, 2),
             'provider_earning' => (float) $this->provider_earning,
             'currency' => $this->currency,
 

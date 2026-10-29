@@ -179,6 +179,16 @@ class User extends Authenticatable implements HasMedia
     }
 
     /**
+     * "Payout Settings": the provider's bank account for payouts.
+     *
+     * @return HasOne<ProviderPayoutAccount, $this>
+     */
+    public function payoutAccount(): HasOne
+    {
+        return $this->hasOne(ProviderPayoutAccount::class, 'provider_id');
+    }
+
+    /**
      * Where the "Become a Service Provider" application is:
      * not_started, draft, pending (waiting for admin review), approved, rejected or suspended.
      */

@@ -31,6 +31,14 @@ class Setting extends Model
     }
 
     /**
+     * One setting's value, or $default when it is not saved yet.
+     */
+    public static function valueOf(string $key, mixed $default = null): mixed
+    {
+        return static::query()->where('key', $key)->first()?->typedValue() ?? $default;
+    }
+
+    /**
      * @param  Builder<Setting>  $query
      */
     public function scopePublic(Builder $query): void

@@ -28,7 +28,10 @@ class Payment extends Model
     use HasFactory;
 
     /** Methods shown on the "Payments" sheet. */
-    public const array METHODS = ['card', 'apple_pay'];
+    public const array METHODS = ['card', 'apple_pay', 'tabby', 'tamara'];
+
+    /** "Buy now, pay later" methods: paid on the gateway's own checkout page (opened in a WebView). */
+    public const array INSTALLMENT_METHODS = ['tabby', 'tamara'];
 
     protected function casts(): array
     {

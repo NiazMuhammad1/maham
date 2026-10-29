@@ -57,6 +57,31 @@ class Offer extends Model
     }
 
     /**
+     * What the customer pays and what the provider receives for this offer.
+     * Example (5% + 5%): price 200 -> processing fee 10, customer pays 210; commission 10, provider receives 190.
+     *
+     * @return array{service_price: float, processing_fee_percent: float, processing_fee: float, total_amount: float, provider_commission: float, provider_earning: float}
+     */
+    public function priceBreakdown(): array
+    {
+        $price = (float) $this->price;
+        $feePercent = (float) Setting::valueOf('customer_processing_fee_percent', 5);
+        $commissionPercent = (float) Setting::valueOf('provider_commission_percent', 5);
+
+        $processingFee = round($price * $feePercent / 100, 2);
+        $commission = round($price * $commissionPercent / 100, 2);
+
+        return [
+            'service_price' => $price,
+            'processing_fee_percent' => $feePercent,
+            'processing_fee' => $processingFee,
+            'total_amount' => round($price + $processingFee, 2),
+            'provider_commission' => $commission,
+            'provider_earning' => round($price - $commission, 2),
+        ];
+    }
+
+    /**
      * @return BelongsTo<ServiceRequest, $this>
      */
     public function serviceRequest(): BelongsTo

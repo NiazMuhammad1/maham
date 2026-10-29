@@ -73,6 +73,7 @@ return [
     'offer_not_available' => 'لم يعد بالإمكان قبول هذا العرض.',
     'booking_confirmed' => 'تم تأكيد الحجز',
     'payment_failed' => 'لم تتم عملية الدفع. يرجى المحاولة مرة أخرى.',
+    'installment_not_available' => 'خيار الدفع هذا غير متاح لهذا الحجز. يرجى اختيار طريقة دفع أخرى.',
     'offer_status' => [
         'pending' => 'بانتظار الرد',
         'accepted' => 'مقبول',
@@ -89,6 +90,8 @@ return [
     'payment_method' => [
         'card' => 'بطاقة ائتمان/خصم',
         'apple_pay' => 'Apple Pay',
+        'tabby' => 'تابي - قسّمها على 4 دفعات بدون فوائد',
+        'tamara' => 'تمارا - قسّمها على دفعات بدون فوائد',
     ],
     'receipt' => [
         'title' => 'إيصال الدفع',
@@ -101,6 +104,7 @@ return [
         'time' => 'الوقت',
         'location' => 'مكان الخدمة',
         'service_price' => 'سعر الخدمة',
+        'processing_fee' => 'رسوم المعالجة',
         'vat' => 'ضريبة القيمة المضافة',
         'total' => 'المبلغ المدفوع',
         'payment_method' => 'طريقة الدفع',
@@ -141,6 +145,9 @@ return [
     'provider_application_submitted' => 'تم إرسال الطلب!',
     'provider_application_under_review' => 'طلبك قيد المراجعة. يمكنك تعديله مرة أخرى فقط في حال رفضه.',
     'provider_application_closed' => 'لم يعد بالإمكان تعديل طلب مقدم الخدمة الخاص بك.',
+
+    // Business Profile -> Payment Settings
+    'invalid_iban' => 'يرجى إدخال رقم آيبان سعودي صحيح: SA متبوعاً بـ 22 رقماً (24 حرفاً).',
 
     // Provider Dashboard / Earnings / Mode switch
     'provider_only' => 'هذا القسم متاح لمقدمي الخدمة المعتمدين فقط.',

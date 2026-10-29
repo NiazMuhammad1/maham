@@ -7,6 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Base for the "Become a Service Provider" steps: only fully registered (non-guest) users can apply.
+ * Business Profile (Manage Services, Service Area, Business Details) reuses these rules for approved providers.
  */
 abstract class ProviderApplicationRequest extends FormRequest
 {
@@ -14,7 +15,7 @@ abstract class ProviderApplicationRequest extends FormRequest
     {
         $user = $this->user();
 
-        return ! $user->is_guest && $user->registration_completed_at !== null;
+        return $user->isApprovedProvider() || (! $user->is_guest && $user->registration_completed_at !== null);
     }
 
     /**

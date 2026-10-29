@@ -23,6 +23,9 @@ class SettingSeeder extends Seeder
             ['support', 'support_email', 'support@maham.sa', 'string'],
             ['support', 'support_phone', '+966500000000', 'string'],
             ['support', 'support_whatsapp', '+966500000000', 'string'],
+            // Maham's cut of each booking: "Processing fee" added to the customer's price, commission taken from the provider
+            ['fees', 'customer_processing_fee_percent', '5', 'decimal'],
+            ['fees', 'provider_commission_percent', '5', 'decimal'],
         ];
 
         foreach ($settings as [$group, $key, $value, $type]) {

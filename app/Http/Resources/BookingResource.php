@@ -55,8 +55,9 @@ class BookingResource extends JsonResource
                 'longitude' => $this->longitude,
             ],
 
-            // "Service Price"
+            // "Service Price" + "Processing fee" (+ VAT) = "Total"
             'service_price' => (float) $this->service_price,
+            'processing_fee' => (float) $this->platform_fee,
             'vat_amount' => (float) $this->vat_amount,
             'total_amount' => (float) $this->total_amount,
             'currency' => $this->currency,

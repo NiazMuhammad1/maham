@@ -51,6 +51,9 @@
             <tr><td>{{ __('messages.receipt.paid_at') }}</td><td>{{ $payment->paid_at?->locale(app()->getLocale())->translatedFormat('d M, Y h:i A') }}</td></tr>
         @endif
         <tr><td>{{ __('messages.receipt.service_price') }}</td><td>{{ $money($booking->service_price) }}</td></tr>
+        @if ((float) $booking->platform_fee > 0)
+            <tr><td>{{ __('messages.receipt.processing_fee') }}</td><td>{{ $money($booking->platform_fee) }}</td></tr>
+        @endif
         @if ((float) $booking->vat_amount > 0)
             <tr><td>{{ __('messages.receipt.vat') }}</td><td>{{ $money($booking->vat_amount) }}</td></tr>
         @endif

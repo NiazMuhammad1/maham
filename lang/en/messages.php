@@ -149,6 +149,17 @@ return [
     // Business Profile -> Payment Settings
     'invalid_iban' => 'Please enter a valid Saudi IBAN: SA followed by 22 digits (24 characters).',
 
+    // Provider: Manage Requests / Send Offer
+    'offer_sent' => 'Offer Sent Successfully!',
+    'offer_withdrawn' => 'Your offer has been withdrawn.',
+    'request_not_available' => 'This request is no longer accepting offers from you.',
+    'offer_cannot_be_withdrawn' => 'Only pending offers on open requests can be withdrawn.',
+    'provider_request_status' => [
+        'open' => 'Open',
+        'offer_sent' => 'Offer Sent',
+        'closed' => 'Closed',
+    ],
+
     // Provider Dashboard / Earnings / Mode switch
     'provider_only' => 'This section is available for approved service providers only.',
     'mode_switched' => [

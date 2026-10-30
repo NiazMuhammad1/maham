@@ -9,6 +9,7 @@ use App\Http\Resources\MessageResource;
 use App\Models\Booking;
 use App\Models\Conversation;
 use App\Models\Message;
+use App\Models\ServiceRequest;
 use App\Services\ChatFilter;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
@@ -68,6 +69,25 @@ class ConversationController extends Controller
 
         // Remember the latest booking the chat is about
         $conversation->update(['booking_id' => $booking->id]);
+
+        return $this->show($request, $conversation);
+    }
+
+    /**
+     * Provider "Chat" on a Customer Requests card / Request Details, and "Send a Message" on Offer Details:
+     * open the thread with the customer who posted the request (created the first time). No booking is needed.
+     * Returns the same data as `show`.
+     */
+    public function openFromServiceRequest(Request $request, ServiceRequest $serviceRequest): JsonResponse
+    {
+        $provider = $request->user();
+        $this->ensureProviderCanUseDashboard($provider);
+        abort_unless($serviceRequest->isVisibleToProvider($provider), 404);
+
+        $conversation = Conversation::firstOrCreate(
+            ['customer_id' => $serviceRequest->customer_id, 'provider_id' => $provider->id],
+            ['service_request_id' => $serviceRequest->id],
+        );
 
         return $this->show($request, $conversation);
     }

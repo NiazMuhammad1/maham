@@ -30,7 +30,9 @@ use App\Http\Controllers\Api\V1\Provider\BookingController as ProviderBookingCon
 use App\Http\Controllers\Api\V1\Provider\BusinessProfileController as ProviderBusinessProfileController;
 use App\Http\Controllers\Api\V1\Provider\DashboardController as ProviderDashboardController;
 use App\Http\Controllers\Api\V1\Provider\EarningsController as ProviderEarningsController;
+use App\Http\Controllers\Api\V1\Provider\OfferController as ProviderOfferController;
 use App\Http\Controllers\Api\V1\Provider\PayoutAccountController as ProviderPayoutAccountController;
+use App\Http\Controllers\Api\V1\Provider\ServiceRequestController as ProviderServiceRequestController;
 use App\Http\Controllers\Api\V1\ProviderController;
 use App\Http\Controllers\Api\V1\ServiceController;
 use App\Http\Controllers\Api\V1\ServiceRequestController;
@@ -130,6 +132,15 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
             Route::put('business-profile/business-details', [ProviderBusinessProfileController::class, 'updateBusinessDetails'])->name('business-profile.business-details');
             Route::get('payout-account', [ProviderPayoutAccountController::class, 'show'])->name('payout-account.show');
             Route::put('payout-account', [ProviderPayoutAccountController::class, 'update'])->middleware('throttle:10,1')->name('payout-account.update');
+
+            // Manage Requests: Customer Requests (Open / Offer Sent / Closed), Request Details, Send Offer,
+            // Offer Details, Withdraw Offer and Chat with the customer before a booking (approved providers only)
+            Route::get('service-requests', [ProviderServiceRequestController::class, 'index'])->name('service-requests.index');
+            Route::get('service-requests/{serviceRequest}', [ProviderServiceRequestController::class, 'show'])->name('service-requests.show');
+            Route::post('service-requests/{serviceRequest}/offers', [ProviderOfferController::class, 'store'])->middleware('throttle:10,1')->name('service-requests.offers.store');
+            Route::post('service-requests/{serviceRequest}/conversation', [ConversationController::class, 'openFromServiceRequest'])->name('service-requests.conversation');
+            Route::get('offers/{offer}', [ProviderOfferController::class, 'show'])->name('offers.show');
+            Route::post('offers/{offer}/withdraw', [ProviderOfferController::class, 'withdraw'])->middleware('throttle:10,1')->name('offers.withdraw');
         });
 
         // Chat

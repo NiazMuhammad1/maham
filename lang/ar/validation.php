@@ -120,5 +120,11 @@ return [
         'account_holder_name' => 'اسم صاحب الحساب',
         'iban' => 'رقم الآيبان',
         'swift_code' => 'رمز السويفت / BIC',
+
+        // Provider: Send Offer
+        'schedule_type' => 'تاريخ ووقت التنفيذ',
+        'proposed_date' => 'التاريخ',
+        'proposed_time' => 'الوقت',
+        'price' => 'السعر المقترح',
     ],
 ];

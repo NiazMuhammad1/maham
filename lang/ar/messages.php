@@ -149,6 +149,17 @@ return [
     // Business Profile -> Payment Settings
     'invalid_iban' => 'يرجى إدخال رقم آيبان سعودي صحيح: SA متبوعاً بـ 22 رقماً (24 حرفاً).',
 
+    // Provider: Manage Requests / Send Offer
+    'offer_sent' => 'تم إرسال العرض بنجاح!',
+    'offer_withdrawn' => 'تم سحب عرضك.',
+    'request_not_available' => 'لم يعد هذا الطلب يستقبل عروضاً منك.',
+    'offer_cannot_be_withdrawn' => 'يمكن سحب العروض قيد الانتظار على الطلبات المفتوحة فقط.',
+    'provider_request_status' => [
+        'open' => 'مفتوح',
+        'offer_sent' => 'تم إرسال العرض',
+        'closed' => 'مغلق',
+    ],
+
     // Provider Dashboard / Earnings / Mode switch
     'provider_only' => 'هذا القسم متاح لمقدمي الخدمة المعتمدين فقط.',
     'mode_switched' => [

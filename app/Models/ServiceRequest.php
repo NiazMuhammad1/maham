@@ -159,6 +159,34 @@ class ServiceRequest extends Model implements HasMedia
     }
 
     /**
+     * Requests the provider has sent an offer on (pending, accepted, rejected or withdrawn).
+     *
+     * @param  Builder<ServiceRequest>  $query
+     */
+    public function scopeOfferedByProvider(Builder $query, User $provider): void
+    {
+        $query->whereHas('offers', fn (Builder $offers) => $offers->where('provider_id', $provider->id));
+    }
+
+    /**
+     * True when the provider can still send an offer on this request (it is on their "Open" tab).
+     */
+    public function canReceiveOfferFrom(User $provider): bool
+    {
+        return static::query()->matchingProvider($provider)->whereKey($this->id)->exists();
+    }
+
+    /**
+     * A provider can open a request (Request Details, Chat) when they can send an offer on it
+     * or when they already sent one. Other requests are hidden from them.
+     */
+    public function isVisibleToProvider(User $provider): bool
+    {
+        return $this->offers()->where('provider_id', $provider->id)->exists()
+            || $this->canReceiveOfferFrom($provider);
+    }
+
+    /**
      * @return BelongsTo<City, $this>
      */
     public function city(): BelongsTo

@@ -38,6 +38,9 @@ class Offer extends Model
 
     public const string STATUS_WITHDRAWN = 'withdrawn';
 
+    /** "Agree with Customer's Time" or "Propose a Different Date & Time" on Send Offer. */
+    public const array SCHEDULE_TYPES = ['customer_time', 'proposed'];
+
     /**
      * @var array<string, mixed>
      */

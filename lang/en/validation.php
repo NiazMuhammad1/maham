@@ -230,6 +230,12 @@ return [
         'account_holder_name' => 'account holder name',
         'iban' => 'IBAN',
         'swift_code' => 'Swift / BIC code',
+
+        // Provider: Send Offer
+        'schedule_type' => 'execution date & time',
+        'proposed_date' => 'date',
+        'proposed_time' => 'time',
+        'price' => 'proposed price',
     ],
 
 ];
